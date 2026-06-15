@@ -3,6 +3,7 @@ from sqlmodel import Session
 from app.models.conversation import Conversation
 from app.models.message import Message, MessageSource
 from app.models.document import Document
+from app.schemas.common import success_response
 from app.services.retrieval_service import retrieve_context
 from app.services.llm_service import chat_with_ollama
 from app.utils.ids import new_id
@@ -143,8 +144,8 @@ def ask_question(session: Session, repository_id: str, message: str, conversatio
     conv.updated_at = now_utc()
     session.commit()
 
-    return {
+    return success_response({
         "conversation_id": conv.id,
         "answer": answer,
         "sources": sources,
-    }
+    }, message="답변이 생성되었습니다.")

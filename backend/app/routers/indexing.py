@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-
+from app.schemas.common import success_response
 from app.database import get_session
 from app.models.repository import DocumentRepository
 from app.models.document import Document
@@ -58,12 +58,12 @@ def scan_repository(repository_id: str, session: Session = Depends(get_session))
 
     session.commit()
 
-    return {
+    return success_response({
         "repository_id": repository_id,
         "found": len(files),
         "created": created,
         "skipped": skipped,
-    }
+    }, message="문서 스캔이 완료되었습니다.")
 @router.post("/repositories/{repository_id}/index")
 def index_repository(repository_id: str, session: Session = Depends(get_session)):
     repo = session.get(DocumentRepository, repository_id)
@@ -139,8 +139,8 @@ def index_repository(repository_id: str, session: Session = Depends(get_session)
 
     session.commit()
 
-    return {
+    return success_response({
         "repository_id": repository_id,
         "indexed": indexed,
         "failed": failed,
-    }
+    }, message= "인덱싱이 완료되었습니다")
