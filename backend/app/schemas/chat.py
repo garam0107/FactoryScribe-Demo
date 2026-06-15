@@ -6,6 +6,10 @@ class ChatRequest(BaseModel):
     conversation_id: str | None = None
     message: str
 
+class SearchTestRequest(BaseModel):
+    repository_id: str
+    query: str
+    limit: int = 5
 
 class ChatResponse(BaseModel):
     conversation_id: str
