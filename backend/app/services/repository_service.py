@@ -1,6 +1,7 @@
 import os
-from sqlmodel import Session, select
-
+from sqlmodel import Session, select, func
+from app.models.document import Document
+from app.models.chunk import DocumentChunk
 from app.models.repository import DocumentRepository
 from app.schemas.repository import RepositoryCreateRequest
 from app.utils.ids import new_id
@@ -32,3 +33,41 @@ def create_repository(session: Session, req: RepositoryCreateRequest) -> Documen
 
 def list_repositories(session: Session) -> list[DocumentRepository]:
     return session.exec(select(DocumentRepository)).all()
+
+
+def list_repository_documents(session: Session, repository_id: str) -> list[dict]:
+    repo = session.get(DocumentRepository, repository_id)
+    if not repo:
+        raise ValueError("repository not found")
+
+    statement = (
+        select(
+            Document.filename,
+            Document.file_ext,
+            Document.indexed_status,
+            func.count(DocumentChunk.id).label("chunk_count"),
+        )
+        .select_from(Document)
+        .where(Document.repository_id == repository_id)
+        .join(DocumentChunk, DocumentChunk.document_id == Document.id, isouter=True)
+        .group_by(
+            Document.id,
+            Document.filename,
+            Document.file_ext,
+            Document.indexed_status,
+            Document.created_at,
+        )
+        .order_by(Document.created_at.desc())
+    )
+
+    rows = session.exec(statement).all()
+
+    return [
+        {
+            "filename": row.filename,
+            "file_ext": row.file_ext,
+            "indexed_status": row.indexed_status,
+            "chunk_count": row.chunk_count,
+        }
+        for row in rows
+    ]
