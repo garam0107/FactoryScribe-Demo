@@ -36,8 +36,12 @@ def build_citation(result: dict) -> str:
     if result.get("sheet_name"):
         citation += f" / {result.get('sheet_name')}"
 
-    if result.get("row_start"):
-        citation += f" / Row {result.get('row_start')}"
+    row_start = result.get("row_start")
+    row_end = result.get("row_end")
+    if row_start and row_end and row_end != row_start:
+        citation += f" / Row {row_start}-{row_end}"
+    elif row_start:
+        citation += f" / Row {row_start}"
 
     if result.get("page_number"):
         citation += f" / Page {result.get('page_number')}"

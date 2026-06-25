@@ -45,6 +45,7 @@ def list_repository_documents(session: Session, repository_id: str) -> list[dict
             Document.filename,
             Document.file_ext,
             Document.indexed_status,
+            Document.error_message,
             func.count(DocumentChunk.id).label("chunk_count"),
         )
         .select_from(Document)
@@ -55,6 +56,7 @@ def list_repository_documents(session: Session, repository_id: str) -> list[dict
             Document.filename,
             Document.file_ext,
             Document.indexed_status,
+            Document.error_message,
             Document.created_at,
         )
         .order_by(Document.created_at.desc())
@@ -67,6 +69,7 @@ def list_repository_documents(session: Session, repository_id: str) -> list[dict
             "filename": row.filename,
             "file_ext": row.file_ext,
             "indexed_status": row.indexed_status,
+            "error_message": row.error_message,
             "chunk_count": row.chunk_count,
         }
         for row in rows

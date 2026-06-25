@@ -13,9 +13,14 @@ class Settings(BaseSettings):
     ollama_base_url: str = "http://localhost:11434"
     ollama_chat_model: str = "qwen3.5:9b"
     ollama_embed_model: str = "embeddinggemma"
+    ollama_embed_keep_alive: str = "30m"
 
     chunk_size: int = 1000
     chunk_overlap: int = 150
+    indexing_batch_size: int = 64
+    xlsx_general_row_group_size: int = 10
+    xlsx_group_max_chars: int = 3000
+    embedding_vector_dim: int = 768
 
     class Config:
         env_file = ".env"

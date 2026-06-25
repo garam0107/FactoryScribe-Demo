@@ -16,4 +16,5 @@ class RepositoryDocumentResponse(BaseModel):
     filename: str
     file_ext: str
     indexed_status: str
+    error_message: str | None = None
     chunk_count: int
