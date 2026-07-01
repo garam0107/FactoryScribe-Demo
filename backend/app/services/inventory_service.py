@@ -143,6 +143,10 @@ def _replace_repository_inventory_items(
     session.commit()
 
 
+def _is_shortage_item(item: InventoryItem) -> bool:
+    return item.target_stock is not None and item.current_stock < item.target_stock
+
+
 def sync_inventory_items(session: Session, repository_id: str) -> dict:
     repo = session.get(DocumentRepository, repository_id)
     if not repo:
@@ -231,6 +235,64 @@ def sync_inventory_items(session: Session, repository_id: str) -> dict:
     }
 
 
+def list_inventory_items(
+    session: Session,
+    repository_id: str,
+    shortage_only: bool = False,
+) -> list[dict]:
+    repo = session.get(DocumentRepository, repository_id)
+    if not repo:
+        raise ValueError("repository not found")
+
+    items = session.exec(
+        select(InventoryItem)
+        .where(InventoryItem.repository_id == repository_id)
+        .order_by(InventoryItem.created_at.desc(), InventoryItem.item_name.asc())
+    ).all()
+
+    if not items:
+        raise ValueError("inventory items not loaded")
+
+    results = []
+    for item in items:
+        is_shortage = _is_shortage_item(item)
+        if shortage_only and not is_shortage:
+            continue
+
+        results.append(
+            {
+                "id": item.id,
+                "repository_id": item.repository_id,
+                "item_code": item.item_code,
+                "item_name": item.item_name,
+                "category": item.category,
+                "spec": item.spec,
+                "unit": item.unit,
+                "supplier": item.supplier,
+                "current_stock": item.current_stock,
+                "safety_stock": item.safety_stock,
+                "target_stock": item.target_stock,
+                "avg_monthly_usage": item.avg_monthly_usage,
+                "current_unit_price": item.current_unit_price,
+                "previous_unit_price": item.previous_unit_price,
+                "price_change_rate": item.price_change_rate,
+                "stock_status": item.stock_status,
+                "expected_depletion_days": item.expected_depletion_days,
+                "warehouse_location": item.warehouse_location,
+                "last_inbound_date": item.last_inbound_date,
+                "note": item.note,
+                "source_filename": item.source_filename,
+                "source_sheet_name": item.source_sheet_name,
+                "source_row": item.source_row,
+                "created_at": item.created_at,
+                "updated_at": item.updated_at,
+                "is_shortage": is_shortage,
+            }
+        )
+
+    return results
+
+
 def get_inventory_dashboard(session: Session, repository_id: str) -> dict:
     repo = session.get(DocumentRepository, repository_id)
     if not repo:
@@ -255,7 +317,7 @@ def get_inventory_dashboard(session: Session, repository_id: str) -> dict:
     shortage_items = sum(
         1
         for item in items
-        if item.target_stock is not None and item.current_stock < item.target_stock
+        if _is_shortage_item(item)
     )
 
     inventory_remaining_rate = None
