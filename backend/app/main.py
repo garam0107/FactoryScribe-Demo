@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.database import create_db_and_tables
 
 # 모델 import 필수
@@ -10,7 +10,16 @@ from app.routers import health, repositories, indexing, chat, quotations, invent
 
 app = FastAPI(title="FactoryScribe DEOM API")
 
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
