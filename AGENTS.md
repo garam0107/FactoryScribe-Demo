@@ -276,22 +276,7 @@ A제품_제품사양서.pdf / Page 1
 
 # XLSX Parser 규칙
 
-엑셀 첫 줄을 무조건 헤더로 가정하지 않는다.
 
-헤더 자동 탐지 사용.
-
-검색용 텍스트는 아래 형태 유지:
-
-파일명=재고현황.xlsx,
-시트=제품재고,
-행=4,
-제품명=A제품,
-품번=A-001,
-현재고=37,
-예약수량=5,
-가용재고=32
-
----
 
 # LanceDB 규칙
 
@@ -307,79 +292,17 @@ vector_column_name="vector"
 
 ---
 
-# 현재 완료된 API
 
-POST /repositories
-
-GET /repositories
-
-POST /indexing/repositories/{repository_id}/scan
-
-POST /indexing/repositories/{repository_id}/index
-
-POST /chat/ask
-
-POST /quotations/generate-xlsx
 
 ---
 
-# 다음 구현 순서
+# 프론트 개발
+- figma mcp를 통해 가져온 링크를 토대로 만들고 반응형으로 만든다.
+- react로 UI 작업을 모두 끝낸 후 Electron앱으로 사용이 가능하도록 만들 것이니까 참고한다.
+- figma mcp를 통해 가져온 링크의 레이아웃과 디자인대로 퍼블리싱을 진행하는데, 내가 요청한 요구사항을 무조건 반영해야한다.
+- 버튼, 바 등 공용 컴포넌트로 사용할 수 있는 것이 있다면 공용 컴포넌트로 만든 후 사용할 것.
 
-우선순위 순서대로 구현
 
-1.
-
-GET /repositories/{repository_id}/documents
-
-문서 목록 조회
-
-2.
-
-POST /chat/search-test
-
-검색 결과만 확인
-
-3.
-
-채팅 품질 개선
-
-4.
-
-재고 질문 구조화 응답
-
-5.
-
-단가 질문 구조화 응답
-
-6.
-
-품번 질문 구조화 응답
-
-7.
-
-견적서 생성과 채팅 연결
-
-8.
-
-파일 다운로드 API
-
-9.
-
-프론트 개발
-
----
-
-# 프론트 개발 금지 조건
-
-백엔드 기능이 완성되기 전까지
-
-React
-Tauri
-Electron
-
-작업 금지
-
-모든 기능은 Postman으로 먼저 검증한다.
 
 ---
 
