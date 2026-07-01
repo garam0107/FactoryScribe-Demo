@@ -193,7 +193,6 @@ export function MainPage() {
         <section className="content" aria-label="메인 대시보드">
           <div className="company-row">
             <h1>SI E&amp;C Vietnam Co., Ltd.</h1>
-            <span className="caret" aria-hidden="true" />
           </div>
 
           <section className="assistant-panel" aria-label="질문 입력">
