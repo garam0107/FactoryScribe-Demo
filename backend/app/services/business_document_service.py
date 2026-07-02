@@ -411,6 +411,27 @@ def _model_to_dict(model) -> dict:
     return model.dict()
 
 
+def _parse_year_month(month: str | None) -> tuple[date, date] | None:
+    if not month:
+        return None
+
+    match = re.fullmatch(r"(\d{4})-(\d{2})", month)
+    if not match:
+        raise ValueError("month must be YYYY-MM")
+
+    year = int(match.group(1))
+    month_number = int(match.group(2))
+    if month_number < 1 or month_number > 12:
+        raise ValueError("month must be YYYY-MM")
+    start_date = date(year, month_number, 1)
+    if month_number == 12:
+        end_date = date(year + 1, 1, 1)
+    else:
+        end_date = date(year, month_number + 1, 1)
+
+    return start_date, end_date
+
+
 def list_quotation_documents(session: Session, repository_id: str) -> list[dict]:
     repo = session.get(DocumentRepository, repository_id)
     if not repo:
@@ -455,15 +476,32 @@ def get_quotation_document(
     return _quotation_document_to_dict(document, items)
 
 
-def list_purchase_order_documents(session: Session, repository_id: str) -> list[dict]:
+def list_purchase_order_documents(
+    session: Session,
+    repository_id: str,
+    month: str | None = None,
+) -> list[dict]:
     repo = session.get(DocumentRepository, repository_id)
     if not repo:
         raise ValueError("repository not found")
 
+    statement = select(PurchaseOrderDocument).where(
+        PurchaseOrderDocument.repository_id == repository_id
+    )
+
+    month_range = _parse_year_month(month)
+    if month_range:
+        start_date, end_date = month_range
+        statement = statement.where(
+            PurchaseOrderDocument.order_date >= start_date,
+            PurchaseOrderDocument.order_date < end_date,
+        )
+
     documents = session.exec(
-        select(PurchaseOrderDocument)
-        .where(PurchaseOrderDocument.repository_id == repository_id)
-        .order_by(PurchaseOrderDocument.order_date.desc(), PurchaseOrderDocument.purchase_order_no.desc())
+        statement.order_by(
+            PurchaseOrderDocument.order_date.desc(),
+            PurchaseOrderDocument.purchase_order_no.desc(),
+        )
     ).all()
 
     if not documents:

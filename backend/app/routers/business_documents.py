@@ -77,12 +77,17 @@ def get_quotation(
     summary="발주서 목록 조회",
     description=(
         "적재된 발주서 문서와 품목 라인을 조회합니다. "
-        "이미 발주된 수량과 추가 발주 필요 수량을 계산할 때 사용하는 데이터입니다."
+        "이미 발주된 수량과 추가 발주 필요 수량을 계산할 때 사용하는 데이터입니다. "
+        "month=YYYY-MM 쿼리 파라미터를 전달하면 해당 월의 발주서만 조회합니다."
     ),
 )
-def get_purchase_orders(repository_id: str, session: Session = Depends(get_session)):
+def get_purchase_orders(
+    repository_id: str,
+    month: str | None = None,
+    session: Session = Depends(get_session),
+):
     try:
-        data = list_purchase_order_documents(session, repository_id)
+        data = list_purchase_order_documents(session, repository_id, month=month)
         return success_response(
             data=data,
             message="purchase order documents loaded successfully",
