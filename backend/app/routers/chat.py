@@ -9,7 +9,14 @@ from app.services.chat_service import ask_question, search_documents
 router = APIRouter()
 
 
-@router.post("/ask")
+@router.post(
+    "/ask",
+    summary="RAG 기반 질문 답변",
+    description=(
+        "저장소 검색 결과와 로컬 LLM을 사용해 사용자 질문에 답변합니다. "
+        "재고 관련 질문은 구조화된 XLSX/재고 데이터를 우선 근거로 사용합니다."
+    ),
+)
 def ask(req: ChatRequest, session: Session = Depends(get_session)):
     try:
         return ask_question(
@@ -21,7 +28,14 @@ def ask(req: ChatRequest, session: Session = Depends(get_session)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     
-@router.post("/search-test")
+@router.post(
+    "/search-test",
+    summary="문서 검색 테스트",
+    description=(
+        "채팅 답변을 생성하지 않고 검색 결과만 반환합니다. "
+        "RAG 검색 품질과 출처 랭킹을 확인할 때 사용합니다."
+    ),
+)
 def search_test(req: SearchTestRequest, session: Session = Depends(get_session)):
     try:
         results = search_documents(

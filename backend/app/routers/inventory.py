@@ -12,7 +12,14 @@ from app.services.inventory_service import (
 router = APIRouter()
 
 
-@router.post("/repositories/{repository_id}/sync")
+@router.post(
+    "/repositories/{repository_id}/sync",
+    summary="재고 XLSX 데이터 적재",
+    description=(
+        "저장소의 재고 엑셀 시트를 읽어 구조화된 재고 데이터를 적재합니다. "
+        "기존 재고 데이터는 저장소 기준으로 교체되며, 재고 대시보드/목록 조회 전에 실행합니다."
+    ),
+)
 def sync_inventory(repository_id: str, session: Session = Depends(get_session)):
     try:
         data = sync_inventory_items(session, repository_id)
@@ -24,7 +31,14 @@ def sync_inventory(repository_id: str, session: Session = Depends(get_session)):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/repositories/{repository_id}/dashboard")
+@router.get(
+    "/repositories/{repository_id}/dashboard",
+    summary="재고 대시보드 지표 조회",
+    description=(
+        "전체 품목 수, 현재 재고 합계, 목표 재고 합계, 재고 잔여율, "
+        "평균 가격 상승률, 부족 재고 수 등 재고 대시보드 지표를 조회합니다."
+    ),
+)
 def inventory_dashboard(repository_id: str, session: Session = Depends(get_session)):
     try:
         data = get_inventory_dashboard(session, repository_id)
@@ -36,7 +50,14 @@ def inventory_dashboard(repository_id: str, session: Session = Depends(get_sessi
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/repositories/{repository_id}/items")
+@router.get(
+    "/repositories/{repository_id}/items",
+    summary="재고 품목 목록 조회",
+    description=(
+        "재고 적재 API로 저장된 구조화 재고 품목 목록을 조회합니다. "
+        "shortage_only=true로 요청하면 현재 재고가 목표 재고보다 부족한 품목만 반환합니다."
+    ),
+)
 def get_inventory_items(
     repository_id: str,
     shortage_only: bool = False,

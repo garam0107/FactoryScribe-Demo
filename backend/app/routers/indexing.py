@@ -50,7 +50,14 @@ def _cleanup_document_index(session: Session, document_id: str) -> str | None:
     return None
 
 
-@router.post("/repositories/{repository_id}/scan")
+@router.post(
+    "/repositories/{repository_id}/scan",
+    summary="저장소 파일 스캔",
+    description=(
+        "등록된 저장소 폴더에서 지원되는 문서 파일을 스캔합니다. "
+        "새로 발견된 파일은 인덱싱 대기 상태의 문서로 저장됩니다."
+    ),
+)
 def scan_repository(repository_id: str, session: Session = Depends(get_session)):
     repo = session.get(DocumentRepository, repository_id)
 
@@ -101,7 +108,14 @@ def scan_repository(repository_id: str, session: Session = Depends(get_session))
         "created": created,
         "skipped": skipped,
     }, message="문서 스캔이 완료되었습니다.")
-@router.post("/repositories/{repository_id}/index")
+@router.post(
+    "/repositories/{repository_id}/index",
+    summary="저장소 문서 인덱싱",
+    description=(
+        "인덱싱 대기 문서를 파싱하고 텍스트 청크를 생성한 뒤 임베딩을 수행합니다. "
+        "생성된 벡터는 RAG 검색을 위해 LanceDB에 저장됩니다."
+    ),
+)
 def index_repository(repository_id: str, session: Session = Depends(get_session)):
     started_at = perf_counter()
     repo = session.get(DocumentRepository, repository_id)
