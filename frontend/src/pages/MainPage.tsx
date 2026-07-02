@@ -17,6 +17,7 @@ import {
 } from '../components/dashboard/DashboardSummary'
 import { DashboardInventoryTable } from '../components/dashboard/DashboardInventoryTable'
 import { DashboardInventoryToolbar } from '../components/dashboard/DashboardInventoryToolbar'
+import { PriceChangeGraph } from '../components/dashboard/PriceChangeGraph'
 import type {
   InventoryDashboard,
   InventoryItem,
@@ -42,11 +43,6 @@ const navItems: NavItem[] = [
   { label: '관리자 설정', icon: settingsIcon },
 ]
 
-const graphTitles = [
-  '납품업체 최근 부품 가격 변화',
-  '월별 소모품 사용량 / 출납 실거래량',
-]
-
 function clampPercent(value: number | null | undefined) {
   if (value == null || Number.isNaN(value)) {
     return 0
@@ -69,6 +65,7 @@ export function MainPage() {
   const [items, setItems] = useState<InventoryItem[]>([])
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const [activePriceIndex, setActivePriceIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -136,11 +133,46 @@ export function MainPage() {
     })
   }, [items, sortDirection])
 
+  const priceChangeItems = useMemo(() => {
+    return items
+      .filter(
+        (item) =>
+          item.current_unit_price != null &&
+          item.previous_unit_price != null &&
+          item.previous_unit_price > 0,
+      )
+      .sort((a, b) => {
+        const aRate = a.price_change_rate ?? 0
+        const bRate = b.price_change_rate ?? 0
+        return Math.abs(bRate) - Math.abs(aRate)
+      })
+  }, [items])
+
+  useEffect(() => {
+    if (priceChangeItems.length <= 1) {
+      return
+    }
+
+    const timer = window.setInterval(() => {
+      setActivePriceIndex((current) => (current + 1) % priceChangeItems.length)
+    }, 5000)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [priceChangeItems.length])
+
   const visibleItems = sortedItems.slice(0, visibleCount)
   const canShowMore = visibleCount < sortedItems.length
   const totalItems = items.length || dashboard?.total_items || 0
   const shortageItems =
     dashboard?.shortage_items ?? items.filter((item) => item.is_shortage).length
+  const safeActivePriceIndex =
+    priceChangeItems.length > 0 ? activePriceIndex % priceChangeItems.length : 0
+  const activePriceItem =
+    priceChangeItems.length > 0
+      ? priceChangeItems[safeActivePriceIndex]
+      : null
 
   const metrics: InventoryMetric[] = [
     {
@@ -250,15 +282,14 @@ export function MainPage() {
           <section className="graphs-section" aria-label="데이터 그래프">
             <h2>데이터 그래프</h2>
             <div className="graph-grid">
-              {graphTitles.map((title) => (
-                <article className="graph-card" key={title}>
-                  <div className="graph-header">
-                    <h3>{title}</h3>
-                    <span aria-hidden="true">›</span>
-                  </div>
-                  <div className="zero-graph">0</div>
-                </article>
-              ))}
+              <PriceChangeGraph item={activePriceItem} />
+              <article className="graph-card">
+                <div className="graph-header">
+                  <h3>월별 소모품 사용량 / 출납 실거래량</h3>
+                  <span aria-hidden="true">›</span>
+                </div>
+                <div className="zero-graph">0</div>
+              </article>
             </div>
           </section>
         </section>

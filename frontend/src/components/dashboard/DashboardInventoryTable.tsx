@@ -1,4 +1,5 @@
 import caretDownIcon from '../../assets/icons/caret-down.svg'
+import chevronDownIcon from '../../assets/icons/chevron-down.svg'
 import type { InventoryItem, SortDirection } from '../../types/inventory'
 
 type DashboardInventoryTableProps = {
@@ -78,7 +79,7 @@ export function DashboardInventoryTable({
               aria-label="재고 10개 더 보기"
               onClick={onShowMore}
             >
-              ˅
+              <img src={chevronDownIcon} alt="" />
             </button>
           ) : null}
         </>

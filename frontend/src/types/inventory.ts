@@ -12,10 +12,13 @@ export type InventoryItem = {
   id: string
   item_code: string
   item_name: string
+  supplier: string | null
   unit: string | null
   current_stock: number
   target_stock: number | null
   current_unit_price: number | null
+  previous_unit_price: number | null
+  price_change_rate: number | null
   is_shortage: boolean
 }
 
