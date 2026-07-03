@@ -14,6 +14,7 @@ import { MonthlyPurchaseOrdersPanel } from '../components/dashboard/MonthlyPurch
 import { OverviewPanel } from '../components/dashboard/OverviewPanel'
 import { MainSidebar, type AppSection } from '../components/layout/MainSidebar'
 import type { InventoryDashboard, InventoryItem } from '../types/inventory'
+import { InventoryManagementPage } from './InventoryManagementPage'
 import { OrderPage } from './OrderPage'
 
 const REPOSITORY_ID = 'repo_0c61123ac8be'
@@ -140,16 +141,29 @@ export function MainPage() {
 
         <section
           className="content"
-          aria-label={activeSection === 'orders' ? '발주' : '메인 대시보드'}
+          aria-label={
+            activeSection === 'orders'
+              ? '발주'
+              : activeSection === 'inventory'
+                ? '재고 관리'
+                : '메인 대시보드'
+          }
         >
+          <div className="company-row">
+            <h1>SI E&amp;C Vietnam Co., Ltd.</h1>
+          </div>
+
           {activeSection === 'orders' ? (
             <OrderPage repositoryId={REPOSITORY_ID} />
+          ) : activeSection === 'inventory' ? (
+            <InventoryManagementPage
+              dashboard={dashboard}
+              items={items}
+              isLoading={isLoading}
+              errorMessage={errorMessage}
+            />
           ) : (
             <>
-              <div className="company-row">
-                <h1>SI E&amp;C Vietnam Co., Ltd.</h1>
-              </div>
-
               <section className="assistant-panel" aria-label="질문 입력">
                 <div className="greeting">
                   <p className="hello">안녕하세요. 김OO님.</p>

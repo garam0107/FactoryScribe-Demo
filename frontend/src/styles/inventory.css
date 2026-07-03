@@ -173,3 +173,179 @@
   font-size: 15px;
   line-height: 20px;
 }
+
+.inventory-management-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px 0 0;
+}
+
+.inventory-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  padding: 0;
+}
+
+.inventory-page-tabs {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid var(--black);
+}
+
+.inventory-page-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--black);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.inventory-page-tabs button.active {
+  border-bottom-color: var(--azure-700);
+  color: var(--azure-700);
+}
+
+.inventory-table-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 24px 0;
+}
+
+.inventory-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.inventory-summary-row h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: var(--black);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: -0.32px;
+  white-space: nowrap;
+}
+
+.inventory-summary-row h2 span {
+  color: var(--red-500);
+  font-weight: 650;
+}
+
+.inventory-page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  flex: 0 0 auto;
+}
+
+.inventory-add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--azure-700);
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.inventory-more-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0 0 6px;
+  border: 1px solid var(--black);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--black);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.inventory-page-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--white);
+}
+
+.inventory-page-toolbar {
+  padding: 12px 0;
+}
+
+.inventory-page-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 52px;
+  padding: 16px 0;
+  border-top: 1px solid var(--black);
+}
+
+.inventory-page-empty-row {
+  height: 52px;
+  border-top: 1px solid var(--black);
+}
+
+.inventory-page-row-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.inventory-page-row-main span {
+  overflow: hidden;
+  color: var(--black);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inventory-page-row-detail {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  color: var(--gray-500);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.inventory-page-row-detail i {
+  display: block;
+  width: 1px;
+  height: 14px;
+  background: var(--gray-300);
+}
