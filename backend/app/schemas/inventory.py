@@ -32,6 +32,9 @@ class InventoryItemResponse(BaseModel):
     safety_stock: float | None = None
     target_stock: float | None = None
     avg_monthly_usage: float | None = None
+    previous_year_usage_quantity: float | None = None
+    current_remaining_quantity: float | None = None
+    current_year_expected_quantity: float | None = None
     current_unit_price: float | None = None
     previous_unit_price: float | None = None
     price_change_rate: float | None = None

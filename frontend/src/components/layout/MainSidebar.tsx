@@ -16,8 +16,8 @@ const navItems: NavItem[] = [
   { label: '메인', icon: homeIcon, active: true },
   { label: '발주', icon: truckIcon },
   { label: '재고 관리', icon: toolsIcon },
-  { label: '견적 계산 (도면)', icon: viewsIcon, disabled: true },
-  { label: '고급 : 프롬포트 입력', icon: typeIcon, disabled: true },
+  { label: '견적 계산 (도면)', icon: viewsIcon},
+  { label: '고급 : 프롬포트 입력', icon: typeIcon},
   { label: '관리자 설정', icon: settingsIcon },
 ]
 

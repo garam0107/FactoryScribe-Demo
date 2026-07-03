@@ -20,6 +20,9 @@ class InventoryItem(SQLModel, table=True):
     safety_stock: Optional[float] = None
     target_stock: Optional[float] = None
     avg_monthly_usage: Optional[float] = None
+    previous_year_usage_quantity: Optional[float] = None
+    current_remaining_quantity: Optional[float] = None
+    current_year_expected_quantity: Optional[float] = None
 
     current_unit_price: Optional[float] = None
     previous_unit_price: Optional[float] = None

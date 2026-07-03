@@ -16,6 +16,9 @@ export type InventoryItem = {
   unit: string | null
   current_stock: number
   target_stock: number | null
+  previous_year_usage_quantity: number | null
+  current_remaining_quantity: number | null
+  current_year_expected_quantity: number | null
   current_unit_price: number | null
   previous_unit_price: number | null
   price_change_rate: number | null
