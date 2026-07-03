@@ -23,6 +23,7 @@ export type InventoryItem = {
   current_unit_price: number | null
   previous_unit_price: number | null
   price_change_rate: number | null
+  stock_status: string | null
   is_shortage: boolean
 }
 

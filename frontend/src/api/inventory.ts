@@ -7,6 +7,17 @@ export function getInventoryDashboard(repositoryId: string) {
   )
 }
 
-export function getInventoryItems(repositoryId: string) {
-  return apiGet<InventoryItem[]>(`/inventory/repositories/${repositoryId}/items`)
+export function getInventoryItems(
+  repositoryId: string,
+  options?: { shortageOnly?: boolean },
+) {
+  const params = new URLSearchParams()
+  if (options?.shortageOnly) {
+    params.set('shortage_only', 'true')
+  }
+
+  const query = params.toString()
+  return apiGet<InventoryItem[]>(
+    `/inventory/repositories/${repositoryId}/items${query ? `?${query}` : ''}`,
+  )
 }
