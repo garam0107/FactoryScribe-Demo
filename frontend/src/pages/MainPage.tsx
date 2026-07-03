@@ -12,13 +12,29 @@ import {
 import { ForecastPanel } from '../components/dashboard/ForecastPanel'
 import { MonthlyPurchaseOrdersPanel } from '../components/dashboard/MonthlyPurchaseOrdersPanel'
 import { OverviewPanel } from '../components/dashboard/OverviewPanel'
-import { MainSidebar } from '../components/layout/MainSidebar'
+import { MainSidebar, type AppSection } from '../components/layout/MainSidebar'
 import type { InventoryDashboard, InventoryItem } from '../types/inventory'
+import { OrderPage } from './OrderPage'
 
 const REPOSITORY_ID = 'repo_0c61123ac8be'
 const FIGMA_FRAME_WIDTH = 1440
+const SECTIONS: AppSection[] = [
+  'main',
+  'orders',
+  'inventory',
+  'quote',
+  'prompt',
+  'admin',
+]
+
+function getSectionFromHash(): AppSection {
+  const hashSection = window.location.hash.replace('#', '') as AppSection
+  return SECTIONS.includes(hashSection) ? hashSection : 'main'
+}
 
 export function MainPage() {
+  const [activeSection, setActiveSection] =
+    useState<AppSection>(getSectionFromHash)
   const [activeTab, setActiveTab] = useState<MainDashboardTab>('overview')
   const [appScale, setAppScale] = useState(1)
   const [dashboard, setDashboard] = useState<InventoryDashboard | null>(null)
@@ -38,6 +54,29 @@ export function MainPage() {
       window.removeEventListener('resize', updateScale)
     }
   }, [])
+
+  useEffect(() => {
+    const syncSectionFromHash = () => {
+      setActiveSection(getSectionFromHash())
+    }
+
+    window.addEventListener('hashchange', syncSectionFromHash)
+
+    return () => {
+      window.removeEventListener('hashchange', syncSectionFromHash)
+    }
+  }, [])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0 })
+  }, [activeSection])
+
+  const changeSection = (section: AppSection) => {
+    setActiveSection(section)
+    if (window.location.hash !== `#${section}`) {
+      window.location.hash = section
+    }
+  }
 
   useEffect(() => {
     let ignore = false
@@ -94,54 +133,66 @@ export function MainPage() {
       </header>
 
       <div className="workspace">
-        <MainSidebar />
+        <MainSidebar
+          activeSection={activeSection}
+          onSectionChange={changeSection}
+        />
 
-        <section className="content" aria-label="메인 대시보드">
-          <div className="company-row">
-            <h1>SI E&amp;C Vietnam Co., Ltd.</h1>
-          </div>
+        <section
+          className="content"
+          aria-label={activeSection === 'orders' ? '발주' : '메인 대시보드'}
+        >
+          {activeSection === 'orders' ? (
+            <OrderPage repositoryId={REPOSITORY_ID} />
+          ) : (
+            <>
+              <div className="company-row">
+                <h1>SI E&amp;C Vietnam Co., Ltd.</h1>
+              </div>
 
-          <section className="assistant-panel" aria-label="질문 입력">
-            <div className="greeting">
-              <p className="hello">안녕하세요. 김OO님.</p>
-              <p className="prompt">무엇을 도와드릴까요?</p>
-            </div>
+              <section className="assistant-panel" aria-label="질문 입력">
+                <div className="greeting">
+                  <p className="hello">안녕하세요. 김OO님.</p>
+                  <p className="prompt">무엇을 도와드릴까요?</p>
+                </div>
 
-            <label className="query-box">
-              <img src={plusIcon} alt="" />
-              <input
-                aria-label="질문 입력"
-                placeholder="무엇이든 물어보세요."
-                type="text"
-              />
-              <button type="button" aria-label="질문 검색">
-                <img src={searchIcon} alt="" />
-              </button>
-            </label>
-          </section>
+                <label className="query-box">
+                  <img src={plusIcon} alt="" />
+                  <input
+                    aria-label="질문 입력"
+                    placeholder="무엇이든 물어보세요."
+                    type="text"
+                  />
+                  <button type="button" aria-label="질문 검색">
+                    <img src={searchIcon} alt="" />
+                  </button>
+                </label>
+              </section>
 
-          <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
+              <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-          {activeTab === 'overview' ? (
-            <OverviewPanel
-              dashboard={dashboard}
-              items={items}
-              isLoading={isLoading}
-              errorMessage={errorMessage}
-            />
-          ) : null}
+              {activeTab === 'overview' ? (
+                <OverviewPanel
+                  dashboard={dashboard}
+                  items={items}
+                  isLoading={isLoading}
+                  errorMessage={errorMessage}
+                />
+              ) : null}
 
-          {activeTab === 'purchaseOrders' ? (
-            <MonthlyPurchaseOrdersPanel repositoryId={REPOSITORY_ID} />
-          ) : null}
+              {activeTab === 'purchaseOrders' ? (
+                <MonthlyPurchaseOrdersPanel repositoryId={REPOSITORY_ID} />
+              ) : null}
 
-          {activeTab === 'forecast' ? (
-            <ForecastPanel
-              items={items}
-              isLoading={isLoading}
-              errorMessage={errorMessage}
-            />
-          ) : null}
+              {activeTab === 'forecast' ? (
+                <ForecastPanel
+                  items={items}
+                  isLoading={isLoading}
+                  errorMessage={errorMessage}
+                />
+              ) : null}
+            </>
+          )}
         </section>
       </div>
     </main>

@@ -70,8 +70,11 @@
 }
 
 .sidebar {
-  position: sticky;
+  position: fixed;
   top: 56px;
+  left: 48px;
+  z-index: 9;
+  width: 400px;
   padding: 24px 0;
 }
 
@@ -88,10 +91,13 @@
   width: 100%;
   min-height: 40px;
   padding: 8px 16px;
+  border: 0;
   border-radius: 8px;
+  background: transparent;
   color: var(--black);
   font-size: 15px;
   line-height: 20px;
+  text-align: left;
 }
 
 .side-link:hover {
@@ -122,6 +128,7 @@
 .content {
   display: flex;
   flex-direction: column;
+  grid-column: 2;
   width: 100%;
   padding: 24px 0 0;
 }
