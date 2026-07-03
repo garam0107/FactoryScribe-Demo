@@ -210,3 +210,224 @@
   height: 24px;
   margin-left: 4px;
 }
+
+.bulk-order-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3vh, 32px) clamp(16px, 4vw, 48px);
+  background: rgb(119 119 119 / 35%);
+  backdrop-filter: blur(4px);
+  overscroll-behavior: contain;
+}
+
+.bulk-order-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 1.6vw, 24px);
+  width: min(
+    93.333vw,
+    calc((100vh - clamp(24px, 4.5vh, 48px)) * 1.826)
+  );
+  aspect-ratio: 1344 / 736;
+  max-height: 90.864vh;
+  padding: clamp(24px, 2.25vw, 32px);
+  overflow: hidden;
+  border: 0;
+  border-radius: clamp(18px, 1.8vw, 24px);
+  background: var(--white);
+  box-shadow: 0 18px 48px rgb(0 0 0 / 10%);
+}
+
+.bulk-order-close {
+  position: absolute;
+  top: clamp(12px, 1.2vw, 16px);
+  right: clamp(12px, 1.2vw, 16px);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(28px, 2.4vw, 32px);
+  height: clamp(28px, 2.4vw, 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--black);
+  font-size: clamp(24px, 2vw, 28px);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.bulk-order-close:hover {
+  background: var(--gray-100);
+}
+
+.bulk-order-description {
+  margin: 0;
+  padding-right: clamp(40px, 3.6vw, 48px);
+  color: var(--black);
+  font-size: clamp(24px, 2.35vw, 32px);
+  font-weight: 650;
+  line-height: 1.4;
+  letter-spacing: -0.0064px;
+}
+
+.bulk-order-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 0 0 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bulk-order-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 16px 0;
+  border-top: 1px solid var(--black);
+}
+
+.bulk-order-modal-header strong {
+  color: var(--black);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.bulk-order-row-list {
+  flex: 0 0 auto;
+  min-height: 0;
+  max-height: calc(clamp(72px, 5.6vw, 92px) * 9);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.bulk-order-row-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bulk-order-row-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--gray-300);
+}
+
+.bulk-order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 1.8vw, 24px);
+  min-height: clamp(48px, 4vw, 60px);
+  padding: clamp(12px, 1.2vw, 16px) 0;
+  border-top: 1px solid var(--black);
+}
+
+.bulk-order-row-main {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1vw, 12px);
+  min-width: 0;
+}
+
+.bulk-order-row-main span {
+  overflow: hidden;
+  color: var(--black);
+  font-size: clamp(14px, 1.2vw, 16px);
+  font-weight: 400;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bulk-order-row-detail {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(6px, 0.7vw, 8px);
+  flex: 0 0 auto;
+  color: var(--gray-500);
+  font-size: clamp(11px, 0.95vw, 13px);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.bulk-order-row-detail i {
+  display: block;
+  width: 1px;
+  height: 14px;
+  background: var(--gray-300);
+}
+
+.bulk-order-cost {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(6px, 0.7vw, 8px);
+  flex: 0 0 clamp(52px, 4vw, 60px);
+  min-height: clamp(52px, 4vw, 60px);
+  padding: clamp(12px, 1.2vw, 16px) 0;
+  border-top: 1px solid var(--black);
+  color: var(--black);
+  font-size: clamp(20px, 1.8vw, 24px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.bulk-order-cost span {
+  font-weight: 400;
+}
+
+.bulk-order-cost strong {
+  font-weight: 650;
+}
+
+.bulk-order-empty {
+  display: grid;
+  place-items: center;
+  min-height: 156px;
+  border-top: 1px solid var(--black);
+  color: var(--gray-500);
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.bulk-order-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(12px, 1.2vw, 16px);
+  flex: 0 0 auto;
+}
+
+.bulk-order-cancel,
+.bulk-order-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(68px, 5.6vw, 76px);
+  height: clamp(34px, 2.7vw, 36px);
+  padding: 8px clamp(14px, 1.2vw, 16px);
+  border: 0;
+  border-radius: 8px;
+  font-size: clamp(14px, 1.05vw, 15px);
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.bulk-order-cancel {
+  background: #ddd;
+  color: #222;
+}
+
+.bulk-order-submit {
+  background: var(--azure-700);
+  color: var(--white);
+}

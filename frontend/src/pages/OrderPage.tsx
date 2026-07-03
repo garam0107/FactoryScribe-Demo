@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { getInventoryItems } from '../api/inventory'
 import { getRequiredOrders } from '../api/purchaseRecommendations'
@@ -21,6 +22,7 @@ type OrderRow = {
   itemCode?: string | null
   partnerName: string | null
   trackingNo: string | null
+  estimatedCost: number
   searchSource?: Array<string | number | null | undefined>
 }
 
@@ -37,6 +39,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-WIPER-001',
     partnerName: '(주) 현장소모품',
     trackingNo: '-',
+    estimatedCost: 185000,
   },
   {
     id: 'additional-cable-tie',
@@ -44,6 +47,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-TIE-200',
     partnerName: '(주) 산업자재몰',
     trackingNo: '-',
+    estimatedCost: 96000,
   },
   {
     id: 'additional-nitrile-glove',
@@ -51,6 +55,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-GLOVE-L',
     partnerName: 'Vietnam Safety Co.',
     trackingNo: '-',
+    estimatedCost: 132000,
   },
   {
     id: 'additional-mask',
@@ -58,6 +63,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-MASK-01',
     partnerName: '(주) 세이프라인',
     trackingNo: '-',
+    estimatedCost: 218000,
   },
   {
     id: 'additional-label',
@@ -65,6 +71,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-LABEL-01',
     partnerName: '(주) 라벨테크',
     trackingNo: '-',
+    estimatedCost: 74000,
   },
   {
     id: 'additional-tape',
@@ -72,6 +79,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-TAPE-01',
     partnerName: 'Tech Supply VN',
     trackingNo: '-',
+    estimatedCost: 58000,
   },
   {
     id: 'additional-marker',
@@ -79,6 +87,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-MARKER-01',
     partnerName: '(주) 오피스팩토리',
     trackingNo: '-',
+    estimatedCost: 41000,
   },
   {
     id: 'additional-pallet-wrap',
@@ -86,6 +95,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-WRAP-01',
     partnerName: 'Global Pack Co.',
     trackingNo: '-',
+    estimatedCost: 266000,
   },
   {
     id: 'additional-cleaner',
@@ -93,6 +103,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-CLEANER-01',
     partnerName: '(주) 케미컬라인',
     trackingNo: '-',
+    estimatedCost: 305000,
   },
   {
     id: 'additional-desiccant',
@@ -100,6 +111,7 @@ const additionalOrderRows: OrderRow[] = [
     itemCode: 'ADD-DESICCANT-50',
     partnerName: '(주) 패키징허브',
     trackingNo: '-',
+    estimatedCost: 89000,
   },
 ]
 
@@ -114,6 +126,7 @@ function toRequiredOrderRow(item: RequiredOrderItem): OrderRow {
     itemCode: item.item_code,
     partnerName: item.customer_name,
     trackingNo: '-',
+    estimatedCost: item.unit_price ?? 0,
     searchSource: [item.quotation_no],
   }
 }
@@ -125,8 +138,13 @@ function toAutoOrderRow(item: InventoryItem): OrderRow {
     itemCode: item.item_code,
     partnerName: item.supplier || '거래처 미지정',
     trackingNo: '-',
+    estimatedCost: item.current_unit_price ?? 0,
     searchSource: [item.category, item.stock_status, item.current_stock],
   }
+}
+
+function formatCurrency(value: number) {
+  return `${Math.round(value).toLocaleString('ko-KR')} KRW(원)`
 }
 
 function getTabTitle(activeTab: OrderTab, count: number) {
@@ -167,6 +185,7 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
   const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(
     () => new Set(),
   )
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false)
   const [isRequiredLoading, setIsRequiredLoading] = useState(true)
   const [isAutoLoading, setIsAutoLoading] = useState(true)
   const [requiredErrorMessage, setRequiredErrorMessage] = useState<string | null>(
@@ -232,6 +251,41 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
     }
   }, [repositoryId])
 
+  useEffect(() => {
+    if (!isBulkModalOpen || activeTab === 'auto') {
+      return
+    }
+
+    const scrollY = window.scrollY
+    const { body, documentElement } = document
+    const previousBodyOverflow = body.style.overflow
+    const previousBodyPosition = body.style.position
+    const previousBodyTop = body.style.top
+    const previousBodyLeft = body.style.left
+    const previousBodyRight = body.style.right
+    const previousBodyWidth = body.style.width
+    const previousHtmlOverflow = documentElement.style.overflow
+
+    body.style.overflow = 'hidden'
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    body.style.width = '100%'
+    documentElement.style.overflow = 'hidden'
+
+    return () => {
+      body.style.overflow = previousBodyOverflow
+      body.style.position = previousBodyPosition
+      body.style.top = previousBodyTop
+      body.style.left = previousBodyLeft
+      body.style.right = previousBodyRight
+      body.style.width = previousBodyWidth
+      documentElement.style.overflow = previousHtmlOverflow
+      window.scrollTo(0, scrollY)
+    }
+  }, [activeTab, isBulkModalOpen])
+
   const activeRows = useMemo<OrderRow[]>(() => {
     if (activeTab === 'additional') {
       return additionalOrderRows
@@ -286,6 +340,17 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
   const allVisibleSelected =
     visibleItemIds.length > 0 &&
     visibleItemIds.every((itemId) => selectedItemIds.has(itemId))
+  const modalRows = useMemo(() => {
+    if (activeTab === 'additional') {
+      return additionalOrderRows
+    }
+
+    return activeRows.filter((row) => selectedItemIds.has(row.id))
+  }, [activeRows, activeTab, selectedItemIds])
+  const modalEstimatedCost = modalRows.reduce(
+    (total, row) => total + row.estimatedCost,
+    0,
+  )
 
   const toggleVisibleRows = () => {
     setSelectedItemIds((currentIds) => {
@@ -338,7 +403,21 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
         <div className="order-summary-row">
           <h1>{getTabTitle(activeTab, activeRows.length)}</h1>
           <div className="order-actions">
-            <button className="order-bulk-button" type="button">
+            <button
+              className="order-bulk-button"
+              type="button"
+              disabled={activeTab === 'auto'}
+              onClick={() => {
+                if (activeTab === 'auto') {
+                  return
+                }
+                if (activeTab === 'required' && modalRows.length === 0) {
+                  window.alert('발주하실 품목을 선택해주세요.')
+                  return
+                }
+                setIsBulkModalOpen(true)
+              }}
+            >
               {getPrimaryButtonLabel(activeTab)}
             </button>
             <button
@@ -485,6 +564,64 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
           )}
         </div>
       </div>
+      {isBulkModalOpen && activeTab !== 'auto' ? createPortal(
+        <div className="bulk-order-backdrop" role="presentation">
+          <section
+            className="bulk-order-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="일괄 발주"
+          >
+            <button
+              className="bulk-order-close"
+              type="button"
+              aria-label="모달 닫기"
+              onClick={() => setIsBulkModalOpen(false)}
+            >
+              ×
+            </button>
+            <p className="bulk-order-description">다음 발주를 일괄 진행합니다</p>
+            <div className="bulk-order-table">
+              <div className="bulk-order-row-list">
+                {modalRows.map((row) => (
+                    <article className="bulk-order-row" key={row.id}>
+                      <div className="bulk-order-row-main">
+                        <label className="order-check-button">
+                          <input type="checkbox" checked readOnly />
+                        </label>
+                        <span>{row.itemName}</span>
+                      </div>
+                      <div className="bulk-order-row-detail">
+                        <span>{row.partnerName || '-'}</span>
+                        <i aria-hidden="true" />
+                        <span>{row.trackingNo || '-'}</span>
+                      </div>
+                    </article>
+                  ))}
+              </div>
+
+              <div className="bulk-order-cost">
+                <span>예상 비용</span>
+                <strong>: {formatCurrency(modalEstimatedCost)}</strong>
+              </div>
+            </div>
+
+            <div className="bulk-order-actions">
+              <button
+                className="bulk-order-cancel"
+                type="button"
+                onClick={() => setIsBulkModalOpen(false)}
+              >
+                취소
+              </button>
+              <button className="bulk-order-submit" type="button">
+                발주 신청 진행
+              </button>
+            </div>
+          </section>
+        </div>,
+        document.body,
+      ) : null}
     </section>
   )
 }
