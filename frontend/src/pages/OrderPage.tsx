@@ -26,6 +26,22 @@ type OrderRow = {
   searchSource?: Array<string | number | null | undefined>
 }
 
+type AutoOrderDraft = {
+  inventoryId: string
+  itemName: string
+  supplierName: string
+  unitLabel: string
+  unitPrice: string
+  contactName: string
+  contactValue: string
+  maxLeadTime: string
+  autoJudgementEnabled: boolean
+  minimumQuantity: string
+  autoOrderQuantity: string
+  useRecentUnitPrice: boolean
+  designatedUnitPrice: string
+}
+
 const orderTabs: { label: string; value: OrderTab }[] = [
   { label: '필요 발주', value: 'required' },
   { label: '추가 발주', value: 'additional' },
@@ -119,6 +135,48 @@ function normalizeText(value: string | number | null | undefined) {
   return value == null ? '' : String(value).trim().toLowerCase()
 }
 
+function getAutoOrderGap(item: InventoryItem) {
+  if (item.target_stock == null) {
+    return 0
+  }
+
+  return item.target_stock - item.current_stock
+}
+
+function getUnitLabel(item: InventoryItem) {
+  return item.unit?.trim() || 'pcs'
+}
+
+function createAutoOrderDraft(item: InventoryItem): AutoOrderDraft {
+  const shortageGap = getAutoOrderGap(item)
+  const unitPrice = item.current_unit_price ?? 0
+
+  return {
+    inventoryId: item.id,
+    itemName: item.item_name,
+    supplierName: item.supplier || '-',
+    unitLabel: getUnitLabel(item),
+    unitPrice: String(unitPrice),
+    contactName: '',
+    contactValue: '',
+    maxLeadTime: '',
+    autoJudgementEnabled: false,
+    minimumQuantity: String(shortageGap),
+    autoOrderQuantity: String(shortageGap),
+    useRecentUnitPrice: false,
+    designatedUnitPrice: String(unitPrice),
+  }
+}
+
+function parseNumberInput(value: string) {
+  const parsed = Number(value.replaceAll(',', '').trim())
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+function toDigitsOnly(value: string) {
+  return value.replaceAll(/\D/g, '')
+}
+
 function toRequiredOrderRow(item: RequiredOrderItem): OrderRow {
   return {
     id: item.quotation_item_id,
@@ -182,17 +240,22 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [bulkModalRows, setBulkModalRows] = useState<OrderRow[]>([])
+  const [autoOrderDraft, setAutoOrderDraft] = useState<AutoOrderDraft | null>(
+    null,
+  )
   const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(
     () => new Set(),
   )
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false)
+  const [isAutoOrderModalOpen, setIsAutoOrderModalOpen] = useState(false)
   const [isRequiredLoading, setIsRequiredLoading] = useState(true)
   const [isAutoLoading, setIsAutoLoading] = useState(true)
   const [requiredErrorMessage, setRequiredErrorMessage] = useState<string | null>(
     null,
   )
   const [autoErrorMessage, setAutoErrorMessage] = useState<string | null>(null)
-
+  
   useEffect(() => {
     let ignore = false
 
@@ -252,7 +315,7 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
   }, [repositoryId])
 
   useEffect(() => {
-    if (!isBulkModalOpen || activeTab === 'auto') {
+    if (!isBulkModalOpen && !isAutoOrderModalOpen) {
       return
     }
 
@@ -284,7 +347,7 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
       documentElement.style.overflow = previousHtmlOverflow
       window.scrollTo(0, scrollY)
     }
-  }, [activeTab, isBulkModalOpen])
+  }, [isAutoOrderModalOpen, isBulkModalOpen])
 
   const activeRows = useMemo<OrderRow[]>(() => {
     if (activeTab === 'additional') {
@@ -341,16 +404,19 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
     visibleItemIds.length > 0 &&
     visibleItemIds.every((itemId) => selectedItemIds.has(itemId))
   const modalRows = useMemo(() => {
-    if (activeTab === 'additional') {
-      return additionalOrderRows
-    }
-
     return activeRows.filter((row) => selectedItemIds.has(row.id))
-  }, [activeRows, activeTab, selectedItemIds])
-  const modalEstimatedCost = modalRows.reduce(
-    (total, row) => total + row.estimatedCost,
-    0,
+  }, [activeRows, selectedItemIds])
+  const selectedAutoItems = useMemo(
+    () => autoOrders.filter((item) => selectedItemIds.has(item.id)),
+    [autoOrders, selectedItemIds],
   )
+  const modalEstimatedCost = bulkModalRows
+  .filter((row) => selectedItemIds.has(row.id))
+  .reduce((total, row) => total + row.estimatedCost, 0)
+  const autoOrderEstimatedCost = autoOrderDraft
+    ? parseNumberInput(autoOrderDraft.autoOrderQuantity) *
+      parseNumberInput(autoOrderDraft.designatedUnitPrice)
+    : 0
 
   const toggleVisibleRows = () => {
     setSelectedItemIds((currentIds) => {
@@ -406,15 +472,29 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
             <button
               className="order-bulk-button"
               type="button"
-              disabled={activeTab === 'auto'}
               onClick={() => {
                 if (activeTab === 'auto') {
+                  if (selectedAutoItems.length === 0) {
+                    window.alert('자동 발주를 등록할 품목을 선택해주세요.')
+                    return
+                  }
+
+                  if (selectedAutoItems.length > 1) {
+                    window.alert(
+                      '자동 발주 등록은 한 번에 1개 품목만 설정할 수 있습니다.',
+                    )
+                    return
+                  }
+
+                  setAutoOrderDraft(createAutoOrderDraft(selectedAutoItems[0]))
+                  setIsAutoOrderModalOpen(true)
                   return
                 }
-                if (activeTab === 'required' && modalRows.length === 0) {
+                if (modalRows.length === 0) {
                   window.alert('발주하실 품목을 선택해주세요.')
                   return
                 }
+                setBulkModalRows(modalRows)
                 setIsBulkModalOpen(true)
               }}
             >
@@ -432,14 +512,18 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
 
         <div className="order-table">
           <div className="order-toolbar">
-            <label className="order-check-button">
-              <input
-                type="checkbox"
-                checked={allVisibleSelected}
-                onChange={toggleVisibleRows}
-                aria-label="현재 페이지 전체 선택"
-              />
-            </label>
+            {activeTab === 'auto' ? (
+              <span className="order-toolbar-spacer" aria-hidden="true" />
+            ) : (
+              <label className="order-check-button">
+                <input
+                  type="checkbox"
+                  checked={allVisibleSelected}
+                  onChange={toggleVisibleRows}
+                  aria-label="현재 페이지 전체 선택"
+                />
+              </label>
+            )}
             <button
               className="sort-button order-sort-button"
               type="button"
@@ -572,22 +656,19 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
             aria-modal="true"
             aria-label="일괄 발주"
           >
-            <button
-              className="bulk-order-close"
-              type="button"
-              aria-label="모달 닫기"
-              onClick={() => setIsBulkModalOpen(false)}
-            >
-              ×
-            </button>
             <p className="bulk-order-description">다음 발주를 일괄 진행합니다</p>
             <div className="bulk-order-table">
               <div className="bulk-order-row-list">
-                {modalRows.map((row) => (
+                {bulkModalRows.map((row) => (
                     <article className="bulk-order-row" key={row.id}>
                       <div className="bulk-order-row-main">
                         <label className="order-check-button">
-                          <input type="checkbox" checked readOnly />
+                          <input
+                            type="checkbox"
+                            checked={selectedItemIds.has(row.id)}
+                            onChange={() => toggleRow(row.id)}
+                            aria-label={`${row.itemName} 선택`}
+                          />
                         </label>
                         <span>{row.itemName}</span>
                       </div>
@@ -611,6 +692,227 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
                 className="bulk-order-cancel"
                 type="button"
                 onClick={() => setIsBulkModalOpen(false)}
+              >
+                취소
+              </button>
+              <button className="bulk-order-submit" type="button">
+                발주 신청 진행
+              </button>
+            </div>
+          </section>
+        </div>,
+        document.body,
+      ) : null}
+      {isAutoOrderModalOpen && autoOrderDraft ? createPortal(
+        <div className="bulk-order-backdrop" role="presentation">
+          <section
+            className="bulk-order-modal auto-order-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="자동 발주 등록"
+          >
+            <p className="bulk-order-description">자동 발주 등록</p>
+            <div className="bulk-order-table auto-order-table">
+              <div className="auto-order-grid">
+                <div className="auto-order-column">
+                  <label className="auto-order-field">
+                    <span>부품명</span>
+                    <input
+                      type="text"
+                      value={autoOrderDraft.itemName}
+                      onChange={(event) =>
+                        setAutoOrderDraft((current) =>
+                          current
+                            ? { ...current, itemName: event.target.value }
+                            : current,
+                        )
+                      }
+                    />
+                  </label>
+                  <label className="auto-order-field">
+                    <span>납품업체</span>
+                    <input
+                      type="text"
+                      value={autoOrderDraft.supplierName}
+                      onChange={(event) =>
+                        setAutoOrderDraft((current) =>
+                          current
+                            ? { ...current, supplierName: event.target.value }
+                            : current,
+                        )
+                      }
+                    />
+                  </label>
+                  <label className="auto-order-field">
+                    <span>단가</span>
+                    <div className="auto-order-inline-input">
+                      <input
+                        type="text"
+                        value={autoOrderDraft.unitPrice}
+                        onChange={(event) =>
+                          setAutoOrderDraft((current) =>
+                            current
+                              ? { ...current, unitPrice: event.target.value }
+                              : current,
+                          )
+                        }
+                      />
+                      <em>KRW/{autoOrderDraft.unitLabel}</em>
+                    </div>
+                  </label>
+                  <label className="auto-order-field">
+                    <span>납품 담당자</span>
+                    <input
+                      type="text"
+                      value={autoOrderDraft.contactName}
+                      onChange={(event) =>
+                        setAutoOrderDraft((current) =>
+                          current
+                            ? { ...current, contactName: event.target.value }
+                            : current,
+                        )
+                      }
+                    />
+                  </label>
+                  <label className="auto-order-field">
+                    <span>연락처</span>
+                    <input
+                      type="text"
+                      value={autoOrderDraft.contactValue}
+                      onChange={(event) =>
+                        setAutoOrderDraft((current) =>
+                          current
+                            ? { ...current, contactValue: event.target.value }
+                            : current,
+                        )
+                      }
+                    />
+                  </label>
+                  <label className="auto-order-field auto-order-divider">
+                    <span>최대 납기일</span>
+                    <div className="auto-order-inline-input">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={autoOrderDraft.maxLeadTime}
+                        onChange={(event) =>
+                          setAutoOrderDraft((current) =>
+                            current
+                              ? {
+                                  ...current,
+                                  maxLeadTime: toDigitsOnly(event.target.value),
+                                }
+                              : current,
+                          )
+                        }
+                      />
+                      <em>일</em>
+                    </div>
+                  </label>
+                </div>
+
+                <div className="auto-order-column">
+                  <div className="auto-order-field">
+                    <span>자동 판단</span>
+                    <button
+                      className="auto-order-toggle"
+                      type="button"
+                      aria-pressed={false}
+                      disabled
+                    >
+                      <span />
+                    </button>
+                  </div>
+                  <label className="auto-order-field">
+                    <span>최저 부품 개수</span>
+                    <div className="auto-order-inline-input">
+                      <input
+                        type="text"
+                        value={autoOrderDraft.minimumQuantity}
+                        disabled
+                      />
+                      <em>{autoOrderDraft.unitLabel}</em>
+                    </div>
+                  </label>
+                  <label className="auto-order-field">
+                    <span>자동 발주 개수</span>
+                    <div className="auto-order-inline-input">
+                      <input
+                        type="text"
+                        value={autoOrderDraft.autoOrderQuantity}
+                        onChange={(event) =>
+                          setAutoOrderDraft((current) =>
+                            current
+                              ? { ...current, autoOrderQuantity: event.target.value }
+                              : current,
+                          )
+                        }
+                      />
+                      <em>{autoOrderDraft.unitLabel}</em>
+                    </div>
+                  </label>
+                  <div className="auto-order-field">
+                    <span>최근 거래 단가 사용</span>
+                    <button
+                      className={`auto-order-toggle${autoOrderDraft.useRecentUnitPrice ? ' active' : ''}`}
+                      type="button"
+                      aria-pressed={autoOrderDraft.useRecentUnitPrice}
+                      onClick={() =>
+                        setAutoOrderDraft((current) => {
+                          if (!current) {
+                            return current
+                          }
+
+                          const nextValue = !current.useRecentUnitPrice
+                          return {
+                            ...current,
+                            useRecentUnitPrice: nextValue,
+                            designatedUnitPrice: nextValue
+                              ? current.unitPrice
+                              : current.designatedUnitPrice,
+                          }
+                        })
+                      }
+                    >
+                      <span />
+                    </button>
+                  </div>
+                  <label className="auto-order-field">
+                    <span>지정 단가</span>
+                    <div className="auto-order-inline-input">
+                      <input
+                        type="text"
+                        value={autoOrderDraft.designatedUnitPrice}
+                        disabled={autoOrderDraft.useRecentUnitPrice}
+                        onChange={(event) =>
+                          setAutoOrderDraft((current) =>
+                            current
+                              ? {
+                                  ...current,
+                                  designatedUnitPrice: event.target.value,
+                                }
+                              : current,
+                          )
+                        }
+                      />
+                      <em>KRW/{autoOrderDraft.unitLabel}</em>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div className="bulk-order-cost">
+                <span>예상 비용</span>
+                <strong>: {formatCurrency(autoOrderEstimatedCost)}</strong>
+              </div>
+            </div>
+
+            <div className="bulk-order-actions">
+              <button
+                className="bulk-order-cancel"
+                type="button"
+                onClick={() => setIsAutoOrderModalOpen(false)}
               >
                 취소
               </button>

@@ -225,6 +225,8 @@
 }
 
 .bulk-order-modal {
+  --bulk-row-height: 64px;
+  
   position: relative;
   display: flex;
   flex-direction: column;
@@ -281,7 +283,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 }
@@ -304,11 +306,13 @@
 }
 
 .bulk-order-row-list {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   min-height: 0;
-  max-height: calc(clamp(72px, 5.6vw, 92px) * 9);
+  max-height: calc(var(--bulk-row-height) * 8);
   overflow-y: auto;
   scrollbar-gutter: stable;
+  border-bottom: 1px solid var(--black);
+  padding-right: 12px;
 }
 
 .bulk-order-row-list::-webkit-scrollbar {
@@ -321,12 +325,14 @@
 }
 
 .bulk-order-row {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: clamp(16px, 1.8vw, 24px);
-  min-height: clamp(48px, 4vw, 60px);
-  padding: clamp(12px, 1.2vw, 16px) 0;
+  height: var(--bulk-row-height);
+  min-height: var(--bulk-row-height);
+  padding: 0;
   border-top: 1px solid var(--black);
 }
 
@@ -367,18 +373,21 @@
 }
 
 .bulk-order-cost {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: clamp(6px, 0.7vw, 8px);
   flex: 0 0 clamp(52px, 4vw, 60px);
+  height: clamp(52px, 4vw, 60px);
   min-height: clamp(52px, 4vw, 60px);
-  padding: clamp(12px, 1.2vw, 16px) 0;
-  border-top: 1px solid var(--black);
+  padding: 0;
+  border-top : 0;
   color: var(--black);
   font-size: clamp(20px, 1.8vw, 24px);
   line-height: 1;
   white-space: nowrap;
+  margin-top: auto;
 }
 
 .bulk-order-cost span {
@@ -404,6 +413,140 @@
   justify-content: flex-end;
   gap: clamp(12px, 1.2vw, 16px);
   flex: 0 0 auto;
+  margin-top: clamp(18px, 1.8vw, 24px);
+}
+
+.auto-order-modal {
+  justify-content: flex-start;
+}
+
+.auto-order-table {
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.auto-order-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(20px, 2.4vw, 32px);
+  row-gap: 0;
+  width: 100%;
+  flex: 1 1 auto;
+  align-content: start;
+  border-bottom: 1px solid var(--black);
+}
+
+.auto-order-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  justify-content: flex-start;
+}
+
+.auto-order-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: clamp(72px, 6.25vw, 88px);
+  padding: clamp(18px, 1.9vw, 24px) 0;
+  color: var(--black);
+  font-size: clamp(16px, 1.45vw, 20px);
+  line-height: 1.4;
+}
+
+.auto-order-field > span {
+  flex: 0 0 auto;
+}
+
+.auto-order-table .bulk-order-cost {
+  width: 100%;
+  margin-top: clamp(20px, 2vw, 28px);
+  border-top: 0;
+}
+
+.auto-order-field input {
+  width: min(280px, 100%);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--black);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 650;
+  line-height: inherit;
+  text-align: right;
+  outline: 0;
+}
+
+.auto-order-field input:disabled {
+  color: #aaa;
+}
+
+.auto-order-inline-input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 0;
+  color: #aaa;
+}
+
+.auto-order-inline-input input {
+  width: min(160px, 100%);
+}
+
+.auto-order-inline-input em {
+  color: inherit;
+  font-size: inherit;
+  font-style: normal;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.auto-order-toggle {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #ddd;
+  transition: background-color 0.2s ease;
+}
+
+.auto-order-toggle span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 18%);
+  transition: transform 0.2s ease;
+}
+
+.auto-order-toggle.active {
+  background: #60a5e9;
+}
+
+.auto-order-toggle.active span {
+  transform: translateX(16px);
+}
+
+.auto-order-toggle:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.order-toolbar-spacer {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
 }
 
 .bulk-order-cancel,
