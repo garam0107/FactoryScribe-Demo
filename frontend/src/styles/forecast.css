@@ -45,7 +45,7 @@
   gap: 32px;
   align-self: start;
   min-width: 0;
-  min-height: 370px;
+  height: 370px;
   padding: 24px;
   overflow: hidden;
   border: 1px solid var(--azure-900);
@@ -75,6 +75,9 @@
   align-items: center;
   gap: 0;
   flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--black);
   font-size: 17px;
   font-weight: 400;
@@ -82,14 +85,122 @@
   letter-spacing: -0.02px;
 }
 
-.forecast-more span:last-child {
-  display: grid;
-  place-items: center;
+.forecast-more img {
   width: 24px;
   height: 24px;
-  font-size: 28px;
-  font-weight: 300;
-  line-height: 24px;
+  flex: 0 0 auto;
+}
+
+.forecast-card-expanded {
+  background: var(--azure-700);
+  color: var(--white);
+}
+
+.forecast-card-expanded .forecast-card-header {
+  flex: 0 0 auto;
+}
+
+.forecast-card-expanded .forecast-card-header h3,
+.forecast-card-expanded .forecast-more {
+  color: var(--white);
+}
+
+.forecast-close-button img {
+  transform: rotate(180deg);
+}
+
+.forecast-card-expanded .forecast-more img {
+  filter: brightness(0) invert(1);
+}
+
+.forecast-item-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 60%) transparent;
+}
+
+.forecast-item-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.forecast-item-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(255 255 255 / 55%);
+}
+
+.forecast-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  flex: 0 0 auto;
+  min-height: 53px;
+  padding: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--white);
+  background: transparent;
+  color: var(--white);
+  text-align: left;
+}
+
+.forecast-item-row:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+.forecast-item-row-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forecast-item-row-detail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-width: 0;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.forecast-item-row-detail span {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.forecast-item-row-detail i {
+  display: block;
+  width: 1px;
+  height: 14px;
+  background: rgb(255 255 255 / 70%);
+  flex: 0 0 auto;
+}
+
+.forecast-expanded-empty {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  border-top: 1px solid var(--white);
+  color: var(--white);
+  font-size: 15px;
+  line-height: 20px;
+  text-align: center;
 }
 
 .forecast-product {

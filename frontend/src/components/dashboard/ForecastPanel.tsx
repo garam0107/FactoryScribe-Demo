@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import chevronRightIcon from '../../assets/icons/chevron-right.svg'
 import type { InventoryItem } from '../../types/inventory'
 
 type ForecastPanelProps = {
@@ -9,6 +10,7 @@ type ForecastPanelProps = {
 }
 
 type ForecastCategory = '원자재' | '부자재' | '소모품' | '포장재'
+type SelectedItemIds = Partial<Record<ForecastCategory, string>>
 
 const FORECAST_CATEGORIES: ForecastCategory[] = [
   '원자재',
@@ -149,19 +151,77 @@ function getMostNeededCategory(
 function ForecastCard({
   category,
   item,
+  items,
+  isExpanded,
+  onExpand,
+  onClose,
+  onSelectItem,
 }: {
   category: ForecastCategory
   item: InventoryItem | null
+  items: InventoryItem[]
+  isExpanded: boolean
+  onExpand: (category: ForecastCategory) => void
+  onClose: () => void
+  onSelectItem: (category: ForecastCategory, itemId: string) => void
 }) {
+  if (isExpanded) {
+    return (
+      <article className="forecast-card forecast-card-expanded">
+        <header className="forecast-card-header">
+          <h3>{category}</h3>
+          <button
+            className="forecast-more forecast-close-button"
+            type="button"
+            onClick={onClose}
+          >
+            <span>닫기</span>
+            <img src={chevronRightIcon} alt="" aria-hidden="true" />
+          </button>
+        </header>
+
+        <div className="forecast-item-list">
+          {items.length > 0 ? (
+            items.map((listItem) => (
+              <button
+                className="forecast-item-row"
+                type="button"
+                key={listItem.id}
+                onClick={() => onSelectItem(category, listItem.id)}
+              >
+                <span className="forecast-item-row-name">
+                  {listItem.item_name}
+                </span>
+                <span className="forecast-item-row-detail">
+                  <span>{listItem.supplier || '공급사 미지정'}</span>
+                  <i aria-hidden="true" />
+                  <span>{formatPrice(listItem.current_unit_price, null)}</span>
+                </span>
+              </button>
+            ))
+          ) : (
+            <div className="forecast-expanded-empty">
+              표시할 {category} 데이터가 없습니다.
+            </div>
+          )}
+        </div>
+      </article>
+    )
+  }
+
   if (!item) {
     return (
       <article className="forecast-card">
         <header className="forecast-card-header">
           <h3>{category}</h3>
-          <div className="forecast-more">
+          <button
+            className="forecast-more"
+            type="button"
+            onClick={() => onExpand(category)}
+          >
             <span>더 보기</span>
-            <span aria-hidden="true">›</span>
-          </div>
+            <img src={chevronRightIcon} alt="" aria-hidden="true" />
+          </button>
         </header>
 
         <div className="forecast-empty">
@@ -182,10 +242,14 @@ function ForecastCard({
     <article className="forecast-card">
       <header className="forecast-card-header">
         <h3>{category}</h3>
-        <div className="forecast-more">
+        <button
+          className="forecast-more"
+          type="button"
+          onClick={() => onExpand(category)}
+        >
           <span>더 보기</span>
-          <span aria-hidden="true">›</span>
-        </div>
+          <img src={chevronRightIcon} alt="" aria-hidden="true" />
+        </button>
       </header>
 
       <div className="forecast-product">
@@ -235,6 +299,9 @@ export function ForecastPanel({
   errorMessage,
 }: ForecastPanelProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [expandedCategory, setExpandedCategory] =
+    useState<ForecastCategory | null>(null)
+  const [selectedItemIds, setSelectedItemIds] = useState<SelectedItemIds>({})
   const groupedItems = groupItemsByCategory(items)
   const mostNeededCategory = getMostNeededCategory(groupedItems)
 
@@ -275,13 +342,33 @@ export function ForecastPanel({
       <div className="forecast-grid">
         {FORECAST_CATEGORIES.map((category) => {
           const categoryItems = groupedItems[category]
-          const item =
+          const selectedItemId = selectedItemIds[category]
+          const selectedItem = selectedItemId
+            ? categoryItems.find((categoryItem) => categoryItem.id === selectedItemId)
+            : null
+          const rotatedItem =
             categoryItems.length > 0
               ? categoryItems[activeIndex % categoryItems.length]
               : null
+          const item = selectedItem ?? rotatedItem
 
           return (
-            <ForecastCard key={category} category={category} item={item} />
+            <ForecastCard
+              key={category}
+              category={category}
+              item={item}
+              items={categoryItems}
+              isExpanded={expandedCategory === category}
+              onExpand={setExpandedCategory}
+              onClose={() => setExpandedCategory(null)}
+              onSelectItem={(selectedCategory, itemId) => {
+                setSelectedItemIds((currentItems) => ({
+                  ...currentItems,
+                  [selectedCategory]: itemId,
+                }))
+                setExpandedCategory(null)
+              }}
+            />
           )
         })}
       </div>
