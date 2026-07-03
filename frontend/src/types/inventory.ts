@@ -12,6 +12,7 @@ export type InventoryItem = {
   id: string
   item_code: string
   item_name: string
+  category: string | null
   supplier: string | null
   unit: string | null
   current_stock: number

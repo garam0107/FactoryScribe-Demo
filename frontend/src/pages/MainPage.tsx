@@ -9,6 +9,7 @@ import {
   DashboardTabs,
   type MainDashboardTab,
 } from '../components/dashboard/DashboardTabs'
+import { ForecastPanel } from '../components/dashboard/ForecastPanel'
 import { MonthlyPurchaseOrdersPanel } from '../components/dashboard/MonthlyPurchaseOrdersPanel'
 import { OverviewPanel } from '../components/dashboard/OverviewPanel'
 import { MainSidebar } from '../components/layout/MainSidebar'
@@ -135,9 +136,11 @@ export function MainPage() {
           ) : null}
 
           {activeTab === 'forecast' ? (
-            <section className="empty-tab-panel" aria-label="예상 소모도">
-              예상 소모도 화면은 준비 중입니다.
-            </section>
+            <ForecastPanel
+              items={items}
+              isLoading={isLoading}
+              errorMessage={errorMessage}
+            />
           ) : null}
         </section>
       </div>

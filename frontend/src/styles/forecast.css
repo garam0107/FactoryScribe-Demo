@@ -1,0 +1,250 @@
+.forecast-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  padding: 24px 0;
+}
+
+.forecast-headline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  color: var(--black);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: -0.32px;
+  white-space: nowrap;
+}
+
+.forecast-headline p,
+.forecast-headline strong {
+  margin: 0;
+}
+
+.forecast-headline strong {
+  color: var(--mustard-500);
+  font-weight: 650;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  padding: 24px 0;
+  background: var(--white);
+}
+
+.forecast-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-self: start;
+  min-width: 0;
+  min-height: 370px;
+  padding: 24px;
+  overflow: hidden;
+  border: 1px solid var(--azure-900);
+  border-radius: 16px;
+  background: var(--white);
+}
+
+.forecast-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.forecast-card-header h3 {
+  min-width: 0;
+  margin: 0;
+  color: var(--black);
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 24px;
+}
+
+.forecast-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  flex: 0 0 auto;
+  color: var(--black);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02px;
+}
+
+.forecast-more span:last-child {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 24px;
+}
+
+.forecast-product {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.forecast-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--gray-500);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.forecast-meta span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.forecast-meta i {
+  display: block;
+  width: 1px;
+  height: 14px;
+  background: var(--gray-300);
+  flex: 0 0 auto;
+}
+
+.forecast-product strong {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--black);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: -0.34px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forecast-change {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forecast-change.increase {
+  color: var(--red-500);
+}
+
+.forecast-change.decrease {
+  color: var(--azure-500);
+}
+
+.forecast-change.neutral {
+  color: var(--gray-500);
+}
+
+.forecast-quantity-box {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  width: 100%;
+  padding: 7px 0;
+  overflow: hidden;
+}
+
+.forecast-quantities {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  margin: 0;
+  padding: 0 25px;
+}
+
+.forecast-quantities div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.forecast-quantities dt {
+  margin: 0;
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.forecast-quantities dd {
+  margin: 0;
+  color: var(--black);
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.forecast-quantities dd.muted {
+  color: #bbb;
+}
+
+.forecast-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--gray-300);
+}
+
+.forecast-needed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 25px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.forecast-needed span {
+  color: #222;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.forecast-needed strong {
+  color: var(--black);
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.forecast-status,
+.forecast-empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 220px;
+  color: var(--gray-500);
+  font-size: 15px;
+  line-height: 20px;
+  text-align: center;
+}

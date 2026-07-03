@@ -1,0 +1,101 @@
+.tabs {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  border-bottom: 1px solid var(--black);
+}
+
+.tabs button {
+  min-height: 44px;
+  padding: 12px 24px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--black);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.tabs button.active {
+  border-bottom-color: var(--azure-700);
+  color: var(--azure-700);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  padding: 34px 0 24px;
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  min-width: 0;
+}
+
+.metric-card h2 {
+  margin: 0;
+  color: var(--black);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 36px;
+  text-align: center;
+}
+
+.metric-ring {
+  display: grid;
+  place-items: center;
+  width: 139px;
+  height: 139px;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      closest-side,
+      var(--white) calc(100% - 6px),
+      transparent calc(100% - 5px)
+    ),
+    conic-gradient(
+      var(--metric-color) calc(var(--metric-percent, 0) * 1%),
+      var(--gray-200) 0
+    );
+}
+
+.metric-ring span {
+  font-size: 34px;
+  font-weight: 650;
+  line-height: 36px;
+}
+
+.metric-ring.red {
+  --metric-color: var(--red-500);
+  color: var(--red-500);
+}
+
+.metric-ring.turquoise {
+  --metric-color: var(--turquoise-500);
+  color: var(--turquoise-500);
+}
+
+.metric-ring.mustard {
+  --metric-color: var(--mustard-500);
+  color: var(--mustard-500);
+}
+
+.metric-ring.azure {
+  --metric-color: var(--azure-700);
+  color: var(--azure-700);
+}
+
+.empty-tab-panel {
+  display: grid;
+  place-items: center;
+  min-height: 280px;
+  color: var(--gray-500);
+  font-size: 18px;
+  line-height: 28px;
+}
