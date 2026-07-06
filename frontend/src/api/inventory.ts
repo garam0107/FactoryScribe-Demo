@@ -1,5 +1,9 @@
 import { apiGet } from './client'
-import type { InventoryDashboard, InventoryItem } from '../types/inventory'
+import type {
+  InventoryDashboard,
+  InventoryItem,
+  ShortageQuotationDocument,
+} from '../types/inventory'
 
 export function getInventoryDashboard(repositoryId: string) {
   return apiGet<InventoryDashboard>(
@@ -19,5 +23,11 @@ export function getInventoryItems(
   const query = params.toString()
   return apiGet<InventoryItem[]>(
     `/inventory/repositories/${repositoryId}/items${query ? `?${query}` : ''}`,
+  )
+}
+
+export function getShortageQuotations(repositoryId: string) {
+  return apiGet<ShortageQuotationDocument[]>(
+    `/inventory/repositories/${repositoryId}/shortage-quotations`,
   )
 }

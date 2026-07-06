@@ -27,4 +27,28 @@ export type InventoryItem = {
   is_shortage: boolean
 }
 
+export type ShortageQuotationItem = {
+  quotation_item_id: string
+  inventory_item_id: string
+  item_code: string
+  item_name: string
+  required_quantity: number
+  unit_price: number | null
+  current_stock: number
+  target_stock: number | null
+  shortage_quantity: number
+}
+
+export type ShortageQuotationDocument = {
+  quotation_document_id: string
+  quotation_no: string
+  quotation_date: string | null
+  recipient_company_name: string | null
+  project_name: string | null
+  delivery_terms: string | null
+  source_filename: string | null
+  shortage_item_count: number
+  shortage_items: ShortageQuotationItem[]
+}
+
 export type SortDirection = 'asc' | 'desc'

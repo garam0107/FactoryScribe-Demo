@@ -4,6 +4,7 @@ from datetime import datetime
 from openpyxl import load_workbook
 from sqlmodel import Session, select
 
+from app.models.business_document import QuotationDocument, QuotationItem
 from app.models.inventory_item import InventoryItem
 from app.models.repository import DocumentRepository
 from app.utils.ids import new_id
@@ -148,6 +149,20 @@ def _replace_repository_inventory_items(
 
 def _is_shortage_item(item: InventoryItem) -> bool:
     return item.target_stock is not None and item.current_stock < item.target_stock
+
+
+def _normalize_match_key(value: str | None) -> str:
+    if not value:
+        return ""
+
+    return " ".join(str(value).strip().lower().split())
+
+
+def _get_shortage_quantity(item: InventoryItem) -> float:
+    if item.target_stock is None:
+        return 0
+
+    return max(item.target_stock - item.current_stock, 0)
 
 
 def sync_inventory_items(session: Session, repository_id: str) -> dict:
@@ -348,3 +363,92 @@ def get_inventory_dashboard(session: Session, repository_id: str) -> dict:
         "average_price_increase_rate": round(average_price_increase_rate, 2) if average_price_increase_rate is not None else None,
         "shortage_items": shortage_items,
     }
+
+
+def list_shortage_quotation_documents(session: Session, repository_id: str) -> list[dict]:
+    repo = session.get(DocumentRepository, repository_id)
+    if not repo:
+        raise ValueError("repository not found")
+
+    inventory_items = session.exec(
+        select(InventoryItem).where(InventoryItem.repository_id == repository_id)
+    ).all()
+    if not inventory_items:
+        raise ValueError("inventory items not loaded")
+
+    shortage_items = [item for item in inventory_items if _is_shortage_item(item)]
+    if not shortage_items:
+        return []
+
+    quotation_documents = session.exec(
+        select(QuotationDocument)
+        .where(QuotationDocument.repository_id == repository_id)
+        .order_by(QuotationDocument.quotation_date.desc(), QuotationDocument.quotation_no.desc())
+    ).all()
+    if not quotation_documents:
+        raise ValueError("quotation documents not loaded")
+
+    quotation_items = session.exec(
+        select(QuotationItem)
+        .where(QuotationItem.repository_id == repository_id)
+        .order_by(QuotationItem.quotation_document_id.asc(), QuotationItem.source_row.asc())
+    ).all()
+    if not quotation_items:
+        raise ValueError("quotation documents not loaded")
+
+    shortage_by_code: dict[str, InventoryItem] = {}
+    shortage_by_name: dict[str, InventoryItem] = {}
+    for item in shortage_items:
+        code_key = _normalize_match_key(item.item_code)
+        name_key = _normalize_match_key(item.item_name)
+        if code_key and code_key not in shortage_by_code:
+            shortage_by_code[code_key] = item
+        if name_key and name_key not in shortage_by_name:
+            shortage_by_name[name_key] = item
+
+    quotation_items_by_document: dict[str, list[QuotationItem]] = {}
+    for item in quotation_items:
+        quotation_items_by_document.setdefault(item.quotation_document_id, []).append(item)
+
+    results: list[dict] = []
+    for document in quotation_documents:
+        matched_items: list[dict] = []
+        for quotation_item in quotation_items_by_document.get(document.id, []):
+            inventory_item = shortage_by_code.get(_normalize_match_key(quotation_item.item_code))
+            if inventory_item is None:
+                inventory_item = shortage_by_name.get(_normalize_match_key(quotation_item.item_name))
+            if inventory_item is None:
+                continue
+
+            matched_items.append(
+                {
+                    "quotation_item_id": quotation_item.id,
+                    "inventory_item_id": inventory_item.id,
+                    "item_code": quotation_item.item_code,
+                    "item_name": quotation_item.item_name,
+                    "required_quantity": round(quotation_item.quantity, 3),
+                    "unit_price": quotation_item.unit_price,
+                    "current_stock": round(inventory_item.current_stock, 3),
+                    "target_stock": inventory_item.target_stock,
+                    "shortage_quantity": round(_get_shortage_quantity(inventory_item), 3),
+                }
+            )
+
+        if not matched_items:
+            continue
+
+        results.append(
+            {
+                "quotation_document_id": document.id,
+                "quotation_no": document.quotation_no,
+                "quotation_date": document.quotation_date,
+                "recipient_company_name": document.recipient_company_name,
+                "project_name": document.project_name,
+                "delivery_terms": document.delivery_terms,
+                "source_filename": document.source_filename,
+                "shortage_item_count": len(matched_items),
+                "shortage_items": matched_items,
+            }
+        )
+
+    return results

@@ -5,6 +5,7 @@ from app.database import get_session
 from app.schemas.common import success_response
 from app.services.inventory_service import (
     get_inventory_dashboard,
+    list_shortage_quotation_documents,
     list_inventory_items,
     sync_inventory_items,
 )
@@ -72,6 +73,28 @@ def get_inventory_items(
         return success_response(
             data=items,
             message="재고 목록을 조회했습니다.",
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get(
+    "/repositories/{repository_id}/shortage-quotations",
+    summary="부족 재고 연관 견적서 목록 조회",
+    description=(
+        "현재 재고가 목표 재고보다 부족한 품목과 견적서 품목을 매칭하여, "
+        "부족 재고가 포함된 견적서 목록과 각 견적서 안의 부족 품목 하위 목록을 함께 반환합니다."
+    ),
+)
+def get_shortage_quotations(
+    repository_id: str,
+    session: Session = Depends(get_session),
+):
+    try:
+        data = list_shortage_quotation_documents(session, repository_id)
+        return success_response(
+            data=data,
+            message="부족 재고 연관 견적서 목록을 조회했습니다.",
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

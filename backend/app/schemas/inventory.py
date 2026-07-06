@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import date, datetime
 
 
 class InventorySyncResponse(BaseModel):
@@ -49,3 +49,27 @@ class InventoryItemResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     is_shortage: bool
+
+
+class ShortageQuotationItemResponse(BaseModel):
+    quotation_item_id: str
+    inventory_item_id: str
+    item_code: str
+    item_name: str
+    required_quantity: float
+    unit_price: float | None = None
+    current_stock: float
+    target_stock: float | None = None
+    shortage_quantity: float
+
+
+class ShortageQuotationDocumentResponse(BaseModel):
+    quotation_document_id: str
+    quotation_no: str
+    quotation_date: date | None = None
+    recipient_company_name: str | None = None
+    project_name: str | None = None
+    delivery_terms: str | None = None
+    source_filename: str | None = None
+    shortage_item_count: int
+    shortage_items: list[ShortageQuotationItemResponse]

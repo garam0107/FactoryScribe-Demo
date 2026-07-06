@@ -157,6 +157,7 @@ export function MainPage() {
             <OrderPage repositoryId={REPOSITORY_ID} />
           ) : activeSection === 'inventory' ? (
             <InventoryManagementPage
+              repositoryId={REPOSITORY_ID}
               dashboard={dashboard}
               items={items}
               isLoading={isLoading}
