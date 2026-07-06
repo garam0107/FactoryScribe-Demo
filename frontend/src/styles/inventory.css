@@ -527,3 +527,130 @@
 .inventory-shortage-subcheck input {
   pointer-events: none;
 }
+
+.inventory-add-modal {
+  justify-content: flex-start;
+}
+
+.inventory-add-content {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.inventory-add-attachment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  background: var(--azure-100);
+  color: var(--azure-700);
+  cursor: pointer;
+}
+
+.inventory-add-attachment input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.inventory-add-attachment img {
+  width: clamp(72px, 7vw, 100px);
+  height: clamp(72px, 7vw, 100px);
+}
+
+.inventory-add-attachment span {
+  color: var(--azure-700);
+  font-size: clamp(20px, 1.8vw, 24px);
+  font-weight: 700;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.inventory-add-attachment:hover span {
+  color: var(--azure-700);
+}
+
+.inventory-add-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.inventory-add-quote-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 40px;
+  overflow: hidden;
+}
+
+.inventory-add-quote-row span {
+  color: var(--black);
+  font-size: clamp(18px, 1.5vw, 20px);
+  font-weight: 400;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.inventory-add-more-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0 0 6px;
+  border: 1px solid var(--black);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--black);
+  font-size: 24px;
+  line-height: 20px;
+}
+
+.inventory-add-bom-title {
+  color: var(--black);
+  font-size: clamp(18px, 1.5vw, 20px);
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.inventory-add-bom-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: transparent;
+  border-top: 1px solid var(--black);
+  padding: 0 8px;
+}
+
+.inventory-add-bom-row {
+  height: 40px;
+  border-top: 1px solid #ddd;
+  background: var(--white);
+}
+
+.inventory-add-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(12px, 1.2vw, 16px);
+  flex: 0 0 auto;
+  margin-top: clamp(18px, 1.8vw, 24px);
+}

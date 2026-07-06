@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import {
   getShortageQuotations,
 } from '../api/inventory'
 import caretDownIcon from '../assets/icons/caret-down.svg'
 import chevronDownIcon from '../assets/icons/chevron-down.svg'
+import filePlusIcon from '../assets/icons/file-plus.svg'
 import searchIcon from '../assets/icons/search.svg'
 import type {
   InventoryDashboard,
@@ -154,6 +156,7 @@ export function InventoryManagementPage({
   const [shortageErrorMessage, setShortageErrorMessage] = useState<string | null>(
     null,
   )
+  const [isInventoryAddModalOpen, setIsInventoryAddModalOpen] = useState(false)
   const [expandedQuotationId, setExpandedQuotationId] = useState<string | null>(
     null,
   )
@@ -199,6 +202,41 @@ export function InventoryManagementPage({
       ignore = true
     }
   }, [activeTab, hasAttemptedShortageQuotations, repositoryId])
+
+  useEffect(() => {
+    if (!isInventoryAddModalOpen) {
+      return
+    }
+
+    const scrollY = window.scrollY
+    const { body, documentElement } = document
+    const previousBodyOverflow = body.style.overflow
+    const previousBodyPosition = body.style.position
+    const previousBodyTop = body.style.top
+    const previousBodyLeft = body.style.left
+    const previousBodyRight = body.style.right
+    const previousBodyWidth = body.style.width
+    const previousHtmlOverflow = documentElement.style.overflow
+
+    body.style.overflow = 'hidden'
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    body.style.width = '100%'
+    documentElement.style.overflow = 'hidden'
+
+    return () => {
+      body.style.overflow = previousBodyOverflow
+      body.style.position = previousBodyPosition
+      body.style.top = previousBodyTop
+      body.style.left = previousBodyLeft
+      body.style.right = previousBodyRight
+      body.style.width = previousBodyWidth
+      documentElement.style.overflow = previousHtmlOverflow
+      window.scrollTo(0, scrollY)
+    }
+  }, [isInventoryAddModalOpen])
 
   const totalItems = dashboard?.total_items ?? items.length
   const shortageItems =
@@ -376,6 +414,7 @@ export function InventoryManagementPage({
   )
 
   return (
+    <>
     <section className="inventory-management-page" aria-label="재고 관리">
       <div className="inventory-page-header">
         <nav className="inventory-page-tabs" aria-label="재고 관리 탭">
@@ -402,7 +441,11 @@ export function InventoryManagementPage({
               </h2>
 
               <div className="inventory-page-actions">
-                <button className="inventory-add-button" type="button">
+                <button
+                  className="inventory-add-button"
+                  type="button"
+                  onClick={() => setIsInventoryAddModalOpen(true)}
+                >
                   재고 추가
                 </button>
                 <button
@@ -582,7 +625,11 @@ export function InventoryManagementPage({
               </h2>
 
               <div className="inventory-page-actions">
-                <button className="inventory-add-button" type="button">
+                <button
+                  className="inventory-add-button"
+                  type="button"
+                  onClick={() => setIsInventoryAddModalOpen(true)}
+                >
                   재고 추가
                 </button>
                 <button
@@ -686,5 +733,68 @@ export function InventoryManagementPage({
         )}
       </div>
     </section>
+    {isInventoryAddModalOpen
+      ? createPortal(
+          <div className="bulk-order-backdrop" role="presentation">
+            <section
+              className="bulk-order-modal inventory-add-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label="재고 추가"
+            >
+              <p className="bulk-order-description">재고 추가</p>
+
+              <div className="inventory-add-content">
+                <label className="inventory-add-attachment">
+                  <input type="file" accept=".xlsx,.xls,.csv,.pdf,image/*" />
+                  <img src={filePlusIcon} alt="" />
+                  <span>여기에 거래명세서 첨부</span>
+                </label>
+
+                <div className="inventory-add-preview">
+                  <div className="inventory-add-quote-row">
+                    <span>견적서명 :</span>
+                    <button
+                      className="inventory-add-more-button"
+                      type="button"
+                      aria-label="견적서 더보기"
+                    >
+                      ...
+                    </button>
+                  </div>
+
+                  <strong className="inventory-add-bom-title">예상 BOM</strong>
+
+                  <div className="inventory-add-bom-list" aria-hidden="true">
+                    {Array.from({ length: 12 }).map((_, index) => (
+                      <div className="inventory-add-bom-row" key={index} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="inventory-add-actions">
+                <button
+                  className="bulk-order-cancel"
+                  type="button"
+                  onClick={() => setIsInventoryAddModalOpen(false)}
+                >
+                  취소
+                </button>
+                <button
+                  className="bulk-order-submit"
+                  type="button"
+                  onClick={() => setIsInventoryAddModalOpen(false)}
+                >
+                  발주 신청 진행
+                </button>
+              </div>
+            </section>
+          </div>,
+          document.body,
+        )
+      : null}
+    </>
   )
 }
+
