@@ -1,5 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
+import * as XLSX from 'xlsx'
 
 import {
   getShortageQuotations,
@@ -24,6 +25,15 @@ type InventoryManagementPageProps = {
 }
 
 type InventoryTab = 'total' | 'shortage' | 'comparison'
+type PreviewFileKind = 'image' | 'pdf' | 'xlsx' | 'unknown'
+
+type InventoryPreviewFile = {
+  id: string
+  name: string
+  kind: PreviewFileKind
+  objectUrl: string | null
+  rows: string[][]
+}
 
 const PAGE_SIZE = 9
 
@@ -35,6 +45,73 @@ const inventoryTabs: { value: InventoryTab; label: string }[] = [
 
 function normalizeText(value: string | number | null | undefined) {
   return value == null ? '' : String(value).trim().toLowerCase()
+}
+
+function getPreviewFileKind(file: File): PreviewFileKind {
+  const extension = file.name.split('.').pop()?.toLowerCase()
+
+  if (file.type.startsWith('image/')) {
+    return 'image'
+  }
+
+  if (file.type === 'application/pdf' || extension === 'pdf') {
+    return 'pdf'
+  }
+
+  if (extension === 'xlsx' || extension === 'xls' || extension === 'csv') {
+    return 'xlsx'
+  }
+
+  return 'unknown'
+}
+
+async function createInventoryPreviewFile(file: File): Promise<InventoryPreviewFile> {
+  const kind = getPreviewFileKind(file)
+  const id = `${file.name}-${file.lastModified}-${file.size}-${crypto.randomUUID()}`
+
+  if (kind === 'image' || kind === 'pdf') {
+    return {
+      id,
+      name: file.name,
+      kind,
+      objectUrl: URL.createObjectURL(file),
+      rows: [],
+    }
+  }
+
+  if (kind === 'xlsx') {
+    const buffer = await file.arrayBuffer()
+    const workbook = XLSX.read(buffer, { type: 'array' })
+    const firstSheetName = workbook.SheetNames[0]
+    const worksheet = firstSheetName ? workbook.Sheets[firstSheetName] : null
+    const rawRows = worksheet
+      ? XLSX.utils.sheet_to_json<unknown[]>(worksheet, {
+          header: 1,
+          raw: false,
+          blankrows: false,
+        })
+      : []
+    const rows = rawRows
+      .map((row) => row.slice(0, 8).map((cell) => String(cell ?? '')))
+      .filter((row) => row.some((cell) => cell.trim()))
+      .slice(0, 18)
+
+    return {
+      id,
+      name: file.name,
+      kind,
+      objectUrl: null,
+      rows,
+    }
+  }
+
+  return {
+    id,
+    name: file.name,
+    kind,
+    objectUrl: null,
+    rows: [],
+  }
 }
 
 function formatPrice(item: InventoryItem) {
@@ -157,6 +234,15 @@ export function InventoryManagementPage({
     null,
   )
   const [isInventoryAddModalOpen, setIsInventoryAddModalOpen] = useState(false)
+  const [inventoryPreviewFiles, setInventoryPreviewFiles] = useState<
+    InventoryPreviewFile[]
+  >([])
+  const [activePreviewFileId, setActivePreviewFileId] = useState<string | null>(
+    null,
+  )
+  const [selectedPreviewFileIds, setSelectedPreviewFileIds] = useState<
+    Set<string>
+  >(() => new Set())
   const [expandedQuotationId, setExpandedQuotationId] = useState<string | null>(
     null,
   )
@@ -311,6 +397,18 @@ export function InventoryManagementPage({
   const allVisibleSelected =
     visibleItemIds.length > 0 &&
     visibleItemIds.every((itemId) => selectedItemIds.has(itemId))
+  const activePreviewFile =
+    inventoryPreviewFiles.find((file) => file.id === activePreviewFileId) ??
+    inventoryPreviewFiles[0] ??
+    null
+
+  const revokePreviewFiles = (files: InventoryPreviewFile[]) => {
+    files.forEach((file) => {
+      if (file.objectUrl) {
+        URL.revokeObjectURL(file.objectUrl)
+      }
+    })
+  }
 
   const toggleVisibleRows = () => {
     setSelectedItemIds((currentIds) => {
@@ -338,6 +436,80 @@ export function InventoryManagementPage({
 
       return nextIds
     })
+  }
+
+  const handleInventoryFileChange = async (event: {
+    currentTarget: HTMLInputElement
+  }) => {
+    const input = event.currentTarget
+    const files = Array.from(input.files ?? [])
+
+    if (files.length === 0) {
+      return
+    }
+
+    try {
+      const previews = await Promise.all(files.map(createInventoryPreviewFile))
+      setInventoryPreviewFiles((currentFiles) => [...currentFiles, ...previews])
+      setSelectedPreviewFileIds((currentIds) => {
+        const nextIds = new Set(currentIds)
+        previews.forEach((preview) => nextIds.add(preview.id))
+        return nextIds
+      })
+      setActivePreviewFileId((currentId) => currentId ?? previews[0]?.id ?? null)
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : '파일 미리보기를 생성하지 못했습니다.',
+      )
+    } finally {
+      input.value = ''
+    }
+  }
+
+  const deleteActivePreviewFile = () => {
+    if (!activePreviewFile) {
+      return
+    }
+
+    const nextFiles = inventoryPreviewFiles.filter(
+      (file) => file.id !== activePreviewFile.id,
+    )
+    revokePreviewFiles([activePreviewFile])
+    setInventoryPreviewFiles(nextFiles)
+    setSelectedPreviewFileIds((currentIds) => {
+      const nextIds = new Set(currentIds)
+      nextIds.delete(activePreviewFile.id)
+      return nextIds
+    })
+    setActivePreviewFileId(nextFiles[0]?.id ?? null)
+  }
+
+  const resetPreviewFiles = () => {
+    revokePreviewFiles(inventoryPreviewFiles)
+    setInventoryPreviewFiles([])
+    setSelectedPreviewFileIds(new Set())
+    setActivePreviewFileId(null)
+  }
+
+  const togglePreviewFileSelection = (fileId: string) => {
+    setSelectedPreviewFileIds((currentIds) => {
+      const nextIds = new Set(currentIds)
+
+      if (nextIds.has(fileId)) {
+        nextIds.delete(fileId)
+      } else {
+        nextIds.add(fileId)
+      }
+
+      return nextIds
+    })
+  }
+
+  const closeInventoryAddModal = () => {
+    resetPreviewFiles()
+    setIsInventoryAddModalOpen(false)
   }
 
   const handleTabChange = (tab: InventoryTab) => {
@@ -412,6 +584,52 @@ export function InventoryManagementPage({
       </button>
     </div>
   )
+
+  const renderSpreadsheetPreview = (
+    file: InventoryPreviewFile,
+    variant: 'large' | 'thumbnail',
+  ) => (
+    <div className={`inventory-add-sheet-preview ${variant}`}>
+      {file.rows.length > 0 ? (
+        <table>
+          <tbody>
+            {file.rows.map((row, rowIndex) => (
+              <tr key={`${file.id}-row-${rowIndex}`}>
+                {row.map((cell, cellIndex) => (
+                  <td key={`${file.id}-cell-${rowIndex}-${cellIndex}`}>{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <span>표시할 시트 데이터가 없습니다.</span>
+      )}
+    </div>
+  )
+
+  const renderPreviewFile = (
+    file: InventoryPreviewFile,
+    variant: 'large' | 'thumbnail',
+  ) => {
+    if (file.kind === 'image' && file.objectUrl) {
+      return <img src={file.objectUrl} alt={file.name} />
+    }
+
+    if (file.kind === 'pdf' && file.objectUrl) {
+      return (
+        <object data={file.objectUrl} type="application/pdf" aria-label={file.name}>
+          <span>PDF 미리보기를 표시할 수 없습니다.</span>
+        </object>
+      )
+    }
+
+    if (file.kind === 'xlsx') {
+      return renderSpreadsheetPreview(file, variant)
+    }
+
+    return <span className="inventory-add-unsupported">미리보기 불가</span>
+  }
 
   return (
     <>
@@ -742,18 +960,80 @@ export function InventoryManagementPage({
               aria-modal="true"
               aria-label="재고 추가"
             >
-              <p className="bulk-order-description">재고 추가</p>
+              <div className="inventory-add-heading">
+                <p className="bulk-order-description">재고 추가</p>
+              </div>
 
-              <div className="inventory-add-content">
-                <label className="inventory-add-attachment">
-                  <input type="file" accept=".xlsx,.xls,.csv,.pdf,image/*" />
-                  <img src={filePlusIcon} alt="" />
-                  <span>여기에 거래명세서 첨부</span>
-                </label>
+              <div
+                className={`inventory-add-content${
+                  activePreviewFile ? ' has-files' : ''
+                }`}
+              >
+                {activePreviewFile ? (
+                  <div className="inventory-add-preview-zone">
+                    <div className="inventory-add-preview-toolbar">
+                      <span>총 {inventoryPreviewFiles.length}건 선택됨</span>
+                      <div className="inventory-add-file-actions">
+                        <button type="button" onClick={deleteActivePreviewFile}>
+                          현재 명세서 삭제
+                        </button>
+                        <button type="button" onClick={resetPreviewFiles}>
+                          초기화
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="inventory-add-preview-body">
+                      <div className="inventory-add-main-preview">
+                        {renderPreviewFile(activePreviewFile, 'large')}
+                      </div>
+
+                      <aside className="inventory-add-file-sidebar">
+                        <div className="inventory-add-file-list">
+                          {inventoryPreviewFiles.map((file) => (
+                            <button
+                              className={
+                                file.id === activePreviewFile.id ? 'active' : ''
+                              }
+                              type="button"
+                              key={file.id}
+                              onClick={() => setActivePreviewFileId(file.id)}
+                              title={file.name}
+                            >
+                              {renderPreviewFile(file, 'thumbnail')}
+                            </button>
+                          ))}
+
+                          <label className="inventory-add-file-plus">
+                            <input
+                              type="file"
+                              accept=".xlsx,.xls,.csv,.pdf,image/*"
+                              multiple
+                              onChange={handleInventoryFileChange}
+                            />
+                            <span>+</span>
+                            <small>파일 추가</small>
+                          </label>
+                        </div>
+                      </aside>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="inventory-add-attachment">
+                    <input
+                      type="file"
+                      accept=".xlsx,.xls,.csv,.pdf,image/*"
+                      multiple
+                      onChange={handleInventoryFileChange}
+                    />
+                    <img src={filePlusIcon} alt="" />
+                    <span>여기에 거래명세서 첨부</span>
+                  </label>
+                )}
 
                 <div className="inventory-add-preview">
                   <div className="inventory-add-quote-row">
-                    <span>견적서명 :</span>
+                    <span>재고 목록 :</span>
                     <button
                       className="inventory-add-more-button"
                       type="button"
@@ -763,12 +1043,46 @@ export function InventoryManagementPage({
                     </button>
                   </div>
 
-                  <strong className="inventory-add-bom-title">예상 BOM</strong>
+                  <strong className="inventory-add-bom-title">거래명세서 상세 정보</strong>
 
-                  <div className="inventory-add-bom-list" aria-hidden="true">
-                    {Array.from({ length: 12 }).map((_, index) => (
-                      <div className="inventory-add-bom-row" key={index} />
-                    ))}
+                  <div className="inventory-add-bom-list">
+                    {inventoryPreviewFiles.length > 0 ? (
+                      <>
+                        {inventoryPreviewFiles.map((file) => (
+                          <div className="inventory-add-document-row" key={file.id}>
+                            <div className="inventory-add-document-main">
+                              <label className="order-check-button">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedPreviewFileIds.has(file.id)}
+                                  onChange={() => togglePreviewFileSelection(file.id)}
+                                  aria-label={`${file.name} 선택`}
+                                />
+                              </label>
+                              <span>{file.name}</span>
+                            </div>
+                            <div className="inventory-add-document-detail">
+                              <span>{file.kind.toUpperCase()}</span>
+                              <i aria-hidden="true" />
+                              <span>{file.id === activePreviewFile.id ? '현재 보기' : '-'}</span>
+                            </div>
+                          </div>
+                        ))}
+                        {Array.from({
+                          length: Math.max(0, 12 - inventoryPreviewFiles.length),
+                        }).map((_, index) => (
+                          <div
+                            className="inventory-add-bom-row"
+                            key={`inventory-add-empty-${index}`}
+                            aria-hidden="true"
+                          />
+                        ))}
+                      </>
+                    ) : (
+                      Array.from({ length: 12 }).map((_, index) => (
+                        <div className="inventory-add-bom-row" key={index} />
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
@@ -777,16 +1091,16 @@ export function InventoryManagementPage({
                 <button
                   className="bulk-order-cancel"
                   type="button"
-                  onClick={() => setIsInventoryAddModalOpen(false)}
+                  onClick={closeInventoryAddModal}
                 >
                   취소
                 </button>
                 <button
                   className="bulk-order-submit"
                   type="button"
-                  onClick={() => setIsInventoryAddModalOpen(false)}
+                  onClick={closeInventoryAddModal}
                 >
-                  발주 신청 진행
+                  재고 추가
                 </button>
               </div>
             </section>
@@ -797,4 +1111,3 @@ export function InventoryManagementPage({
     </>
   )
 }
-
