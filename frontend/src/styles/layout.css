@@ -26,6 +26,121 @@
   gap: 8px;
 }
 
+.global-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 60px 48px;
+  background: rgb(119 119 119 / 35%);
+  backdrop-filter: blur(4px);
+}
+
+.global-search-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.global-search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 72px;
+  padding: 24px;
+  border-radius: 56px;
+  background: var(--white);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 8%);
+}
+
+.global-search-field img {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
+.global-search-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--black);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.global-search-field input::placeholder {
+  color: var(--black);
+  opacity: 1;
+}
+
+.global-search-results,
+.global-search-empty {
+  width: 100%;
+  border-radius: 24px;
+  background: var(--white);
+}
+
+.global-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 32px;
+}
+
+.global-search-result-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.global-search-result-title,
+.global-search-result-item {
+  width: 100%;
+  border: 0;
+  background: var(--white);
+  color: var(--black);
+  text-align: left;
+}
+
+.global-search-result-title {
+  padding: 24px;
+  font-size: 32px;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.global-search-result-item {
+  padding: 24px 48px;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.global-search-result-title:hover,
+.global-search-result-item:hover,
+.global-search-result-title:focus-visible,
+.global-search-result-item:focus-visible {
+  background: var(--gray-100);
+  outline: none;
+}
+
+.global-search-empty {
+  padding: 32px;
+  color: var(--gray-700);
+  font-size: 20px;
+  line-height: 28px;
+}
+
 .brand {
   display: inline-flex;
   align-items: center;

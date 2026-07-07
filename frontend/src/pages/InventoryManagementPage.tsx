@@ -22,9 +22,11 @@ type InventoryManagementPageProps = {
   items: InventoryItem[]
   isLoading: boolean
   errorMessage: string | null
+  activeTab?: InventoryTab
+  onTabChange?: (tab: InventoryTab) => void
 }
 
-type InventoryTab = 'total' | 'shortage' | 'comparison'
+export type InventoryTab = 'total' | 'shortage' | 'comparison'
 type PreviewFileKind = 'image' | 'pdf' | 'xlsx' | 'unknown'
 
 type InventoryPreviewFile = {
@@ -216,8 +218,12 @@ export function InventoryManagementPage({
   items,
   isLoading,
   errorMessage,
+  activeTab: controlledActiveTab,
+  onTabChange,
 }: InventoryManagementPageProps) {
-  const [activeTab, setActiveTab] = useState<InventoryTab>('total')
+  const [internalActiveTab, setInternalActiveTab] =
+    useState<InventoryTab>('total')
+  const activeTab = controlledActiveTab ?? internalActiveTab
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
@@ -513,7 +519,11 @@ export function InventoryManagementPage({
   }
 
   const handleTabChange = (tab: InventoryTab) => {
-    setActiveTab(tab)
+    if (controlledActiveTab == null) {
+      setInternalActiveTab(tab)
+    }
+
+    onTabChange?.(tab)
     setCurrentPage(1)
     setQuery('')
     setSelectedItemIds(new Set())

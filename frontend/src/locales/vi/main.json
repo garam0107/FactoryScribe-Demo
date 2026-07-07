@@ -40,5 +40,25 @@
     "help": "Tôi có thể giúp gì cho bạn?",
     "askAnything": "Hãy hỏi tôi bất cứ điều gì.",
     "searchPlaceholder": "Vui lòng nhập tên linh kiện, đối tác giao dịch, số vận đơn, v.v."
+  },
+  "search": {
+    "placeholder": "Vui lòng nhập từ khóa tìm kiếm",
+    "empty": "Không tìm thấy kết quả tìm kiếm.",
+    "sections": {
+      "main": "Trang chính",
+      "orders": "Đơn đặt hàng",
+      "inventory": "Quản lý tồn kho"
+    },
+    "items": {
+      "overallStatus": "Tình trạng tổng thể",
+      "monthlyOrders": "Đơn đặt hàng tháng này",
+      "expectedConsumption": "Mức tiêu hao dự kiến",
+      "requiredOrders": "Đơn đặt hàng cần thiết",
+      "additionalOrders": "Đơn đặt hàng bổ sung",
+      "autoOrders": "Đơn đặt hàng tự động",
+      "totalInventory": "Tình trạng tồn kho tổng",
+      "lowStock": "Tồn kho thiếu hụt",
+      "quoteComparison": "So sánh báo giá"
+    }
   }
 }

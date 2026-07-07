@@ -40,5 +40,25 @@
     "help": "How can I help you?",
     "askAnything": "Ask me anything.",
     "searchPlaceholder": "Please enter a part name, client/vendor, tracking number, etc."
+  },
+  "search": {
+    "placeholder": "Please enter a search term",
+    "empty": "No search results found.",
+    "sections": {
+      "main": "Main",
+      "orders": "Purchase Orders",
+      "inventory": "Inventory Management"
+    },
+    "items": {
+      "overallStatus": "Overall Status",
+      "monthlyOrders": "This Month's Purchase Orders",
+      "expectedConsumption": "Expected Consumption",
+      "requiredOrders": "Required Orders",
+      "additionalOrders": "Additional Orders",
+      "autoOrders": "Auto Orders",
+      "totalInventory": "Total Inventory Status",
+      "lowStock": "Low Stock",
+      "quoteComparison": "Quote Comparison"
+    }
   }
 }

@@ -12,9 +12,11 @@ const PAGE_SIZE = 9
 
 type OrderPageProps = {
   repositoryId: string
+  activeTab?: OrderTab
+  onTabChange?: (tab: OrderTab) => void
 }
 
-type OrderTab = 'required' | 'additional' | 'auto'
+export type OrderTab = 'required' | 'additional' | 'auto'
 
 type OrderRow = {
   id: string
@@ -233,8 +235,14 @@ function getEmptyMessage(activeTab: OrderTab) {
   return '표시할 필요 발주 품목이 없습니다.'
 }
 
-export function OrderPage({ repositoryId }: OrderPageProps) {
-  const [activeTab, setActiveTab] = useState<OrderTab>('required')
+export function OrderPage({
+  repositoryId,
+  activeTab: controlledActiveTab,
+  onTabChange,
+}: OrderPageProps) {
+  const [internalActiveTab, setInternalActiveTab] =
+    useState<OrderTab>('required')
+  const activeTab = controlledActiveTab ?? internalActiveTab
   const [requiredOrders, setRequiredOrders] = useState<RequiredOrderItem[]>([])
   const [autoOrders, setAutoOrders] = useState<InventoryItem[]>([])
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
@@ -446,6 +454,16 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
     })
   }
 
+  const handleTabChange = (tab: OrderTab) => {
+    if (controlledActiveTab == null) {
+      setInternalActiveTab(tab)
+    }
+
+    onTabChange?.(tab)
+    setCurrentPage(1)
+    setQuery('')
+  }
+
   return (
     <section className="order-page" aria-label="발주">
       <nav className="tabs order-tabs" aria-label="발주 탭">
@@ -454,11 +472,7 @@ export function OrderPage({ repositoryId }: OrderPageProps) {
             className={activeTab === tab.value ? 'active' : ''}
             type="button"
             key={tab.value}
-            onClick={() => {
-              setActiveTab(tab.value)
-              setCurrentPage(1)
-              setQuery('')
-            }}
+            onClick={() => handleTabChange(tab.value)}
           >
             {tab.label}
           </button>

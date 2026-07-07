@@ -40,5 +40,25 @@
     "help": "무엇을 도와드릴까요?",
     "askAnything": "무엇이든 물어보세요.",
     "searchPlaceholder": "부품명, 거래처, 운송장 번호 등을 입력해주세요."
+  },
+  "search": {
+    "placeholder": "검색어를 입력해주세요",
+    "empty": "검색 결과가 없습니다.",
+    "sections": {
+      "main": "메인",
+      "orders": "발주",
+      "inventory": "재고 관리"
+    },
+    "items": {
+      "overallStatus": "전체 현황",
+      "monthlyOrders": "이번 달 발주",
+      "expectedConsumption": "예상 소모도",
+      "requiredOrders": "필요 발주",
+      "additionalOrders": "추가 발주",
+      "autoOrders": "자동 발주",
+      "totalInventory": "총 재고 현황",
+      "lowStock": "부족 재고",
+      "quoteComparison": "견적서 비교"
+    }
   }
 }
