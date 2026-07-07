@@ -14,8 +14,8 @@
     "dataGraph": "Data Graph",
     "sortByName": "By Name",
     "remainingQuantity": "Remaining Quantity",
-    "viewMore" : "ViewMore",
-    "close" : "Close",
+    "viewMore": "View More",
+    "close": "Close",
     "recentSupplierPartPriceChanges": "Recent Part Price Changes by Supplier (Based on Transaction History)",
     "monthlyConsumableUsageActualTransactions": "Monthly Consumable Usage / Actual Inbound and Outbound Transactions",
     "monthlyOrdersSummary": "There are {{total}} purchase orders this month, and {{shipping}} are currently in transit.",
@@ -25,7 +25,15 @@
     "monthlyOrdersSummaryEnd": "",
     "expectedShortageSummary": "Based on this year's expected consumption analysis, {{itemName}} is expected to have the greatest shortage.",
     "expectedShortageSummaryStart": "Based on this year's expected consumption analysis,",
-    "expectedShortageSummaryEnd": "is expected to have the greatest shortage."
+    "expectedShortageSummaryEnd": "is expected to have the greatest shortage.",
+    "priceChangeNoData": "No price change from previous month",
+    "priceChangeText": "{{rate}} price {{direction}} from previous month",
+    "priceIncrease": "increase",
+    "priceDecrease": "decrease",
+    "previousYearUsageQuantity": "Previous Year Usage Quantity",
+    "currentRemainingQuantity": "Current Remaining Quantity",
+    "currentYearExpectedUsageQuantity": "Expected Usage Quantity This Year",
+    "priceChangeAria": "{{itemName}} previous month price change"
   },
   "chat": {
     "greeting": "Hello, 김OO님. ",

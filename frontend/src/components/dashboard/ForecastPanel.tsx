@@ -70,13 +70,16 @@ function getPriceChangeRate(item: InventoryItem) {
   )
 }
 
-function formatPriceChange(item: InventoryItem) {
+function formatPriceChange(
+  item: InventoryItem,
+  t: (key: string, options?: Record<string, string>) => string,
+) {
   const changeRate = getPriceChangeRate(item)
 
   if (changeRate == null) {
     return {
       className: 'neutral',
-      text: '전월 대비 가격 변화 없음',
+      text: t('dashboard.priceChangeNoData'),
     }
   }
 
@@ -85,7 +88,12 @@ function formatPriceChange(item: InventoryItem) {
 
   return {
     className: isIncrease ? 'increase' : 'decrease',
-    text: `전월 대비 ${signedRate} 가격 ${isIncrease ? '상승' : '하락'}`,
+    text: t('dashboard.priceChangeText', {
+      rate: signedRate,
+      direction: t(
+        isIncrease ? 'dashboard.priceIncrease' : 'dashboard.priceDecrease',
+      ),
+    }),
   }
 }
 
@@ -166,6 +174,8 @@ function ForecastCard({
   onClose: () => void
   onSelectItem: (category: ForecastCategory, itemId: string) => void
 }) {
+  const { t } = useTranslation('main')
+
   if (isExpanded) {
     return (
       <article className="forecast-card forecast-card-expanded">
@@ -176,7 +186,7 @@ function ForecastCard({
             type="button"
             onClick={onClose}
           >
-            <span>닫기</span>
+            <span>{t('dashboard.close')}</span>
             <img src={chevronRightIcon} alt="" aria-hidden="true" />
           </button>
         </header>
@@ -220,7 +230,7 @@ function ForecastCard({
             type="button"
             onClick={() => onExpand(category)}
           >
-            <span>더 보기</span>
+            <span>{t('dashboard.viewMore')}</span>
             <img src={chevronRightIcon} alt="" aria-hidden="true" />
           </button>
         </header>
@@ -237,7 +247,7 @@ function ForecastCard({
     item.current_remaining_quantity ?? item.current_stock ?? null
   const expectedQuantity = item.current_year_expected_quantity
   const additionalNeeded = getAdditionalNeeded(item)
-  const priceChange = formatPriceChange(item)
+  const priceChange = formatPriceChange(item, t)
 
   return (
     <article className="forecast-card">
@@ -248,7 +258,7 @@ function ForecastCard({
           type="button"
           onClick={() => onExpand(category)}
         >
-          <span>더 보기</span>
+          <span>{t('dashboard.viewMore')}</span>
           <img src={chevronRightIcon} alt="" aria-hidden="true" />
         </button>
       </header>
@@ -270,15 +280,15 @@ function ForecastCard({
       <div className="forecast-quantity-box">
         <dl className="forecast-quantities">
           <div>
-            <dt>전년도 사용 수량</dt>
+            <dt>{t('dashboard.previousYearUsageQuantity')}</dt>
             <dd className="muted">{formatNumber(previousYearUsage)} 개</dd>
           </div>
           <div>
-            <dt>현 시점 잔여 수량</dt>
+            <dt>{t('dashboard.currentRemainingQuantity')}</dt>
             <dd>{formatNumber(remainingQuantity)} 개</dd>
           </div>
           <div>
-            <dt>금년도 예상 사용 수량</dt>
+            <dt>{t('dashboard.currentYearExpectedUsageQuantity')}</dt>
             <dd>{formatNumber(expectedQuantity)} 개</dd>
           </div>
         </dl>

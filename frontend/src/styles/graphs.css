@@ -143,7 +143,7 @@
   justify-content: flex-start;
   gap: 12px;
   min-width: 0;
-  white-space: nowrap;
+  flex-wrap: wrap;
 }
 
 .price-card-value-row strong {
@@ -156,13 +156,15 @@
 }
 
 .price-card-value-row span {
-  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
   color: var(--red-500);
-  font-size: 13px;
+  font-size: clamp(12px, 0.9vw, 13px);
   font-weight: 500;
   line-height: 16px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .price-card-value-row span.decrease {

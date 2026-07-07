@@ -42,7 +42,7 @@ export function DashboardInventoryTable({
     <div className="inventory-list">
       <div className="inventory-list-header">
         <button className="sort-button" type="button" onClick={onToggleSort}>
-          <span>이름순</span>
+          <span>{t('dashboard.sortByName')}</span>
           <img
             className={sortDirection === 'desc' ? 'rotate' : ''}
             src={caretDownIcon}
@@ -72,7 +72,9 @@ export function DashboardInventoryTable({
               </div>
               <div className="item-detail">
                 <span>{formatCurrency(item.current_unit_price)}</span>
-                <span>잔여 수량 : {formatStock(item)}</span>
+                <span>
+                  {t('dashboard.remainingQuantity')} : {formatStock(item)}
+                </span>
               </div>
             </article>
           ))}
@@ -80,7 +82,7 @@ export function DashboardInventoryTable({
             <button
               className="show-more-button"
               type="button"
-              aria-label="재고 10개 더 보기"
+              aria-label={t('dashboard.viewMore')}
               onClick={onShowMore}
             >
               <img src={chevronDownIcon} alt="" />

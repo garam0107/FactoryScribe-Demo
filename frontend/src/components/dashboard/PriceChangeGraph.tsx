@@ -145,13 +145,25 @@ export function PriceChangeGraph({ item }: PriceChangeGraphProps) {
           <div className="price-card-value-row">
             <strong>{formatCurrency(currentPrice)} KRW</strong>
             <span className={isIncrease ? 'increase' : 'decrease'}>
-              전월 대비 {changeText} 가격 {isIncrease ? '상승' : '하락'}
+              {t('dashboard.priceChangeText', {
+                rate: changeText,
+                direction: t(
+                  isIncrease
+                    ? 'dashboard.priceIncrease'
+                    : 'dashboard.priceDecrease',
+                ),
+              })}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="price-chart" aria-label={`${item.item_name} 전월 대비 가격 변화`}>
+      <div
+        className="price-chart"
+        aria-label={t('dashboard.priceChangeAria', {
+          itemName: item.item_name,
+        })}
+      >
         <svg
           viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
           role="img"

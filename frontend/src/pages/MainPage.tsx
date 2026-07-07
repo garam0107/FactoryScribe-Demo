@@ -181,7 +181,7 @@ export function MainPage() {
                   <img src={plusIcon} alt="" />
                   <input
                     aria-label="질문 입력"
-                    placeholder={t('chat.askAnything')}
+                    placeholder={t('chat.searchPlaceholder')}
                     type="text"
                   />
                   <button type="button" aria-label="질문 검색">

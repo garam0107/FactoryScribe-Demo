@@ -71,13 +71,13 @@
 
 .purchase-search input {
   width: 100%;
-  max-width: 360px;
+  max-width: 520px;
   padding: 0;
   border: 0;
   outline: 0;
   background: transparent;
   color: var(--black);
-  font-size: 15px;
+  font-size: clamp(12px, 1vw, 15px);
   line-height: 20px;
   text-align: right;
 }

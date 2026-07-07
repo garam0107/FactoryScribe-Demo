@@ -14,8 +14,8 @@
     "dataGraph": "Biểu đồ dữ liệu",
     "sortByName": "Theo tên",
     "remainingQuantity": "Số lượng còn lại",
-    "viewMore" : "Xem thêm",
-    "close" : "Đóng",
+    "viewMore": "Xem thêm",
+    "close": "Đóng",
     "recentSupplierPartPriceChanges": "Biến động giá linh kiện gần đây theo nhà cung cấp (dựa trên lịch sử giao dịch)",
     "monthlyConsumableUsageActualTransactions": "Lượng sử dụng vật tư tiêu hao hàng tháng / giao dịch nhập xuất thực tế",
     "monthlyOrdersSummary": "Tháng này có tổng cộng {{total}} đơn đặt hàng, trong đó {{shipping}} đơn hiện đang được vận chuyển.",
@@ -25,7 +25,15 @@
     "monthlyOrdersSummaryEnd": "",
     "expectedShortageSummary": "Dựa trên phân tích mức tiêu hao dự kiến trong năm nay, {{itemName}} được dự báo sẽ thiếu hụt nhiều nhất.",
     "expectedShortageSummaryStart": "Dựa trên phân tích mức tiêu hao dự kiến trong năm nay,",
-    "expectedShortageSummaryEnd": "được dự báo sẽ thiếu hụt nhiều nhất."
+    "expectedShortageSummaryEnd": "được dự báo sẽ thiếu hụt nhiều nhất.",
+    "priceChangeNoData": "Không có thay đổi giá so với tháng trước",
+    "priceChangeText": "Giá {{direction}} {{rate}} so với tháng trước",
+    "priceIncrease": "tăng",
+    "priceDecrease": "giảm",
+    "previousYearUsageQuantity": "Số lượng sử dụng năm trước",
+    "currentRemainingQuantity": "Số lượng còn lại hiện tại",
+    "currentYearExpectedUsageQuantity": "Số lượng sử dụng dự kiến năm nay",
+    "priceChangeAria": "Biến động giá của {{itemName}} so với tháng trước"
   },
   "chat": {
     "greeting": "Xin chào, 김OO님. ",

@@ -148,7 +148,7 @@ export function MonthlyPurchaseOrdersPanel({
               setCurrentPage(1)
             }}
           >
-            <span>이름 순</span>
+            <span>{t('dashboard.sortByName')}</span>
             <img
               className={sortDirection === 'desc' ? 'rotate' : ''}
               src={caretDownIcon}
@@ -160,7 +160,7 @@ export function MonthlyPurchaseOrdersPanel({
             <input
               type="search"
               value={query}
-              placeholder="부품명, 거래처, 운송장 번호 등을 입력해주세요."
+              placeholder={t('chat.searchPlaceholder')}
               aria-label="발주 검색"
               onChange={(event) => {
                 setQuery(event.target.value)

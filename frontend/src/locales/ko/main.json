@@ -14,8 +14,8 @@
     "remainingQuantity": "잔여 수량",
     "dataGraph": "데이터 그래프",
     "sortByName": "이름 순",
-    "viewMore" : "더 보기",
-    "close" : "닫기",
+    "viewMore": "더 보기",
+    "close": "닫기",
     "recentSupplierPartPriceChanges": "납품업체 최근 부품 가격 변화(거래 내역 기반)",
     "monthlyConsumableUsageActualTransactions": "월별 소모품 사용량 / 출납 실거래량",
     "monthlyOrdersSummary": "이번 달 발주는 총 {{total}}건으로, 현재 {{shipping}}건이 배송중 입니다.",
@@ -25,7 +25,15 @@
     "monthlyOrdersSummaryEnd": "입니다.",
     "expectedShortageSummary": "금년 예상 소모도 분석 결과, {{itemName}}가 가장 부족할 것으로 예상됩니다.",
     "expectedShortageSummaryStart": "금년 예상 소모도 분석 결과,",
-    "expectedShortageSummaryEnd": "가 가장 부족할 것으로 예상됩니다."
+    "expectedShortageSummaryEnd": "가 가장 부족할 것으로 예상됩니다.",
+    "priceChangeNoData": "전월 대비 가격 변화 없음",
+    "priceChangeText": "전월 대비 {{rate}} 가격 {{direction}}",
+    "priceIncrease": "상승",
+    "priceDecrease": "하락",
+    "previousYearUsageQuantity": "전년도 사용 수량",
+    "currentRemainingQuantity": "현 시점 잔여 수량",
+    "currentYearExpectedUsageQuantity": "금년도 예상 사용 수량",
+    "priceChangeAria": "{{itemName}} 전월 대비 가격 변화"
   },
   "chat": {
     "greeting": "안녕하세요. 김OO님.",
