@@ -1,4 +1,5 @@
 import { type CSSProperties, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { getInventoryDashboard, getInventoryItems } from '../api/inventory'
 import blackSearchIcon from '../assets/icons/black_search.svg'
@@ -12,6 +13,7 @@ import {
 import { ForecastPanel } from '../components/dashboard/ForecastPanel'
 import { MonthlyPurchaseOrdersPanel } from '../components/dashboard/MonthlyPurchaseOrdersPanel'
 import { OverviewPanel } from '../components/dashboard/OverviewPanel'
+import { LanguageSelector } from '../components/layout/LanguageSelector'
 import { MainSidebar, type AppSection } from '../components/layout/MainSidebar'
 import type { InventoryDashboard, InventoryItem } from '../types/inventory'
 import { InventoryManagementPage } from './InventoryManagementPage'
@@ -34,6 +36,7 @@ function getSectionFromHash(): AppSection {
 }
 
 export function MainPage() {
+  const { t } = useTranslation('main')
   const [activeSection, setActiveSection] =
     useState<AppSection>(getSectionFromHash)
   const [activeTab, setActiveTab] = useState<MainDashboardTab>('overview')
@@ -128,9 +131,12 @@ export function MainPage() {
           <img src={logomarkIcon} alt="" />
           <span>FAUTORY</span>
         </a>
-        <button className="icon-button" type="button" aria-label="검색">
-          <img src={blackSearchIcon} alt="" />
-        </button>
+        <div className="topbar-actions">
+          <button className="icon-button" type="button" aria-label="검색">
+            <img src={blackSearchIcon} alt="" />
+          </button>
+          <LanguageSelector />
+        </div>
       </header>
 
       <div className="workspace">
@@ -167,15 +173,15 @@ export function MainPage() {
             <>
               <section className="assistant-panel" aria-label="질문 입력">
                 <div className="greeting">
-                  <p className="hello">안녕하세요. 김OO님.</p>
-                  <p className="prompt">무엇을 도와드릴까요?</p>
+                  <p className="hello">{t('chat.greeting')}</p>
+                  <p className="prompt">{t('chat.help')}</p>
                 </div>
 
                 <label className="query-box">
                   <img src={plusIcon} alt="" />
                   <input
                     aria-label="질문 입력"
-                    placeholder="무엇이든 물어보세요."
+                    placeholder={t('chat.askAnything')}
                     type="text"
                   />
                   <button type="button" aria-label="질문 검색">

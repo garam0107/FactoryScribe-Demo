@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 export type MainDashboardTab = 'overview' | 'purchaseOrders' | 'forecast'
 
 type DashboardTabsProps = {
@@ -5,13 +7,15 @@ type DashboardTabsProps = {
   onTabChange: (tab: MainDashboardTab) => void
 }
 
-const tabs: { label: string; value: MainDashboardTab }[] = [
-  { label: '전체 현황', value: 'overview' },
-  { label: '이번 달 발주', value: 'purchaseOrders' },
-  { label: '예상 소모도', value: 'forecast' },
+const tabs: { labelKey: string; value: MainDashboardTab }[] = [
+  { labelKey: 'dashboard.overallStatus', value: 'overview' },
+  { labelKey: 'dashboard.monthlyOrders', value: 'purchaseOrders' },
+  { labelKey: 'dashboard.expectedConsumption', value: 'forecast' },
 ]
 
 export function DashboardTabs({ activeTab, onTabChange }: DashboardTabsProps) {
+  const { t } = useTranslation('main')
+
   return (
     <nav className="tabs" aria-label="대시보드 탭">
       {tabs.map((tab) => (
@@ -21,7 +25,7 @@ export function DashboardTabs({ activeTab, onTabChange }: DashboardTabsProps) {
           key={tab.value}
           onClick={() => onTabChange(tab.value)}
         >
-          {tab.label}
+          {t(tab.labelKey)}
         </button>
       ))}
     </nav>

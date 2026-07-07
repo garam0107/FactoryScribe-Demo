@@ -20,6 +20,12 @@
   backdrop-filter: blur(12px);
 }
 
+.topbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
@@ -59,6 +65,31 @@
 .icon-button img {
   width: 24px;
   height: 24px;
+}
+
+.language-selector {
+  display: inline-flex;
+  align-items: center;
+}
+
+.language-selector select {
+  height: 36px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--black);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.language-selector select:hover {
+  border-color: var(--gray-300);
+}
+
+.language-selector select:focus {
+  border-color: var(--azure-500);
+  outline: 2px solid var(--azure-100);
 }
 
 .workspace {
@@ -118,6 +149,12 @@
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
+}
+
+.side-link span {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .side-link.active img {
@@ -181,6 +218,7 @@
   font-size: 40px;
   font-weight: 650;
   line-height: 36px;
+  overflow-wrap: anywhere;
 }
 
 .prompt {
@@ -189,6 +227,7 @@
   font-size: 32px;
   font-weight: 400;
   line-height: 36px;
+  overflow-wrap: anywhere;
 }
 
 .query-box {

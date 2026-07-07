@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import type { InventoryItem } from '../../types/inventory'
 
 type PriceChangeGraphProps = {
@@ -30,7 +32,11 @@ function formatChangeRate(item: InventoryItem) {
     return 0
   }
 
-  return ((item.current_unit_price - item.previous_unit_price) / item.previous_unit_price) * 100
+  return (
+    ((item.current_unit_price - item.previous_unit_price) /
+      item.previous_unit_price) *
+    100
+  )
 }
 
 function buildYAxis(previousPrice: number, currentPrice: number) {
@@ -70,26 +76,30 @@ function yPosition(value: number, minValue: number, maxValue: number) {
 
 function buildSparklinePoints(previousPrice: number, currentPrice: number) {
   const delta = currentPrice - previousPrice
-  const anchors = [0, -0.12, -0.18, 0.38, 0.72, 0.82, 0.2, 0.2, 0.32, 0.28, 0.45, 0.32, 0.46, 0.24, 0.34, 0.2, 0.16, 1]
+  const anchors = [
+    0, -0.12, -0.18, 0.38, 0.72, 0.82, 0.2, 0.2, 0.32, 0.28, 0.45, 0.32,
+    0.46, 0.24, 0.34, 0.2, 0.16, 1,
+  ]
 
   return anchors.map((anchor, index) => ({
     x:
       CHART_PADDING.left +
-      ((CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right) *
-        index) /
+      ((CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right) * index) /
         (anchors.length - 1),
     value: previousPrice + delta * anchor,
   }))
 }
 
 export function PriceChangeGraph({ item }: PriceChangeGraphProps) {
+  const { t } = useTranslation('main')
+
   if (!item || item.current_unit_price == null || item.previous_unit_price == null) {
     return (
       <article className="price-graph-card">
         <div className="price-card-body">
           <div className="price-card-header">
-            <h3>납품업체 최근 부품 가격 변화 (거래 내역 기반)</h3>
-            <span aria-hidden="true">›</span>
+            <h3>{t('dashboard.recentSupplierPartPriceChanges')}</h3>
+            <span aria-hidden="true">...</span>
           </div>
         </div>
         <div className="empty-price-graph">표시할 가격 데이터가 없습니다.</div>
@@ -109,7 +119,9 @@ export function PriceChangeGraph({ item }: PriceChangeGraphProps) {
       return `${command} ${point.x} ${yPosition(point.value, minAxis, maxAxis)}`
     })
     .join(' ')
-  const areaPath = `${path} L ${CHART_WIDTH - CHART_PADDING.right} ${CHART_HEIGHT - CHART_PADDING.bottom} L ${CHART_PADDING.left} ${CHART_HEIGHT - CHART_PADDING.bottom} Z`
+  const areaPath = `${path} L ${CHART_WIDTH - CHART_PADDING.right} ${
+    CHART_HEIGHT - CHART_PADDING.bottom
+  } L ${CHART_PADDING.left} ${CHART_HEIGHT - CHART_PADDING.bottom} Z`
   const changeRate = formatChangeRate(item)
   const isIncrease = changeRate >= 0
   const changeText = `${isIncrease ? '+' : ''}${changeRate.toFixed(1)}%`
@@ -119,8 +131,8 @@ export function PriceChangeGraph({ item }: PriceChangeGraphProps) {
     <article className="price-graph-card">
       <div className="price-card-body">
         <div className="price-card-header">
-          <h3>납품업체 최근 부품 가격 변화 (거래 내역 기반)</h3>
-          <span aria-hidden="true">›</span>
+          <h3>{t('dashboard.recentSupplierPartPriceChanges')}</h3>
+          <span aria-hidden="true">...</span>
         </div>
 
         <div className="price-card-detail">
@@ -162,10 +174,7 @@ export function PriceChangeGraph({ item }: PriceChangeGraphProps) {
               </g>
             )
           })}
-          <path
-            className="price-area"
-            d={areaPath}
-          />
+          <path className="price-area" d={areaPath} />
           <path
             className={isIncrease ? 'price-line increase' : 'price-line decrease'}
             d={path}

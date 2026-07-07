@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "main": "Trang chính",
+    "orders": "Đơn đặt hàng",
+    "inventoryManagement": "Quản lý tồn kho",
+    "quotationCalculationDrawing": "Tính báo giá (Bản vẽ)",
+    "advancedPromptInput": "Nhập prompt nâng cao",
+    "adminSettings": "Cài đặt quản trị"
+  },
+  "dashboard": {
+    "overallStatus": "Tình trạng tổng thể",
+    "monthlyOrders": "Đơn đặt hàng tháng này",
+    "expectedConsumption": "Mức tiêu hao dự kiến",
+    "remainingInventory": "Lượng tồn kho còn lại",
+    "partPriceIncreaseRate": "Tỷ lệ tăng giá linh kiện",
+    "actualProductTransactionVolume": "Số lượng giao dịch thực tế của sản phẩm",
+    "ordersInTransit": "Đơn đặt hàng đang vận chuyển",
+    "currentInventory": "Tồn kho hiện tại",
+    "lowStock": "Hàng tồn kho thiếu",
+        "items" : "mặt hàng",
+    "shortage": "Thiếu hụt",
+    "dataGraph": "Biểu đồ dữ liệu",
+    "recentSupplierPartPriceChanges": "Biến động giá linh kiện gần đây theo nhà cung cấp (dựa trên lịch sử giao dịch)",
+    "monthlyConsumableUsageActualTransactions": "Lượng sử dụng vật tư tiêu hao hàng tháng / giao dịch nhập xuất thực tế",
+    "monthlyOrdersSummary": "Tháng này có tổng cộng {{total}} đơn đặt hàng, trong đó {{shipping}} đơn hiện đang được vận chuyển.",
+    "expectedShortageSummary": "Dựa trên phân tích mức tiêu hao dự kiến trong năm nay, {{itemName}} được dự báo sẽ thiếu hụt nhiều nhất."
+  },
+  "inventory": {
+    "remainingQuantity": "Số lượng còn lại",
+    "sortByName": "Theo tên",
+    "requiredOrders": "Đơn cần đặt",
+    "additionalOrders": "Đơn đặt bổ sung",
+    "autoOrder": "Đặt hàng tự động",
+    "requiredItemsInProcess": "Vật tư cần thiết trong quy trình",
+    "bulkOrder": "Đặt hàng hàng loạt",
+    "additionalItemsOutsideProcess": "Vật tư bổ sung ngoài quy trình",
+    "itemsRequiringAutoOrder": "Vật tư cần đặt hàng tự động",
+    "totalInventoryStatus": "Tình trạng tồn kho tổng thể",
+    "lowStock": "Hàng tồn kho thiếu",
+    "addInventory": "Thêm hàng tồn kho",
+    "inventorySearchPlaceholder": "Vui lòng nhập tên hàng tồn kho hoặc tên đối tác giao dịch.",
+    "lowStockUsedInNextQuotation": "{{count}} mặt hàng thiếu tồn kho sẽ được sử dụng trong báo giá tiếp theo."
+  },
+  "quotation": {
+    "comparison": "So sánh báo giá",
+    "comparisonPreparing": "Màn hình so sánh báo giá hiện đang được chuẩn bị.",
+    "searchPlaceholder": "Vui lòng nhập tên mặt hàng, tên đối tác giao dịch, ngày giao hàng, v.v."
+  },
+  "chat": {
+    "greeting": "Xin chào, 김OO님. ",
+    "help" : "Tôi có thể giúp gì cho bạn?",
+    "askAnything": "Hãy hỏi tôi bất cứ điều gì.",
+    "searchPlaceholder": "Vui lòng nhập tên linh kiện, đối tác giao dịch, số vận đơn, v.v."
+  }
+}

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import caretDownIcon from '../../assets/icons/caret-down.svg'
 import chevronDownIcon from '../../assets/icons/chevron-down.svg'
 import type { InventoryItem, SortDirection } from '../../types/inventory'
@@ -34,6 +36,8 @@ export function DashboardInventoryTable({
   onToggleSort,
   onShowMore,
 }: DashboardInventoryTableProps) {
+  const { t } = useTranslation('main')
+
   return (
     <div className="inventory-list">
       <div className="inventory-list-header">
@@ -62,7 +66,7 @@ export function DashboardInventoryTable({
                 {item.is_shortage ? (
                   <span className="shortage-badge">
                     <span className="shortage-dot" />
-                    부족
+                    {t('dashboard.shortage')}
                   </span>
                 ) : null}
               </div>

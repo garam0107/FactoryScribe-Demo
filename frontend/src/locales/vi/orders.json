@@ -1,0 +1,15 @@
+{
+  "inventory": {
+    "sortByName": "Theo tên",
+    "requiredOrders": "Đơn cần đặt",
+    "additionalOrders": "Đơn đặt bổ sung",
+    "autoOrder": "Đặt hàng tự động",
+    "requiredItemsInProcess": "Vật tư cần thiết trong quy trình",
+    "bulkOrder": "Đặt hàng hàng loạt",
+    "additionalItemsOutsideProcess": "Vật tư bổ sung ngoài quy trình",
+    "itemsRequiringAutoOrder": "Vật tư cần đặt hàng tự động"
+  },
+  "chat": {
+    "searchPlaceholder": "Vui lòng nhập tên linh kiện, đối tác giao dịch, số vận đơn, v.v."
+  }
+}

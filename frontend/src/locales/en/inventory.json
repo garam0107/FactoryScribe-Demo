@@ -1,0 +1,22 @@
+{
+  "dashboard": {
+    "currentInventory": "Current Inventory",
+    "lowStock": "Low Stock",
+    "items": "items",
+    "shortage": "Shortage"
+  },
+  "inventory": {
+    "remainingQuantity": "Remaining Quantity",
+    "sortByName": "By Name",
+    "totalInventoryStatus": "Total Inventory Status",
+    "lowStock": "Low Stock",
+    "addInventory": "Add Inventory",
+    "inventorySearchPlaceholder": "Please enter an inventory name or client/vendor name.",
+    "lowStockUsedInNextQuotation": "{{count}} low-stock items will be used in the next quotation."
+  },
+  "quotation": {
+    "comparison": "Quotation Comparison",
+    "comparisonPreparing": "The quotation comparison screen is currently being prepared.",
+    "searchPlaceholder": "Please enter an item name, client/vendor name, delivery due date, etc."
+  }
+}

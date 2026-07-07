@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "main": "Main",
+    "orders": "Purchase Orders",
+    "inventoryManagement": "Inventory Management",
+    "quotationCalculationDrawing": "Quotation Calculation (Drawing)",
+    "advancedPromptInput": "Advanced : Prompt Input",
+    "adminSettings": "Admin Settings"
+  }
+}

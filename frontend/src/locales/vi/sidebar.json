@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "main": "Trang chính",
+    "orders": "Đơn đặt hàng",
+    "inventoryManagement": "Quản lý tồn kho",
+    "quotationCalculationDrawing": "Tính báo giá (Bản vẽ)",
+    "advancedPromptInput": "Nhập : prompt nâng cao",
+    "adminSettings": "Cài đặt quản trị"
+  }
+}

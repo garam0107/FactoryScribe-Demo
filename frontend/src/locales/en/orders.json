@@ -1,0 +1,15 @@
+{
+  "inventory": {
+    "sortByName": "By Name",
+    "requiredOrders": "Required Orders",
+    "additionalOrders": "Additional Orders",
+    "autoOrder": "Auto Order",
+    "requiredItemsInProcess": "Required Items in Process",
+    "bulkOrder": "Bulk Order",
+    "additionalItemsOutsideProcess": "Additional Items Outside Process",
+    "itemsRequiringAutoOrder": "Items Requiring Auto Order"
+  },
+  "chat": {
+    "searchPlaceholder": "Please enter a part name, client/vendor, tracking number, etc."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "dashboard": {
+    "overallStatus": "전체 현황",
+    "monthlyOrders": "이번 달 발주",
+    "expectedConsumption": "예상 소모도",
+    "remainingInventory": "재고 잔여량",
+    "partPriceIncreaseRate": "부품가격 상승률",
+    "actualProductTransactionVolume": "생산품 실거래량",
+    "ordersInTransit": "배송 중인 발주",
+    "currentInventory": "현재 재고",
+    "lowStock": "부족 재고",
+    "items": "가지",
+    "shortage": "부족",
+    "remainingQuantity": "잔여 수량",
+    "dataGraph": "데이터 그래프",
+    "sortByName": "이름 순",
+    "viewMore" : "더 보기",
+    "close" : "닫기",
+    "recentSupplierPartPriceChanges": "납품업체 최근 부품 가격 변화(거래 내역 기반)",
+    "monthlyConsumableUsageActualTransactions": "월별 소모품 사용량 / 출납 실거래량",
+    "monthlyOrdersSummary": "이번 달 발주는 총 {{total}}건으로, 현재 {{shipping}}건이 배송중 입니다.",
+    "monthlyOrdersSummaryStart": "이번 달 발주는",
+    "monthlyOrdersSummaryTotal": "총 {{total}} 건으로,",
+    "monthlyOrdersSummaryShipping": "현재 {{shipping}}건이 배송중",
+    "monthlyOrdersSummaryEnd": "입니다.",
+    "expectedShortageSummary": "금년 예상 소모도 분석 결과, {{itemName}}가 가장 부족할 것으로 예상됩니다.",
+    "expectedShortageSummaryStart": "금년 예상 소모도 분석 결과,",
+    "expectedShortageSummaryEnd": "가 가장 부족할 것으로 예상됩니다."
+  },
+  "chat": {
+    "greeting": "안녕하세요. 김OO님.",
+    "help": "무엇을 도와드릴까요?",
+    "askAnything": "무엇이든 물어보세요.",
+    "searchPlaceholder": "부품명, 거래처, 운송장 번호 등을 입력해주세요."
+  }
+}

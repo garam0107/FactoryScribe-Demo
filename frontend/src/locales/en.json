@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "main": "Main",
+    "orders": "Purchase Orders",
+    "inventoryManagement": "Inventory Management",
+    "quotationCalculationDrawing": "Quotation Calculation (Drawing)",
+    "advancedPromptInput": "Advanced Prompt Input",
+    "adminSettings": "Admin Settings"
+  },
+  "dashboard": {
+    "overallStatus": "Overall Status",
+    "monthlyOrders": "This Month's Purchase Orders",
+    "expectedConsumption": "Expected Consumption",
+    "remainingInventory": "Remaining Inventory",
+    "partPriceIncreaseRate": "Part Price Increase Rate",
+    "actualProductTransactionVolume": "Actual Product Transaction Volume",
+    "ordersInTransit": "Purchase Orders in Transit",
+    "currentInventory": "Current Inventory",
+    "lowStock": "Low Stock",
+        "items" : "items",
+    "shortage": "Shortage",
+    "dataGraph": "Data Graph",
+    "recentSupplierPartPriceChanges": "Recent Part Price Changes by Supplier (Based on Transaction History)",
+    "monthlyConsumableUsageActualTransactions": "Monthly Consumable Usage / Actual Inbound and Outbound Transactions",
+    "monthlyOrdersSummary": "There are {{total}} purchase orders this month, and {{shipping}} are currently in transit.",
+    "expectedShortageSummary": "Based on this year's expected consumption analysis, {{itemName}} is expected to have the greatest shortage."
+  },
+  "inventory": {
+    "remainingQuantity": "Remaining Quantity",
+    "sortByName": "By Name",
+    "requiredOrders": "Required Orders",
+    "additionalOrders": "Additional Orders",
+    "autoOrder": "Auto Order",
+    "requiredItemsInProcess": "Required Items in Process",
+    "bulkOrder": "Bulk Order",
+    "additionalItemsOutsideProcess": "Additional Items Outside Process",
+    "itemsRequiringAutoOrder": "Items Requiring Auto Order",
+    "totalInventoryStatus": "Total Inventory Status",
+    "lowStock": "Low Stock",
+    "addInventory": "Add Inventory",
+    "inventorySearchPlaceholder": "Please enter an inventory name or client/vendor name.",
+    "lowStockUsedInNextQuotation": "{{count}} low-stock items will be used in the next quotation."
+  },
+  "quotation": {
+    "comparison": "Quotation Comparison",
+    "comparisonPreparing": "The quotation comparison screen is currently being prepared.",
+    "searchPlaceholder": "Please enter an item name, client/vendor name, delivery due date, etc."
+  },
+  "chat": {
+    "greeting": "Hello, 김OO님. ",
+    "help" : "How can I help you?",
+    "askAnything": "Ask me anything.",
+    "searchPlaceholder": "Please enter a part name, client/vendor, tracking number, etc."
+  }
+}

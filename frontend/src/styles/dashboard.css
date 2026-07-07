@@ -15,6 +15,7 @@
   font-size: 15px;
   font-weight: 500;
   line-height: 20px;
+  white-space: normal;
 }
 
 .tabs button.active {
@@ -45,6 +46,7 @@
   font-weight: 400;
   line-height: 36px;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .metric-ring {

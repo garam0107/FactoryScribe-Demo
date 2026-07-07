@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { DashboardInventoryTable } from './DashboardInventoryTable'
 import { DashboardInventoryToolbar } from './DashboardInventoryToolbar'
@@ -41,6 +42,7 @@ export function OverviewPanel({
   isLoading,
   errorMessage,
 }: OverviewPanelProps) {
+  const { t } = useTranslation('main')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [activePriceIndex, setActivePriceIndex] = useState(0)
@@ -99,19 +101,29 @@ export function OverviewPanel({
 
   const metrics: InventoryMetric[] = [
     {
-      title: '재고 잔여량',
+      title: t('dashboard.remainingInventory'),
       value: formatPercent(dashboard?.inventory_remaining_rate),
       percent: clampPercent(dashboard?.inventory_remaining_rate),
       tone: 'red',
     },
     {
-      title: '부품가격 상승률',
+      title: t('dashboard.partPriceIncreaseRate'),
       value: formatPercent(dashboard?.average_price_increase_rate),
       percent: clampPercent(dashboard?.average_price_increase_rate),
       tone: 'turquoise',
     },
-    { title: '생산품 실거래량', value: '0', percent: 0, tone: 'mustard' },
-    { title: '배송 중인 발주', value: '0', percent: 0, tone: 'turquoise' },
+    {
+      title: t('dashboard.actualProductTransactionVolume'),
+      value: '0',
+      percent: 0,
+      tone: 'mustard',
+    },
+    {
+      title: t('dashboard.ordersInTransit'),
+      value: '0',
+      percent: 0,
+      tone: 'turquoise',
+    },
   ]
 
   return (
@@ -140,13 +152,13 @@ export function OverviewPanel({
       </section>
 
       <section className="graphs-section" aria-label="데이터 그래프">
-        <h2>데이터 그래프</h2>
+        <h2>{t('dashboard.dataGraph')}</h2>
         <div className="graph-grid">
           <PriceChangeGraph item={activePriceItem} />
           <article className="graph-card">
             <div className="graph-header">
-              <h3>월별 소모품 사용량 / 출납 실거래량</h3>
-              <span aria-hidden="true">›</span>
+              <h3>{t('dashboard.monthlyConsumableUsageActualTransactions')}</h3>
+              <span aria-hidden="true">...</span>
             </div>
             <div className="zero-graph">0</div>
           </article>

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 type DashboardInventoryToolbarProps = {
   totalItems: number
   shortageItems: number
@@ -7,11 +9,20 @@ export function DashboardInventoryToolbar({
   totalItems,
   shortageItems,
 }: DashboardInventoryToolbarProps) {
+  const { t } = useTranslation('main')
+
   return (
     <div className="inventory-heading">
       <h2>
-        현재 재고 : <strong>{totalItems}가지</strong>
-        <span>부족 재고 : {shortageItems}가지</span>
+        {t('dashboard.currentInventory')} :{' '}
+        <strong>
+          {totalItems}
+          {t('dashboard.items')}
+        </strong>
+        <span>
+          {t('dashboard.lowStock')} : {shortageItems}
+          {t('dashboard.items')}
+        </span>
       </h2>
     </div>
   )

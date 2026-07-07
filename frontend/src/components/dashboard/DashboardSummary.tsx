@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type InventoryMetric = {
   title: string
@@ -12,8 +13,10 @@ type DashboardSummaryProps = {
 }
 
 export function DashboardSummary({ metrics }: DashboardSummaryProps) {
+  const { t } = useTranslation('main')
+
   return (
-    <section className="metrics" aria-label="전체 현황">
+    <section className="metrics" aria-label={t('dashboard.overallStatus')}>
       {metrics.map((metric) => (
         <article className="metric-card" key={metric.title}>
           <h2>{metric.title}</h2>

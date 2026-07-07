@@ -1,0 +1,22 @@
+{
+  "dashboard": {
+    "currentInventory": "현재 재고",
+    "lowStock": "부족 재고",
+    "items": "가지",
+    "shortage": "부족"
+  },
+  "inventory": {
+    "remainingQuantity": "잔여 수량",
+    "sortByName": "이름 순",
+    "totalInventoryStatus": "총 재고 현황",
+    "lowStock": "부족 재고",
+    "addInventory": "재고 추가",
+    "inventorySearchPlaceholder": "재고명, 거래처명을 입력해주세요.",
+    "lowStockUsedInNextQuotation": "부족 재고 : {{count}}가지 는 다음 견적서에 사용 됩니다."
+  },
+  "quotation": {
+    "comparison": "견적서 비교",
+    "comparisonPreparing": "견적서 비교 화면은 준비 중입니다.",
+    "searchPlaceholder": "품목명, 거래처명, 납기일자 등을 입력해주세요."
+  }
+}

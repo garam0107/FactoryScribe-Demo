@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "main": "메인",
+    "orders": "발주",
+    "inventoryManagement": "재고 관리",
+    "quotationCalculationDrawing": "견적 계산(도면)",
+    "advancedPromptInput": "고급 프롬프트 입력",
+    "adminSettings": "관리자 설정"
+  },
+  "dashboard": {
+    "overallStatus": "전체 현황",
+    "monthlyOrders": "이번 달 발주",
+    "expectedConsumption": "예상 소모도",
+    "remainingInventory": "재고 잔여량",
+    "partPriceIncreaseRate": "부품가격 상승률",
+    "actualProductTransactionVolume": "생산품 실거래량",
+    "ordersInTransit": "배송 중인 발주",
+    "currentInventory": "현재 재고",
+    "lowStock": "부족 재고",
+    "items" : "가지",
+    "shortage": "부족",
+    "dataGraph": "데이터 그래프",
+    "recentSupplierPartPriceChanges": "납품업체 최근 부품 가격 변화(거래 내역 기반)",
+    "monthlyConsumableUsageActualTransactions": "월별 소모품 사용량 / 출납 실거래량",
+    "monthlyOrdersSummary": "이번 달 발주는 총 {{total}}건으로, 현재 {{shipping}}건이 배송중 입니다.",
+    "expectedShortageSummary": "금년 예상 소모도 분석 결과, {{itemName}}가 가장 부족할 것으로 예상됩니다."
+  },
+  "inventory": {
+    "remainingQuantity": "잔여 수량",
+    "sortByName": "이름 순",
+    "requiredOrders": "필요 발주",
+    "additionalOrders": "추가 발주",
+    "autoOrder": "자동 발주",
+    "requiredItemsInProcess": "공정 내 필요 물품",
+    "bulkOrder": "일괄 발주",
+    "additionalItemsOutsideProcess": "공정 외 추가 물품",
+    "itemsRequiringAutoOrder": "자동 발주 필요 물품",
+    "totalInventoryStatus": "총 재고 현황",
+    "lowStock": "부족 재고",
+    "addInventory": "재고 추가",
+    "inventorySearchPlaceholder": "재고명, 거래처명을 입력해주세요.",
+    "lowStockUsedInNextQuotation": "부족 재고 : {{count}}가지 는 다음 견적서에 사용 됩니다."
+  },
+  "quotation": {
+    "comparison": "견적서 비교",
+    "comparisonPreparing": "견적서 비교 화면은 준비 중입니다.",
+    "searchPlaceholder": "품목명, 거래처명, 납기일자 등을 입력해주세요."
+  },
+  "chat": {
+    "greeting": "안녕하세요. 김OO님.",
+    "help" : "무엇을 도와드릴까요?",
+    "askAnything": "무엇이든 물어보세요.",
+    "searchPlaceholder": "부품명, 거래처, 운송장 번호 등을 입력해주세요."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "main": "메인",
+    "orders": "발주",
+    "inventoryManagement": "재고 관리",
+    "quotationCalculationDrawing": "견적 계산(도면)",
+    "advancedPromptInput": "고급 : 프롬프트 입력",
+    "adminSettings": "관리자 설정"
+  }
+}

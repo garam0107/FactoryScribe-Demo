@@ -1,0 +1,22 @@
+{
+  "dashboard": {
+    "currentInventory": "Tồn kho hiện tại",
+    "lowStock": "Hàng tồn kho thiếu",
+    "items": "mặt hàng",
+    "shortage": "Thiếu hụt"
+  },
+  "inventory": {
+    "remainingQuantity": "Số lượng còn lại",
+    "sortByName": "Theo tên",
+    "totalInventoryStatus": "Tình trạng tồn kho tổng thể",
+    "lowStock": "Hàng tồn kho thiếu",
+    "addInventory": "Thêm hàng tồn kho",
+    "inventorySearchPlaceholder": "Vui lòng nhập tên hàng tồn kho hoặc tên đối tác giao dịch.",
+    "lowStockUsedInNextQuotation": "{{count}} mặt hàng thiếu tồn kho sẽ được sử dụng trong báo giá tiếp theo."
+  },
+  "quotation": {
+    "comparison": "So sánh báo giá",
+    "comparisonPreparing": "Màn hình so sánh báo giá hiện đang được chuẩn bị.",
+    "searchPlaceholder": "Vui lòng nhập tên mặt hàng, tên đối tác giao dịch, ngày giao hàng, v.v."
+  }
+}

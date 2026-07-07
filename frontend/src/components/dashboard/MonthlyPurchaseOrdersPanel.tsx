@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { getPurchaseOrders } from '../../api/businessDocuments'
 import caretDownIcon from '../../assets/icons/caret-down.svg'
@@ -35,6 +36,7 @@ function normalizeText(value: string | null | undefined) {
 export function MonthlyPurchaseOrdersPanel({
   repositoryId,
 }: MonthlyPurchaseOrdersPanelProps) {
+  const { t } = useTranslation('main')
   const [documents, setDocuments] = useState<PurchaseOrderDocument[]>([])
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [query, setQuery] = useState('')
@@ -116,14 +118,24 @@ export function MonthlyPurchaseOrdersPanel({
   const visibleRows = filteredRows.slice(startIndex, startIndex + PAGE_SIZE)
   const emptyRowCount =
     visibleRows.length > 0 ? Math.max(0, PAGE_SIZE - visibleRows.length) : 0
+  const summaryEnd = t('dashboard.monthlyOrdersSummaryEnd')
 
   return (
-    <section className="purchase-orders-panel" aria-label="이번 달 발주">
+    <section
+      className="purchase-orders-panel"
+      aria-label={t('dashboard.monthlyOrders')}
+    >
       <div className="purchase-orders-summary">
-        <p>이번 달 발주는</p>
-        <p>총 {documents.length} 건으로,</p>
-        <strong>현재 -건이 배송중</strong>
-        <p>입니다.</p>
+        <p>{t('dashboard.monthlyOrdersSummaryStart')}</p>
+        <p>
+          {t('dashboard.monthlyOrdersSummaryTotal', {
+            total: documents.length,
+          })}
+        </p>
+        <strong>
+          {t('dashboard.monthlyOrdersSummaryShipping', { shipping: '-' })}
+        </strong>
+        {summaryEnd ? <p>{summaryEnd}</p> : null}
       </div>
 
       <div className="purchase-orders-table">
@@ -194,7 +206,7 @@ export function MonthlyPurchaseOrdersPanel({
                 disabled={safeCurrentPage === 1}
                 onClick={() => setCurrentPage(1)}
               >
-                «
+                &laquo;
               </button>
               <button
                 type="button"
@@ -202,7 +214,7 @@ export function MonthlyPurchaseOrdersPanel({
                 disabled={safeCurrentPage === 1}
                 onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
               >
-                ‹
+                &lsaquo;
               </button>
               {Array.from({ length: pageCount }).map((_, index) => {
                 const page = index + 1
@@ -225,7 +237,7 @@ export function MonthlyPurchaseOrdersPanel({
                   setCurrentPage((page) => Math.min(pageCount, page + 1))
                 }
               >
-                ›
+                &rsaquo;
               </button>
               <button
                 type="button"
@@ -233,7 +245,7 @@ export function MonthlyPurchaseOrdersPanel({
                 disabled={safeCurrentPage === pageCount}
                 onClick={() => setCurrentPage(pageCount)}
               >
-                »
+                &raquo;
               </button>
             </div>
           </>

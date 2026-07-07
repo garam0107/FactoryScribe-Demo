@@ -1,0 +1,15 @@
+{
+  "inventory": {
+    "sortByName": "이름 순",
+    "requiredOrders": "필요 발주",
+    "additionalOrders": "추가 발주",
+    "autoOrder": "자동 발주",
+    "requiredItemsInProcess": "공정 내 필요 물품",
+    "bulkOrder": "일괄 발주",
+    "additionalItemsOutsideProcess": "공정 외 추가 물품",
+    "itemsRequiringAutoOrder": "자동 발주 필요 물품"
+  },
+  "chat": {
+    "searchPlaceholder": "부품명, 거래처, 운송장 번호 등을 입력해주세요."
+  }
+}

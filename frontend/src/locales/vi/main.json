@@ -1,0 +1,36 @@
+{
+  "dashboard": {
+    "overallStatus": "Tình trạng tổng thể",
+    "monthlyOrders": "Đơn đặt hàng tháng này",
+    "expectedConsumption": "Mức tiêu hao dự kiến",
+    "remainingInventory": "Lượng tồn kho còn lại",
+    "partPriceIncreaseRate": "Tỷ lệ tăng giá linh kiện",
+    "actualProductTransactionVolume": "Số lượng giao dịch thực tế của sản phẩm",
+    "ordersInTransit": "Đơn đặt hàng đang vận chuyển",
+    "currentInventory": "Tồn kho hiện tại",
+    "lowStock": "Hàng tồn kho thiếu",
+    "items": "mặt hàng",
+    "shortage": "Thiếu hụt",
+    "dataGraph": "Biểu đồ dữ liệu",
+    "sortByName": "Theo tên",
+    "remainingQuantity": "Số lượng còn lại",
+    "viewMore" : "Xem thêm",
+    "close" : "Đóng",
+    "recentSupplierPartPriceChanges": "Biến động giá linh kiện gần đây theo nhà cung cấp (dựa trên lịch sử giao dịch)",
+    "monthlyConsumableUsageActualTransactions": "Lượng sử dụng vật tư tiêu hao hàng tháng / giao dịch nhập xuất thực tế",
+    "monthlyOrdersSummary": "Tháng này có tổng cộng {{total}} đơn đặt hàng, trong đó {{shipping}} đơn hiện đang được vận chuyển.",
+    "monthlyOrdersSummaryStart": "Đơn đặt hàng tháng này",
+    "monthlyOrdersSummaryTotal": "tổng cộng {{total}} đơn,",
+    "monthlyOrdersSummaryShipping": "{{shipping}} đơn đang vận chuyển",
+    "monthlyOrdersSummaryEnd": "",
+    "expectedShortageSummary": "Dựa trên phân tích mức tiêu hao dự kiến trong năm nay, {{itemName}} được dự báo sẽ thiếu hụt nhiều nhất.",
+    "expectedShortageSummaryStart": "Dựa trên phân tích mức tiêu hao dự kiến trong năm nay,",
+    "expectedShortageSummaryEnd": "được dự báo sẽ thiếu hụt nhiều nhất."
+  },
+  "chat": {
+    "greeting": "Xin chào, 김OO님. ",
+    "help": "Tôi có thể giúp gì cho bạn?",
+    "askAnything": "Hãy hỏi tôi bất cứ điều gì.",
+    "searchPlaceholder": "Vui lòng nhập tên linh kiện, đối tác giao dịch, số vận đơn, v.v."
+  }
+}

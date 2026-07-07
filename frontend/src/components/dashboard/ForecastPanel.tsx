@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import chevronRightIcon from '../../assets/icons/chevron-right.svg'
 import type { InventoryItem } from '../../types/inventory'
@@ -298,6 +299,7 @@ export function ForecastPanel({
   isLoading,
   errorMessage,
 }: ForecastPanelProps) {
+  const { t } = useTranslation('main')
   const [activeIndex, setActiveIndex] = useState(0)
   const [expandedCategory, setExpandedCategory] =
     useState<ForecastCategory | null>(null)
@@ -334,9 +336,9 @@ export function ForecastPanel({
   return (
     <section className="forecast-panel" aria-label="예상 소모도">
       <div className="forecast-headline">
-        <p>금년 예상 소모도 분석 결과,</p>
+        <p>{t('dashboard.expectedShortageSummaryStart')}</p>
         <strong>{mostNeededCategory.category}</strong>
-        <p>가 가장 부족할 것으로 예상됩니다.</p>
+        <p>{t('dashboard.expectedShortageSummaryEnd')}</p>
       </div>
 
       <div className="forecast-grid">

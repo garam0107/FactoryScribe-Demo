@@ -1,0 +1,36 @@
+{
+  "dashboard": {
+    "overallStatus": "Overall Status",
+    "monthlyOrders": "This Month's Purchase Orders",
+    "expectedConsumption": "Expected Consumption",
+    "remainingInventory": "Remaining Inventory",
+    "partPriceIncreaseRate": "Part Price Increase Rate",
+    "actualProductTransactionVolume": "Actual Product Transaction Volume",
+    "ordersInTransit": "Purchase Orders in Transit",
+    "currentInventory": "Current Inventory",
+    "lowStock": "Low Stock",
+    "items": "items",
+    "shortage": "Shortage",
+    "dataGraph": "Data Graph",
+    "sortByName": "By Name",
+    "remainingQuantity": "Remaining Quantity",
+    "viewMore" : "ViewMore",
+    "close" : "Close",
+    "recentSupplierPartPriceChanges": "Recent Part Price Changes by Supplier (Based on Transaction History)",
+    "monthlyConsumableUsageActualTransactions": "Monthly Consumable Usage / Actual Inbound and Outbound Transactions",
+    "monthlyOrdersSummary": "There are {{total}} purchase orders this month, and {{shipping}} are currently in transit.",
+    "monthlyOrdersSummaryStart": "This month's purchase orders",
+    "monthlyOrdersSummaryTotal": "total {{total}} orders,",
+    "monthlyOrdersSummaryShipping": "{{shipping}} currently in transit",
+    "monthlyOrdersSummaryEnd": "",
+    "expectedShortageSummary": "Based on this year's expected consumption analysis, {{itemName}} is expected to have the greatest shortage.",
+    "expectedShortageSummaryStart": "Based on this year's expected consumption analysis,",
+    "expectedShortageSummaryEnd": "is expected to have the greatest shortage."
+  },
+  "chat": {
+    "greeting": "Hello, 김OO님. ",
+    "help": "How can I help you?",
+    "askAnything": "Ask me anything.",
+    "searchPlaceholder": "Please enter a part name, client/vendor, tracking number, etc."
+  }
+}

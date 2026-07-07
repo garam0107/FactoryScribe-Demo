@@ -73,9 +73,10 @@
   min-width: 0;
   margin: 0;
   color: var(--black);
-  font-size: 17px;
+  font-size: clamp(15px, 1.18vw, 17px);
   font-weight: 500;
   line-height: 24px;
+  overflow-wrap: anywhere;
 }
 
 .price-card-header span {
@@ -99,9 +100,10 @@
 .graph-header h3 {
   margin: 0;
   color: var(--black);
-  font-size: 17px;
+  font-size: clamp(15px, 1.18vw, 17px);
   font-weight: 500;
   line-height: 24px;
+  overflow-wrap: anywhere;
 }
 
 .graph-header span {
