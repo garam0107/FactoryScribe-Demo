@@ -14,6 +14,7 @@ from app.routers import (
     purchase_recommendations,
     quotations,
     repositories,
+    transactions,
 )
 
 
@@ -37,6 +38,7 @@ app.include_router(indexing.router, prefix="/indexing", tags=["indexing"])
 app.include_router(chat.router, prefix="/chat", tags=["chat"])
 app.include_router(quotations.router, prefix="/quotations", tags=["quotations"])
 app.include_router(inventory.router, prefix="/inventory", tags=["inventory"])
+app.include_router(transactions.router, prefix="/transactions", tags=["transactions"])
 app.include_router(
     purchase_recommendations.router,
     prefix="/purchase-recommendations",
