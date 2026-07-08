@@ -154,7 +154,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 60px;
+  min-height: 52px;
   border-top: 1px solid var(--black);
 }
 

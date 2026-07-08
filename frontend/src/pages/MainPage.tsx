@@ -22,8 +22,9 @@ import {
 } from './InventoryManagementPage'
 import { OrderPage, type OrderTab } from './OrderPage'
 
-const REPOSITORY_ID = 'repo_0c61123ac8be'
+const REPOSITORY_ID = 'repo_bb1b5f27db99'
 const FIGMA_FRAME_WIDTH = 1440
+const FIGMA_FRAME_HEIGHT = 1024
 const SECTIONS: AppSection[] = [
   'main',
   'orders',
@@ -166,7 +167,10 @@ export function MainPage() {
 
   useEffect(() => {
     const updateScale = () => {
-      setAppScale(window.innerWidth / FIGMA_FRAME_WIDTH)
+      const widthScale = window.innerWidth / FIGMA_FRAME_WIDTH
+      const heightScale = window.innerHeight / FIGMA_FRAME_HEIGHT
+
+      setAppScale(Math.min(widthScale, heightScale, 1))
     }
 
     updateScale()
