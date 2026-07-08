@@ -15,6 +15,14 @@ class Settings(BaseSettings):
     ollama_embed_model: str = "embeddinggemma"
     ollama_embed_keep_alive: str = "30m"
 
+    openai_api_key: str | None = None
+    openai_base_url: str = "https://api.openai.com/v1"
+    openai_intent_model: str = "gpt-5.4-mini"
+    openai_intent_timeout: int = 30
+    openai_answer_model: str = "gpt-5.4-mini"
+    openai_answer_timeout: int = 30
+    openai_generate_answers: bool = True
+
     chunk_size: int = 1000
     chunk_overlap: int = 150
     indexing_batch_size: int = 64

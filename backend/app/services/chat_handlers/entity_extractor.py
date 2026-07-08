@@ -15,6 +15,8 @@ class ExtractedEntities:
     partner_names: list[str] = field(default_factory=list)
     quotation_no: str | None = None
     purchase_order_no: str | None = None
+    query_type: str | None = None
+    date_condition: str | None = None
     wants_quotation: bool = False
     wants_purchase_order: bool = False
 
@@ -25,6 +27,8 @@ class ExtractedEntities:
             "partner_names": self.partner_names,
             "quotation_no": self.quotation_no,
             "purchase_order_no": self.purchase_order_no,
+            "query_type": self.query_type,
+            "date_condition": self.date_condition,
             "wants_quotation": self.wants_quotation,
             "wants_purchase_order": self.wants_purchase_order,
         }
