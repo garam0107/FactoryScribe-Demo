@@ -33,7 +33,7 @@ type BrowserFileWithPath = File & {
 }
 
 const DIRECTORY_META = [
-  { scope: '공통', capacity: '24.7 TB', shared: '317명 공유' },
+  { scope: '공통', capacity: '50.36 MB', shared: '000명 공유' },
   { scope: '팀', capacity: '19.2 TB', shared: '317명 공유' },
   { scope: '팀', capacity: '195 GB', shared: '317명 공유' },
   { scope: '팀', capacity: '278 GB', shared: '317명 공유' },

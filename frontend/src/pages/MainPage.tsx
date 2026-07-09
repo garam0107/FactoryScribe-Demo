@@ -665,6 +665,14 @@ export function MainPage() {
               onAddDirectory={handleAddDirectory}
               onRemoveDirectory={handleRemoveDirectory}
             />
+            ) : activeSection === 'quote' ? (
+            <div className="empty-page" aria-label="견적 계산 도면">
+              {/* 견적 계산(도면) 화면은 아직 준비 중 */}
+            </div>
+          ) : activeSection === 'admin' ? (
+            <div className="empty-page" aria-label="관리자 설정">
+              {/* 관리자 설정 화면은 아직 준비 중 */}
+            </div>
           ) : (
             <>
               <section className="assistant-panel" aria-label="질문 입력">

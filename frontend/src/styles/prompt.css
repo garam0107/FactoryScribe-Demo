@@ -13,7 +13,6 @@
   min-height: calc(100vh - 216px);
   max-height: calc(100vh - 216px);
   padding: 24px 0 0;
-  overflow: hidden;
 }
 
 .prompt-tabs {
@@ -207,7 +206,7 @@
   flex: 1 1 auto;
   min-width: 0;
   color: var(--black);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 18px;
   white-space: nowrap;
 }
@@ -225,7 +224,7 @@
 .directory-shared {
   flex: 0 0 auto;
   min-width: 0;
-  font-size: 10px;
+  font-size: 14px;
   line-height: 20px;
 }
 
