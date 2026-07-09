@@ -1,7 +1,7 @@
-import { useEffect, useState, type ChangeEvent } from 'react'
-
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 
 import fileAttachIcon from '../assets/icons/file-plus.svg'
+import bomXlsxFileUrl from '../assets/PLH2-420-EM134-11001_0-BOM.xlsx?url'
 
 type QuoteDrawingTab = 'bom' | 'settings' | 'change'
 
@@ -15,9 +15,9 @@ type BomRow = {
   mark: string
   profile: string
   qty: number
-  length: number
   weight: number
   grade: string
+  stock: number | null
 }
 
 const quoteDrawingTabs: { value: QuoteDrawingTab; label: string }[] = [
@@ -31,92 +31,91 @@ const demoBomRows: BomRow[] = [
     mark: 'MC4',
     profile: 'H300*300*10*15',
     qty: 1,
-    length: 4675,
     weight: 439.65,
     grade: 'SM355',
+    stock: 3,
   },
   {
     mark: 'BK1',
     profile: 'H200*200*8*12',
     qty: 1,
-    length: 1064,
     weight: 53.08,
     grade: 'SS275',
+    stock: 12,
   },
   {
     mark: 'BK28',
     profile: 'H350*175*7*11',
     qty: 2,
-    length: 550,
     weight: 54.52,
     grade: 'SS275',
+    stock: 6,
   },
   {
     mark: 'BK48',
     profile: 'H400*200*8*13',
     qty: 1,
-    length: 495,
     weight: 32.69,
     grade: 'SS275',
+    stock: null,
   },
   {
     mark: 'BP5',
     profile: 'PL25*600',
     qty: 1,
-    length: 600,
     weight: 70.65,
     grade: 'SM355',
+    stock: 8,
   },
   {
     mark: 'RP1',
     profile: 'PL12*140',
     qty: 4,
-    length: 250,
     weight: 13.19,
     grade: 'SM355',
+    stock: 24,
   },
   {
     mark: 'RP2',
     profile: 'PL12*140',
     qty: 2,
-    length: 250,
     weight: 6.59,
     grade: 'SM355',
+    stock: 18,
   },
   {
     mark: 'RP3',
     profile: 'PL12*140',
     qty: 2,
-    length: 250,
     weight: 6.59,
     grade: 'SM355',
+    stock: null,
   },
   {
     mark: 'SF2',
     profile: 'PL12*145',
     qty: 4,
-    length: 270,
     weight: 14.75,
     grade: 'SS275',
+    stock: 10,
   },
   {
     mark: 'SF17',
     profile: 'PL14*145',
     qty: 2,
-    length: 270,
     weight: 8.61,
     grade: 'SS275',
+    stock: 5,
   },
   {
     mark: 'SF19',
     profile: 'PL14*145',
     qty: 2,
-    length: 270,
     weight: 8.61,
     grade: 'SS275',
+    stock: null,
   },
 ]
-
 function getPreviewType(file: File): QuotationPreviewFile['type'] {
   const extension = file.name.split('.').pop()?.toLowerCase()
 
@@ -130,12 +129,21 @@ function getPreviewType(file: File): QuotationPreviewFile['type'] {
 
   return 'unknown'
 }
+function getDisplayFileName(fileName?: string): string {
+  if (!fileName) {
+    return '-'
+  }
+
+  return fileName.replace(/\.png$/i, '')
+}
 
 export function QuotationDrawingPage() {
   const activeTab: QuoteDrawingTab = 'bom'
   const [previewFile, setPreviewFile] = useState<QuotationPreviewFile | null>(
     null,
   )
+  const [isBomMenuOpen, setIsBomMenuOpen] = useState(false)
+  const bomMenuRef = useRef<HTMLDivElement | null>(null)
 
   const hasPreviewFile = previewFile !== null
 
@@ -146,7 +154,26 @@ export function QuotationDrawingPage() {
       }
     }
   }, [previewFile])
+  useEffect(() => {
+    if (!isBomMenuOpen) {
+      return
+    }
 
+    const handleMouseDown = (event: MouseEvent) => {
+      if (
+        bomMenuRef.current &&
+        !bomMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsBomMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('mousedown', handleMouseDown)
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown)
+    }
+  }, [isBomMenuOpen])
   const handleQuotationFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
@@ -163,6 +190,18 @@ export function QuotationDrawingPage() {
     })
 
     event.target.value = ''
+  }
+  const handleDownloadBomXlsx = () => {
+    const link = document.createElement('a')
+
+    link.href = bomXlsxFileUrl
+    link.download = 'PLH2-420-EM134-11001_0-BOM.xlsx'
+
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
+    setIsBomMenuOpen(false)
   }
 
   return (
@@ -230,19 +269,32 @@ export function QuotationDrawingPage() {
               <div className="quotation-result-title">
                 <div className="quotation-file-name-row">
                   <strong>견적서명 :</strong>
-                  <span>{previewFile?.name ?? '-'}</span>
+                  <span>{getDisplayFileName(previewFile?.name)}</span>
                 </div>
 
                 <p>예상 BOM</p>
               </div>
 
-              <button
-                className="quotation-more-button"
-                type="button"
-                aria-label="견적서 더보기"
-              >
-                <span>...</span>
-              </button>
+              <div className="quotation-more-menu-wrap" ref={bomMenuRef}>
+                <button
+                  className="quotation-more-button"
+                  type="button"
+                  aria-label="BOM 메뉴 열기"
+                  aria-haspopup="menu"
+                  aria-expanded={isBomMenuOpen}
+                  onClick={() => setIsBomMenuOpen((prev) => !prev)}
+                >
+                  <span>...</span>
+                </button>
+
+                {isBomMenuOpen ? (
+                  <div className="quotation-more-menu" role="menu">
+                    <button type="button" role="menuitem" onClick={handleDownloadBomXlsx}>
+                      다운로드
+                    </button>
+                  </div>
+                ) : null}
+              </div>
             </div>
 
             <div
@@ -252,28 +304,38 @@ export function QuotationDrawingPage() {
             >
               {hasPreviewFile ? (
                 <table className="quotation-bom-table">
-                  <thead>
-                    <tr>
-                      <th>Mark</th>
-                      <th>Profile</th>
-                      <th>Qty</th>
-                      <th>Length</th>
-                      <th>Weight</th>
-                      <th>Grade</th>
+                <thead>
+                  <tr>
+                    <th>Mark</th>
+                    <th>Profile</th>
+                    <th>Qty</th>
+                    <th>Weight</th>
+                    <th>Grade</th>
+                    <th>재고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {demoBomRows.map((row) => (
+                    <tr key={row.mark}>
+                      <td>{row.mark}</td>
+                      <td>{row.profile}</td>
+                      <td>{row.qty}</td>
+                      <td>{row.weight}</td>
+                      <td>{row.grade}</td>
+                      <td>
+                        <span
+                          className={
+                            row.stock === null
+                              ? 'quotation-stock-badge is-empty'
+                              : 'quotation-stock-badge'
+                          }
+                        >
+            {row.stock === null ? `${row.qty}개 부족` : `재고 ${row.stock}개`}
+                        </span>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {demoBomRows.map((row) => (
-                      <tr key={row.mark}>
-                        <td>{row.mark}</td>
-                        <td>{row.profile}</td>
-                        <td>{row.qty}</td>
-                        <td>{row.length}</td>
-                        <td>{row.weight}</td>
-                        <td>{row.grade}</td>
-                      </tr>
-                    ))}
-                  </tbody>
+                  ))}
+                </tbody>
                 </table>
               ) : (
                 Array.from({ length: 8 }).map((_, index) => (
@@ -284,7 +346,7 @@ export function QuotationDrawingPage() {
 
             <div className="quotation-total-price">
               <strong>예상 견적 가격 :</strong>
-              <span>{hasPreviewFile ? '1,420,000 KRW' : 'KRW'}</span>
+              <span>{hasPreviewFile ? '7,420,000 KRW' : 'KRW'}</span>
             </div>
           </aside>
         </div>

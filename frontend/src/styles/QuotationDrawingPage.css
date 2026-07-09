@@ -190,11 +190,14 @@
   line-height: 28px;
 }
 
-.quotation-more-button {
+.quotation-more-menu-wrap {
   position: absolute;
   top: 10px;
   right: 0;
+  z-index: 5;
+}
 
+.quotation-more-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,6 +221,43 @@
   transform: translateY(-4px);
 }
 
+.quotation-more-menu {
+  position: absolute;
+  top: 44px;
+  right: 0;
+
+  width: 104px;
+  padding: 6px;
+  box-sizing: border-box;
+
+  border: 1px solid #d4d4d4;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+}
+
+.quotation-more-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #111;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quotation-more-menu button:hover {
+  background: #edf5ff;
+  color: #294c6f;
+}
+
 .quotation-bom-lines {
   width: 100%;
   flex: 1 1 auto;
@@ -232,13 +272,10 @@
   box-sizing: border-box;
 }
 
+/* 파일 첨부 전: 기존처럼 빈 줄 8개가 BOM 영역 전체 높이를 채움 */
 .quotation-bom-lines.is-empty {
   display: grid;
   grid-template-rows: repeat(8, minmax(0, 1fr));
-}
-
-.quotation-bom-lines.has-data {
-  display: block;
 }
 
 .quotation-bom-line-row {
@@ -251,14 +288,48 @@
   border-bottom: 0;
 }
 
-.quotation-bom-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  color: #111;
+/* 파일 첨부 후: header + 데이터 8개까지만 보이고, 초과 데이터는 내부 스크롤 */
+.quotation-bom-lines.has-data {
+  --visible-table-rows: 9;
+
+  display: block;
 }
 
-.quotation-bom-table thead {
+/*
+  기존 <table>, <thead>, <tbody>, <tr>, <th>, <td> 구조는 유지하면서
+  한 줄 높이를 BOM 영역 기준으로 잡는다.
+  9줄 = header 1줄 + 데이터 8줄
+*/
+.quotation-bom-table {
+  display: grid;
+  grid-auto-rows: calc(100% / var(--visible-table-rows));
+
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+
+  color: #111;
+  border-collapse: collapse;
+  table-layout: fixed;
+  box-sizing: border-box;
+}
+
+.quotation-bom-table thead,
+.quotation-bom-table tbody {
+  display: contents;
+}
+
+.quotation-bom-table tr {
+  display: grid;
+  grid-template-columns: 10% 32% 8% 14% 13% 23%;
+  align-items: center;
+
+  min-height: 0;
+  border-bottom: 1px solid #e3e3e3;
+  box-sizing: border-box;
+}
+
+.quotation-bom-table thead tr {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -267,13 +338,14 @@
 
 .quotation-bom-table th,
 .quotation-bom-table td {
-  height: 36px;
+  min-width: 0;
   padding: 0 6px;
-  border-bottom: 1px solid #e3e3e3;
 
   font-size: 11px;
   line-height: 1;
   text-align: left;
+  color: #111;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -288,38 +360,40 @@
   font-weight: 500;
 }
 
-.quotation-bom-table th:nth-child(1),
-.quotation-bom-table td:nth-child(1) {
-  width: 12%;
-}
-
-.quotation-bom-table th:nth-child(2),
-.quotation-bom-table td:nth-child(2) {
-  width: 34%;
-}
-
 .quotation-bom-table th:nth-child(3),
 .quotation-bom-table td:nth-child(3) {
-  width: 8%;
   text-align: center;
 }
 
 .quotation-bom-table th:nth-child(4),
 .quotation-bom-table td:nth-child(4) {
-  width: 14%;
   text-align: right;
 }
 
 .quotation-bom-table th:nth-child(5),
 .quotation-bom-table td:nth-child(5) {
-  width: 14%;
   text-align: right;
 }
 
 .quotation-bom-table th:nth-child(6),
 .quotation-bom-table td:nth-child(6) {
-  width: 18%;
   text-align: right;
+}
+
+.quotation-stock-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 100%;
+  color: #777777;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.quotation-stock-badge.is-empty {
+  color: #E88384;
 }
 
 .quotation-total-price {
