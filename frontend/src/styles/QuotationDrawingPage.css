@@ -1,0 +1,365 @@
+.quotation-drawing-page {
+  --quote-bottom-padding: 48px;
+  --quote-page-top-offset: 176px;
+
+  width: 100%;
+  height: calc(100dvh - var(--quote-page-top-offset));
+  min-height: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.quotation-drawing-tabs {
+  margin-top: 0;
+  flex: 0 0 auto;
+}
+
+.quotation-drawing-tabs button.active {
+  margin-bottom: -1px;
+}
+
+.quotation-drawing-section {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 24px 0 var(--quote-bottom-padding);
+  overflow: hidden;
+}
+
+.quotation-drawing-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 12px;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.quotation-file-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  border-radius: 6px;
+  background: #edf5ff;
+  color: #35699f;
+  cursor: pointer;
+}
+
+.quotation-file-dropzone input {
+  display: none;
+}
+
+.quotation-file-dropzone > img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  margin-bottom: 24px;
+}
+
+.quotation-file-dropzone > span {
+  max-width: 80%;
+  color: #35699f;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quotation-file-dropzone.has-preview {
+  justify-content: stretch;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.quotation-file-preview {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.quotation-file-preview object,
+.quotation-file-preview iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.quotation-file-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: contain;
+}
+
+.quotation-preview-unsupported {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  color: #35699f;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.quotation-result-panel {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.quotation-result-header {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  height: 76px;
+  flex: 0 0 76px;
+  border-bottom: 1px solid #111;
+}
+
+.quotation-result-title {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-right: 48px;
+}
+
+.quotation-file-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  min-width: 0;
+  margin-bottom: 8px;
+}
+
+.quotation-file-name-row strong {
+  flex: 0 0 auto;
+  color: #111;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.quotation-file-name-row span {
+  min-width: 0;
+  color: #111;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quotation-result-title p {
+  margin: 0;
+  color: #000;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 28px;
+}
+
+.quotation-more-button {
+  position: absolute;
+  top: 10px;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #111;
+  border-radius: 8px;
+  background: #fff;
+  color: #111;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.quotation-more-button span {
+  display: block;
+  line-height: 1;
+  transform: translateY(-4px);
+}
+
+.quotation-bom-lines {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  border-bottom: 1px solid #a7a7a7;
+  box-sizing: border-box;
+}
+
+.quotation-bom-lines.is-empty {
+  display: grid;
+  grid-template-rows: repeat(8, minmax(0, 1fr));
+}
+
+.quotation-bom-lines.has-data {
+  display: block;
+}
+
+.quotation-bom-line-row {
+  min-height: 0;
+  border-bottom: 1px solid #e3e3e3;
+  box-sizing: border-box;
+}
+
+.quotation-bom-line-row:last-child {
+  border-bottom: 0;
+}
+
+.quotation-bom-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: #111;
+}
+
+.quotation-bom-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fff;
+}
+
+.quotation-bom-table th,
+.quotation-bom-table td {
+  height: 36px;
+  padding: 0 6px;
+  border-bottom: 1px solid #e3e3e3;
+
+  font-size: 11px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+.quotation-bom-table th {
+  font-weight: 800;
+}
+
+.quotation-bom-table td {
+  font-weight: 500;
+}
+
+.quotation-bom-table th:nth-child(1),
+.quotation-bom-table td:nth-child(1) {
+  width: 12%;
+}
+
+.quotation-bom-table th:nth-child(2),
+.quotation-bom-table td:nth-child(2) {
+  width: 34%;
+}
+
+.quotation-bom-table th:nth-child(3),
+.quotation-bom-table td:nth-child(3) {
+  width: 8%;
+  text-align: center;
+}
+
+.quotation-bom-table th:nth-child(4),
+.quotation-bom-table td:nth-child(4) {
+  width: 14%;
+  text-align: right;
+}
+
+.quotation-bom-table th:nth-child(5),
+.quotation-bom-table td:nth-child(5) {
+  width: 14%;
+  text-align: right;
+}
+
+.quotation-bom-table th:nth-child(6),
+.quotation-bom-table td:nth-child(6) {
+  width: 18%;
+  text-align: right;
+}
+
+.quotation-total-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 0;
+  height: auto;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+
+.quotation-total-price strong {
+  color: #111;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.quotation-total-price span {
+  color: #294c6f;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+@media (max-width: 900px) {
+  .quotation-drawing-page {
+    height: auto;
+    overflow: visible;
+  }
+
+  .quotation-drawing-content {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .quotation-file-dropzone,
+  .quotation-result-panel {
+    min-height: 360px;
+  }
+}

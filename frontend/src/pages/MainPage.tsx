@@ -33,6 +33,7 @@ import {
 } from './InventoryManagementPage'
 import { OrderPage, type OrderTab } from './OrderPage'
 import { PromptPage } from './PromptPage'
+import { QuotationDrawingPage } from './QuotationDrawingPage'
 
 const REPOSITORY_ID = 'repo_bb1b5f27db99'
 const SECTIONS: AppSection[] = [
@@ -666,9 +667,7 @@ export function MainPage() {
               onRemoveDirectory={handleRemoveDirectory}
             />
             ) : activeSection === 'quote' ? (
-            <div className="empty-page" aria-label="견적 계산 도면">
-              {/* 견적 계산(도면) 화면은 아직 준비 중 */}
-            </div>
+                <QuotationDrawingPage />
           ) : activeSection === 'admin' ? (
             <div className="empty-page" aria-label="관리자 설정">
               {/* 관리자 설정 화면은 아직 준비 중 */}
