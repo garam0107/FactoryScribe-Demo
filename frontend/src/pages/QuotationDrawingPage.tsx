@@ -311,7 +311,7 @@ export function QuotationDrawingPage() {
                     <th>Qty</th>
                     <th>Weight</th>
                     <th>Grade</th>
-                    <th>재고</th>
+                    <th>Stock</th>
                   </tr>
                 </thead>
                 <tbody>
