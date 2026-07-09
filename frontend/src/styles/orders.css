@@ -159,13 +159,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  min-height: 52px;
+  min-height: 53px;
   padding: 16px 0;
   border-top: 1px solid var(--black);
 }
 
 .order-empty-row {
-  height: 52px;
+  min-height: 53px;
   border-top: 1px solid var(--black);
 }
 
@@ -176,7 +176,8 @@
   min-width: 0;
 }
 
-.order-row-main span {
+.order-row-name {
+  flex: 1 1 auto;
   overflow: hidden;
   color: var(--black);
   font-size: 16px;
@@ -191,11 +192,25 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  flex: 0 0 auto;
+  flex: 0 0 240px;
   color: var(--gray-500);
   font-size: 13px;
   line-height: 20px;
   white-space: nowrap;
+}
+
+.order-detail-primary {
+  width: 150px;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+}
+
+.order-detail-secondary {
+  width: 70px;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
 }
 
 .order-row-detail i {

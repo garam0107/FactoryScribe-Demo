@@ -118,6 +118,10 @@
   line-height: 20px;
 }
 
+.shortage-badge-placeholder {
+  visibility: hidden;
+}
+
 .shortage-dot {
   width: 8px;
   height: 8px;
@@ -304,13 +308,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  min-height: 48px;
+  min-height: 53px;
   padding: 12px 0;
   border-top: 1px solid var(--black);
 }
 
 .inventory-page-empty-row {
-  height: 48px;
+  min-height: 53px;
   border-top: 1px solid var(--black);
 }
 
@@ -321,7 +325,8 @@
   min-width: 0;
 }
 
-.inventory-page-row-main span {
+.inventory-row-name {
+  flex: 1 1 auto;
   overflow: hidden;
   color: var(--black);
   font-size: 16px;
@@ -336,11 +341,25 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  flex: 0 0 auto;
+  flex: 0 0 320px;
   color: var(--gray-500);
   font-size: 13px;
   line-height: 20px;
   white-space: nowrap;
+}
+
+.inventory-detail-primary {
+  width: 132px;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+}
+
+.inventory-detail-secondary {
+  width: 180px;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
 }
 
 .inventory-page-row-detail i {
@@ -378,8 +397,8 @@
   justify-content: space-between;
   gap: 24px;
   width: 100%;
-  min-height: 60px;
-  padding: 16px 0;
+  min-height: 48px;
+  padding: 12px 0;
   border: 0;
   background: transparent;
   text-align: left;
@@ -419,6 +438,10 @@
   white-space: nowrap;
 }
 
+.due-soon-badge-placeholder {
+  visibility: hidden;
+}
+
 .due-soon-dot {
   width: 8px;
   height: 8px;
@@ -432,7 +455,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  flex: 0 0 auto;
+  flex: 0 0 352px;
   color: var(--gray-500);
   font-size: 13px;
   line-height: 20px;
@@ -490,8 +513,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  min-height: 52px;
-  padding: 16px 0;
+  min-height: 48px;
+  padding: 12px 0;
   border-top: 1px solid #ddd;
 }
 
@@ -502,7 +525,7 @@
   min-width: 0;
 }
 
-.inventory-shortage-item-main span {
+.inventory-shortage-item-main .inventory-row-name {
   overflow: hidden;
   color: var(--black);
   font-size: 16px;
@@ -517,7 +540,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  flex: 0 0 auto;
+  flex: 0 0 320px;
   color: var(--gray-500);
   font-size: 13px;
   line-height: 20px;

@@ -591,12 +591,12 @@ export function OrderPage({
                         aria-label={`${row.itemName} 선택`}
                       />
                     </label>
-                    <span>{row.itemName}</span>
+                    <span className="order-row-name">{row.itemName}</span>
                   </div>
                   <div className="order-row-detail">
-                    <span>{row.partnerName || '-'}</span>
+                    <span className="order-detail-primary">{row.partnerName || '-'}</span>
                     <i aria-hidden="true" />
-                    <span>{row.trackingNo || '-'}</span>
+                    <span className="order-detail-secondary">{row.trackingNo || '-'}</span>
                   </div>
                 </article>
               ))}

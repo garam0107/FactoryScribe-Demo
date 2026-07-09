@@ -34,36 +34,23 @@ export function PromptPage() {
               디렉토리를 설정 후 아래에 원하는 작업을 입력해주세요.
             </div>
           ) : (
-            <div className="directory-stage">
-              <div className="directory-card">
-                <span className="directory-label">문서 저장소 경로</span>
-                <div className="directory-field">
-                  <span>연결할 디렉토리를 선택해주세요.</span>
-                  <button type="button">선택</button>
-                </div>
-              </div>
-              <div className="directory-card">
-                <span className="directory-label">출력 저장 경로</span>
-                <div className="directory-field">
-                  <span>결과 파일이 저장될 위치를 설정해주세요.</span>
-                  <button type="button">선택</button>
-                </div>
-              </div>
-            </div>
+            <div className="directory-stage" aria-hidden="true" />
           )}
         </div>
 
-        <label className="query-box prompt-query-box">
-          <img src={plusIcon} alt="" />
-          <input
-            aria-label="프롬프트 입력"
-            placeholder="현재 부족 재고 일괄 주문해줘."
-            type="text"
-          />
-          <button type="button" aria-label="프롬프트 전송">
-            <img src={searchIcon} alt="" />
-          </button>
-        </label>
+        {activeTab === 'prompt' ? (
+          <label className="query-box prompt-query-box">
+            <img src={plusIcon} alt="" />
+            <input
+              aria-label="프롬프트 입력"
+              placeholder="궁금하신 것을 물어보세요."
+              type="text"
+            />
+            <button type="button" aria-label="프롬프트 전송">
+              <img src={searchIcon} alt="" />
+            </button>
+          </label>
+        ) : null}
       </div>
     </section>
   )

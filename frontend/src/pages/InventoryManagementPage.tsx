@@ -769,7 +769,7 @@ export function InventoryManagementPage({
                                 aria-label={`${quotationTitle} 선택`}
                               />
                             </label>
-                            <span className="inventory-shortage-card-name">
+                            <span className="inventory-shortage-card-name inventory-row-name">
                               {quotationTitle}
                             </span>
                             {isDueWithinWeek(document) ? (
@@ -777,13 +777,15 @@ export function InventoryManagementPage({
                                 <span className="due-soon-dot" />
                                 납기 임박
                               </span>
-                            ) : null}
+                            ) : (
+                              <span className="due-soon-badge due-soon-badge-placeholder" aria-hidden="true" />
+                            )}
                           </div>
 
                           <div className="inventory-shortage-card-detail">
-                            <span>{document.recipient_company_name || '-'}</span>
+                            <span className="inventory-detail-primary">{document.recipient_company_name || '-'}</span>
                             <i aria-hidden="true" />
-                            <span>{dueText}</span>
+                            <span className="inventory-detail-secondary">{dueText}</span>
                             <img
                               className={isExpanded ? 'expanded' : ''}
                               src={chevronDownIcon}
@@ -811,12 +813,12 @@ export function InventoryManagementPage({
                                         tabIndex={-1}
                                       />
                                     </label>
-                                    <span>{item.item_name}</span>
+                                    <span className="inventory-row-name">{item.item_name}</span>
                                   </div>
                                   <div className="inventory-shortage-item-detail">
-                                    <span>{formatShortagePrice(item.unit_price)}</span>
+                                    <span className="inventory-detail-primary">{formatShortagePrice(item.unit_price)}</span>
                                     <i aria-hidden="true" />
-                                    <span>{formatShortageStock(item.current_stock)}</span>
+                                    <span className="inventory-detail-secondary">{formatShortageStock(item.current_stock)}</span>
                                   </div>
                                 </div>
                               ))}
@@ -931,18 +933,20 @@ export function InventoryManagementPage({
                             aria-label={`${item.item_name} 선택`}
                           />
                         </label>
-                        <span>{item.item_name}</span>
+                        <span className="inventory-row-name">{item.item_name}</span>
                         {item.is_shortage ? (
                           <span className="shortage-badge">
                             <span className="shortage-dot" />
                             부족
                           </span>
-                        ) : null}
+                        ) : (
+                          <span className="shortage-badge shortage-badge-placeholder" aria-hidden="true" />
+                        )}
                       </div>
                       <div className="inventory-page-row-detail">
-                        <span>{formatPrice(item)}</span>
+                        <span className="inventory-detail-primary">{formatPrice(item)}</span>
                         <i aria-hidden="true" />
-                        <span>잔여 수량 : {formatRemainingStock(item)}</span>
+                        <span className="inventory-detail-secondary">잔여 수량 : {formatRemainingStock(item)}</span>
                       </div>
                     </article>
                   ))}

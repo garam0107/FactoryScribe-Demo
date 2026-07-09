@@ -66,18 +66,20 @@ export function DashboardInventoryTable({
           {items.map((item) => (
             <article className="inventory-page-row" key={item.id}>
               <div className="inventory-page-row-main">
-                <span>{item.item_name}</span>
+                <span className="inventory-row-name">{item.item_name}</span>
                 {item.is_shortage ? (
                   <span className="shortage-badge">
                     <span className="shortage-dot" />
                     {t('dashboard.shortage')}
                   </span>
-                ) : null}
+                ) : (
+                  <span className="shortage-badge shortage-badge-placeholder" aria-hidden="true" />
+                )}
               </div>
               <div className="inventory-page-row-detail">
-                <span>{formatCurrency(item.current_unit_price)}</span>
+                <span className="inventory-detail-primary">{formatCurrency(item.current_unit_price)}</span>
                 <i aria-hidden="true" />
-                <span>
+                <span className="inventory-detail-secondary">
                   {t('dashboard.remainingQuantity')} : {formatStock(item)}
                 </span>
               </div>
