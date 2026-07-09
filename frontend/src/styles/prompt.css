@@ -13,6 +13,7 @@
   min-height: calc(100vh - 216px);
   max-height: calc(100vh - 216px);
   padding: 24px 0 0;
+  overflow: hidden;
 }
 
 .prompt-tabs {
@@ -21,11 +22,113 @@
 
 .prompt-stage {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex: 1 1 auto;
   min-height: 0;
   padding: 28px 0 24px;
+  overflow: hidden;
+}
+
+.prompt-chat-thread {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-right: 8px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.prompt-chat-thread-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 16px;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+.chat-bubble-row {
+  display: flex;
+  width: 100%;
+}
+
+.chat-bubble-row.user {
+  justify-content: flex-end;
+}
+
+.chat-bubble-row.assistant {
+  justify-content: flex-start;
+}
+
+.chat-bubble,
+.chat-loading-bubble {
+  position: relative;
+  max-width: min(720px, 78%);
+  border-radius: 24px;
+  padding: 18px 22px;
+}
+
+.chat-bubble.user {
+  background: #dce8f6;
+}
+
+.chat-bubble.assistant,
+.chat-loading-bubble {
+  background: #f1f1f1;
+}
+
+.chat-bubble.user::after,
+.chat-bubble.assistant::after,
+.chat-loading-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  width: 16px;
+  height: 16px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+
+.chat-bubble.user::after {
+  right: -6px;
+}
+
+.chat-bubble.assistant::after,
+.chat-loading-bubble::after {
+  left: -6px;
+}
+
+.chat-bubble p {
+  margin: 0;
+  color: var(--black);
+  font-size: 16px;
+  line-height: 28px;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+.chat-loading-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 90px;
+  min-height: 60px;
+}
+
+.chat-loading-bubble span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #8e98a3;
+  animation: prompt-loading 1.2s infinite ease-in-out;
+}
+
+.chat-loading-bubble span:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.chat-loading-bubble span:nth-child(3) {
+  animation-delay: 0.36s;
 }
 
 .prompt-empty-state {
@@ -45,4 +148,18 @@
 .directory-stage {
   display: block;
   width: 100%;
+}
+
+@keyframes prompt-loading {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
 }

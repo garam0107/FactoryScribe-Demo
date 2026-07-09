@@ -18,3 +18,25 @@ export async function apiGet<T>(path: string): Promise<T> {
 
   return body.data
 }
+
+export async function apiPost<T, B>(path: string, payload: B): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`)
+  }
+
+  const body = (await response.json()) as ApiResponse<T>
+
+  if (!body.success) {
+    throw new Error(body.message ?? 'API request failed')
+  }
+
+  return body.data
+}

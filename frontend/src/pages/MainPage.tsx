@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { askChat, getConversationMessages, getConversations } from '../api/chat'
 import { getInventoryDashboard, getInventoryItems } from '../api/inventory'
 import blackSearchIcon from '../assets/icons/black_search.svg'
 import logomarkIcon from '../assets/icons/logomark.svg'
@@ -15,6 +16,10 @@ import { MonthlyPurchaseOrdersPanel } from '../components/dashboard/MonthlyPurch
 import { OverviewPanel } from '../components/dashboard/OverviewPanel'
 import { LanguageSelector } from '../components/layout/LanguageSelector'
 import { MainSidebar, type AppSection } from '../components/layout/MainSidebar'
+import type {
+  ChatConversationSummary,
+  ChatMessage,
+} from '../types/chat'
 import type { InventoryDashboard, InventoryItem } from '../types/inventory'
 import {
   InventoryManagementPage,
@@ -75,7 +80,7 @@ const SEARCH_RESULT_GROUPS: SearchResultGroup[] = [
         labelKey: 'search.items.expectedConsumption',
         section: 'main',
         mainTab: 'forecast',
-        keywords: ['예상 소모도', '소모도', 'forecast', 'consumption'],
+        keywords: ['예상 소모량', '소모량', 'forecast', 'consumption'],
       },
     ],
   },
@@ -147,6 +152,21 @@ function getSectionFromHash(): AppSection {
   return SECTIONS.includes(hashSection) ? hashSection : 'main'
 }
 
+function createLocalMessage(
+  id: string,
+  role: ChatMessage['role'],
+  content: string,
+  conversationId = 'local',
+): ChatMessage {
+  return {
+    id,
+    conversation_id: conversationId,
+    role,
+    content,
+    created_at: new Date().toISOString(),
+  }
+}
+
 export function MainPage() {
   const { t } = useTranslation('main')
   const { t: tSidebar } = useTranslation('sidebar')
@@ -162,6 +182,15 @@ export function MainPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [promptConversations, setPromptConversations] = useState<
+    ChatConversationSummary[]
+  >([])
+  const [activePromptConversationId, setActivePromptConversationId] =
+    useState<string | null>(null)
+  const [promptMessages, setPromptMessages] = useState<ChatMessage[]>([])
+  const [promptDraft, setPromptDraft] = useState('')
+  const [isPromptMessagesLoading, setIsPromptMessagesLoading] = useState(false)
+  const [isPromptSending, setIsPromptSending] = useState(false)
 
   useEffect(() => {
     const syncSectionFromHash = () => {
@@ -196,6 +225,78 @@ export function MainPage() {
       window.removeEventListener('keydown', closeSearchOnEscape)
     }
   }, [isSearchOpen])
+
+  useEffect(() => {
+    let ignore = false
+
+    async function loadInventory() {
+      try {
+        setIsLoading(true)
+        setErrorMessage(null)
+
+        const [dashboardData, itemData] = await Promise.all([
+          getInventoryDashboard(REPOSITORY_ID),
+          getInventoryItems(REPOSITORY_ID),
+        ])
+
+        if (!ignore) {
+          setDashboard(dashboardData)
+          setItems(itemData)
+        }
+      } catch (error) {
+        if (!ignore) {
+          setErrorMessage(
+            error instanceof Error
+              ? error.message
+              : '재고 데이터를 불러오지 못했습니다.',
+          )
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadInventory()
+
+    return () => {
+      ignore = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (activeSection !== 'prompt') {
+      return undefined
+    }
+
+    let ignore = false
+
+    async function loadPromptConversations() {
+      try {
+        const conversations = await getConversations(REPOSITORY_ID)
+
+        if (!ignore) {
+          setPromptConversations(conversations)
+          setActivePromptConversationId(null)
+          setPromptMessages([])
+          setPromptDraft('')
+        }
+      } catch {
+        if (!ignore) {
+          setPromptConversations([])
+          setActivePromptConversationId(null)
+          setPromptMessages([])
+        }
+      }
+    }
+
+    loadPromptConversations()
+
+    return () => {
+      ignore = true
+    }
+  }, [activeSection])
 
   const changeSection = (section: AppSection) => {
     setActiveSection(section)
@@ -251,44 +352,108 @@ export function MainPage() {
     setSearchQuery('')
   }
 
-  useEffect(() => {
-    let ignore = false
+  const handlePromptConversationSelect = async (conversationId: string) => {
+    setActivePromptConversationId(conversationId)
+    setIsPromptMessagesLoading(true)
 
-    async function loadInventory() {
-      try {
-        setIsLoading(true)
-        setErrorMessage(null)
+    try {
+      const messages = await getConversationMessages(REPOSITORY_ID, conversationId)
+      setPromptMessages(messages)
+    } catch {
+      setPromptMessages([
+        createLocalMessage(
+          `load-error-${Date.now()}`,
+          'assistant',
+          '대화 내용을 불러오지 못했습니다.',
+          conversationId,
+        ),
+      ])
+    } finally {
+      setIsPromptMessagesLoading(false)
+    }
+  }
 
-        const [dashboardData, itemData] = await Promise.all([
-          getInventoryDashboard(REPOSITORY_ID),
-          getInventoryItems(REPOSITORY_ID),
-        ])
+  const handlePromptSend = async () => {
+    const message = promptDraft.trim()
 
-        if (!ignore) {
-          setDashboard(dashboardData)
-          setItems(itemData)
-        }
-      } catch (error) {
-        if (!ignore) {
-          setErrorMessage(
-            error instanceof Error
-              ? error.message
-              : '재고 데이터를 불러오지 못했습니다.',
-          )
-        }
-      } finally {
-        if (!ignore) {
-          setIsLoading(false)
-        }
+    if (!message || isPromptSending) {
+      return
+    }
+
+    const timestamp = Date.now()
+    const userMessage = createLocalMessage(
+      `user-${timestamp}`,
+      'user',
+      message,
+      activePromptConversationId ?? 'pending',
+    )
+
+    const hadActiveConversation = activePromptConversationId !== null
+    const pendingConversationId =
+      activePromptConversationId ?? `pending-${timestamp}`
+
+    setPromptMessages((current) => [...current, userMessage])
+    setPromptDraft('')
+    setIsPromptSending(true)
+
+    if (!hadActiveConversation) {
+      const pendingConversation: ChatConversationSummary = {
+        id: pendingConversationId,
+        repository_id: REPOSITORY_ID,
+        title: message,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       }
+
+      setActivePromptConversationId(pendingConversationId)
+      setPromptConversations((current) => [pendingConversation, ...current])
     }
 
-    loadInventory()
+    try {
+      const response = await askChat({
+        repository_id: REPOSITORY_ID,
+        conversation_id: hadActiveConversation ? activePromptConversationId : null,
+        message,
+      })
 
-    return () => {
-      ignore = true
+      setPromptMessages((current) => [
+        ...current,
+        createLocalMessage(
+          `assistant-${Date.now()}`,
+          'assistant',
+          response.answer,
+          response.conversation_id,
+        ),
+      ])
+      setActivePromptConversationId(response.conversation_id)
+
+      const conversations = await getConversations(REPOSITORY_ID)
+      setPromptConversations(conversations)
+    } catch (error) {
+      if (!hadActiveConversation) {
+        setActivePromptConversationId(null)
+        setPromptConversations((current) =>
+          current.filter((conversation) => conversation.id !== pendingConversationId),
+        )
+      }
+
+      setPromptMessages((current) => [
+        ...current,
+        createLocalMessage(
+          `assistant-error-${Date.now()}`,
+          'assistant',
+          error instanceof Error
+            ? '응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.'
+            : '응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
+          hadActiveConversation
+            ? activePromptConversationId ?? 'pending'
+            : 'pending',
+        ),
+      ])
+    } finally {
+      setIsPromptSending(false)
     }
-  }, [])
+  }
 
   return (
     <main className="app-shell">
@@ -385,6 +550,9 @@ export function MainPage() {
         <MainSidebar
           activeSection={activeSection}
           onSectionChange={changeSection}
+          promptConversations={promptConversations}
+          activePromptConversationId={activePromptConversationId}
+          onPromptConversationSelect={handlePromptConversationSelect}
         />
 
         <section
@@ -394,7 +562,9 @@ export function MainPage() {
               ? '발주'
               : activeSection === 'inventory'
                 ? '재고 관리'
-                : '메인 대시보드'
+                : activeSection === 'prompt'
+                  ? '고급 프롬프트 입력'
+                  : '메인 대시보드'
           }
         >
           <div className="company-row">
@@ -418,7 +588,14 @@ export function MainPage() {
               onTabChange={setActiveInventoryTab}
             />
           ) : activeSection === 'prompt' ? (
-            <PromptPage />
+            <PromptPage
+              draft={promptDraft}
+              isSending={isPromptSending}
+              isLoadingMessages={isPromptMessagesLoading}
+              messages={promptMessages}
+              onDraftChange={setPromptDraft}
+              onSend={handlePromptSend}
+            />
           ) : (
             <>
               <section className="assistant-panel" aria-label="질문 입력">

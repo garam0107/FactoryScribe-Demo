@@ -63,6 +63,56 @@ def search_documents(
     return formatted
 
 
+def list_conversations(session: Session, repository_id: str) -> list[dict]:
+    _ensure_repository_exists(session, repository_id)
+
+    conversations = session.exec(
+        select(Conversation)
+        .where(Conversation.repository_id == repository_id)
+        .order_by(Conversation.updated_at.desc())
+    ).all()
+
+    return [
+        {
+            "id": conversation.id,
+            "repository_id": conversation.repository_id,
+            "title": conversation.title or "새 대화",
+            "created_at": conversation.created_at.isoformat(),
+            "updated_at": conversation.updated_at.isoformat(),
+        }
+        for conversation in conversations
+    ]
+
+
+def get_conversation_messages(
+    session: Session,
+    repository_id: str,
+    conversation_id: str,
+) -> list[dict]:
+    _ensure_repository_exists(session, repository_id)
+
+    conversation = session.get(Conversation, conversation_id)
+    if not conversation or conversation.repository_id != repository_id:
+        raise ValueError("conversation not found")
+
+    messages = session.exec(
+        select(Message)
+        .where(Message.conversation_id == conversation_id)
+        .order_by(Message.created_at.asc())
+    ).all()
+
+    return [
+        {
+            "id": message.id,
+            "conversation_id": message.conversation_id,
+            "role": message.role,
+            "content": message.content,
+            "created_at": message.created_at.isoformat(),
+        }
+        for message in messages
+    ]
+
+
 def _get_or_create_conversation(
     session: Session,
     repository_id: str,

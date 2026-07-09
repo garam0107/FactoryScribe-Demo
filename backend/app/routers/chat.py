@@ -4,7 +4,12 @@ from sqlmodel import Session
 from app.database import get_session
 from app.schemas.chat import ChatRequest, SearchTestRequest
 from app.schemas.common import success_response
-from app.services.chat_service import ask_question, search_documents
+from app.services.chat_service import (
+    ask_question,
+    get_conversation_messages,
+    list_conversations,
+    search_documents,
+)
 
 router = APIRouter()
 
@@ -27,7 +32,46 @@ def ask(req: ChatRequest, session: Session = Depends(get_session)):
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
+
+
+@router.get(
+    "/conversations",
+    summary="대화 히스토리 목록 조회",
+    description="저장된 대화 목록을 최신 순으로 조회합니다.",
+)
+def conversations(repository_id: str, session: Session = Depends(get_session)):
+    try:
+        return success_response(
+            data=list_conversations(session=session, repository_id=repository_id),
+            message="대화 목록을 조회했습니다.",
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get(
+    "/conversations/{conversation_id}/messages",
+    summary="대화 메시지 조회",
+    description="선택한 대화의 메시지를 오래된 순서대로 조회합니다.",
+)
+def conversation_messages(
+    conversation_id: str,
+    repository_id: str,
+    session: Session = Depends(get_session),
+):
+    try:
+        return success_response(
+            data=get_conversation_messages(
+                session=session,
+                repository_id=repository_id,
+                conversation_id=conversation_id,
+            ),
+            message="대화 메시지를 조회했습니다.",
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @router.post(
     "/search-test",
     summary="문서 검색 테스트",
