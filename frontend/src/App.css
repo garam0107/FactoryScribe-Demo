@@ -3,5 +3,6 @@
 @import '/src/styles/inventory.css';
 @import '/src/styles/purchaseOrders.css';
 @import '/src/styles/orders.css';
+@import '/src/styles/prompt.css';
 @import '/src/styles/forecast.css';
 @import '/src/styles/graphs.css';

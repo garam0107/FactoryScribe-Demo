@@ -12,7 +12,7 @@ export function DashboardInventoryToolbar({
   const { t } = useTranslation('main')
 
   return (
-    <div className="inventory-heading">
+    <div className="inventory-heading inventory-summary-row">
       <h2>
         {t('dashboard.currentInventory')} :{' '}
         <strong>

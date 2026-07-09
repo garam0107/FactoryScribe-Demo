@@ -39,9 +39,13 @@ export function DashboardInventoryTable({
   const { t } = useTranslation('main')
 
   return (
-    <div className="inventory-list">
-      <div className="inventory-list-header">
-        <button className="sort-button" type="button" onClick={onToggleSort}>
+    <div className="inventory-page-table">
+      <div className="order-toolbar inventory-page-toolbar">
+        <button
+          className="sort-button order-sort-button"
+          type="button"
+          onClick={onToggleSort}
+        >
           <span>{t('dashboard.sortByName')}</span>
           <img
             className={sortDirection === 'desc' ? 'rotate' : ''}
@@ -60,9 +64,9 @@ export function DashboardInventoryTable({
       ) : (
         <>
           {items.map((item) => (
-            <article className="inventory-row" key={item.id}>
-              <div className="item-main">
-                <span className="item-name">{item.item_name}</span>
+            <article className="inventory-page-row" key={item.id}>
+              <div className="inventory-page-row-main">
+                <span>{item.item_name}</span>
                 {item.is_shortage ? (
                   <span className="shortage-badge">
                     <span className="shortage-dot" />
@@ -70,8 +74,9 @@ export function DashboardInventoryTable({
                   </span>
                 ) : null}
               </div>
-              <div className="item-detail">
+              <div className="inventory-page-row-detail">
                 <span>{formatCurrency(item.current_unit_price)}</span>
+                <i aria-hidden="true" />
                 <span>
                   {t('dashboard.remainingQuantity')} : {formatStock(item)}
                 </span>

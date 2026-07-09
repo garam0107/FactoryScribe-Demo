@@ -1,10 +1,8 @@
 .app-shell {
-  width: 1440px;
+  width: 100%;
   min-height: 100vh;
   padding: 0 48px 48px 48px;
   background: var(--white);
-  transform-origin: top left;
-  zoom: var(--app-scale, 1);
 }
 
 .topbar {
@@ -156,7 +154,7 @@
 .brand span {
   color: var(--azure-700);
   font-family: 'Sekuya', sans-serif;
-  font-size: 28px;
+  font-size: clamp(24px, 1.55vw, 32px);
   line-height: 1;
   white-space: nowrap;
 }
@@ -209,10 +207,10 @@
 
 .workspace {
   display: grid;
-  grid-template-columns: 400px minmax(0, 896px);
+  grid-template-columns: 400px minmax(0, 1fr);
   gap: 48px;
   align-items: start;
-  width: 1344px;
+  width: 100%;
 }
 
 .sidebar {
@@ -275,6 +273,36 @@
 .side-link.active img {
   filter: brightness(0) saturate(100%) invert(40%) sepia(22%) saturate(1078%)
     hue-rotate(169deg) brightness(93%) contrast(86%);
+}
+
+.sidebar-history {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  padding: 40px 0 0;
+}
+
+.sidebar-history-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 16px;
+  color: var(--black);
+}
+
+.sidebar-history-header img {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
+.sidebar-history-header strong {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
 }
 
 .content {

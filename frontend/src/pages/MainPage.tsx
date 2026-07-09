@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getInventoryDashboard, getInventoryItems } from '../api/inventory'
@@ -21,10 +21,9 @@ import {
   type InventoryTab,
 } from './InventoryManagementPage'
 import { OrderPage, type OrderTab } from './OrderPage'
+import { PromptPage } from './PromptPage'
 
 const REPOSITORY_ID = 'repo_bb1b5f27db99'
-const FIGMA_FRAME_WIDTH = 1440
-const FIGMA_FRAME_HEIGHT = 1024
 const SECTIONS: AppSection[] = [
   'main',
   'orders',
@@ -157,29 +156,12 @@ export function MainPage() {
   const [activeOrderTab, setActiveOrderTab] = useState<OrderTab>('required')
   const [activeInventoryTab, setActiveInventoryTab] =
     useState<InventoryTab>('total')
-  const [appScale, setAppScale] = useState(1)
   const [dashboard, setDashboard] = useState<InventoryDashboard | null>(null)
   const [items, setItems] = useState<InventoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-
-  useEffect(() => {
-    const updateScale = () => {
-      const widthScale = window.innerWidth / FIGMA_FRAME_WIDTH
-      const heightScale = window.innerHeight / FIGMA_FRAME_HEIGHT
-
-      setAppScale(Math.min(widthScale, heightScale, 1))
-    }
-
-    updateScale()
-    window.addEventListener('resize', updateScale)
-
-    return () => {
-      window.removeEventListener('resize', updateScale)
-    }
-  }, [])
 
   useEffect(() => {
     const syncSectionFromHash = () => {
@@ -309,10 +291,7 @@ export function MainPage() {
   }, [])
 
   return (
-    <main
-      className="app-shell"
-      style={{ '--app-scale': appScale } as CSSProperties}
-    >
+    <main className="app-shell">
       <header className="topbar">
         <a className="brand" href="/" aria-label="FAUTORY 홈">
           <img src={logomarkIcon} alt="" />
@@ -438,6 +417,8 @@ export function MainPage() {
               activeTab={activeInventoryTab}
               onTabChange={setActiveInventoryTab}
             />
+          ) : activeSection === 'prompt' ? (
+            <PromptPage />
           ) : (
             <>
               <section className="assistant-panel" aria-label="질문 입력">

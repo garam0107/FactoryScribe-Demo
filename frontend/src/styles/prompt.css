@@ -1,0 +1,105 @@
+.prompt-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px 0 0;
+}
+
+.prompt-main-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(100vh - 216px);
+  max-height: calc(100vh - 216px);
+  padding: 24px 0 0;
+}
+
+.prompt-tabs {
+  flex: 0 0 auto;
+}
+
+.prompt-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 28px 0 24px;
+}
+
+.prompt-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  padding: 19px 28px;
+  color: #aaa;
+  font-size: 16px;
+  line-height: 36px;
+  text-align: center;
+}
+
+.prompt-query-box {
+  flex: 0 0 auto;
+  margin-top: auto;
+}
+
+.directory-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 760px;
+}
+
+.directory-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.directory-label {
+  color: var(--black);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.directory-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+  padding: 0 24px;
+  border: 1px solid var(--gray-200);
+  border-radius: 24px;
+  background: var(--white);
+  color: var(--gray-500);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.directory-field span {
+  min-width: 0;
+}
+
+.directory-field button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--azure-700);
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}

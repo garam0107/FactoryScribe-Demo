@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import bookmarkIcon from '../../assets/icons/bookmark.svg'
 import homeIcon from '../../assets/icons/home.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
 import toolsIcon from '../../assets/icons/tools.svg'
@@ -64,6 +65,14 @@ export function MainSidebar({
           </button>
         ))}
       </nav>
+      {activeSection === 'prompt' ? (
+        <section className="sidebar-history" aria-label="대화 히스토리">
+          <div className="sidebar-history-header">
+            <img src={bookmarkIcon} alt="" />
+            <strong>대화 히스토리</strong>
+          </div>
+        </section>
+      ) : null}
     </aside>
   )
 }
