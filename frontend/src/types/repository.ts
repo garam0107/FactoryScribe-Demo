@@ -7,3 +7,8 @@ export type Repository = {
   updated_at?: string
   last_indexed_at?: string | null
 }
+
+export type RepositoryCreateRequest = {
+  name: string
+  path: string
+}

@@ -40,3 +40,21 @@ export async function apiPost<T, B>(path: string, payload: B): Promise<T> {
 
   return body.data
 }
+
+export async function apiDelete<T>(path: string): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: 'DELETE',
+  })
+
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`)
+  }
+
+  const body = (await response.json()) as ApiResponse<T>
+
+  if (!body.success) {
+    throw new Error(body.message ?? 'API request failed')
+  }
+
+  return body.data
+}

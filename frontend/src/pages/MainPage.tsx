@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 import { askChat, getConversationMessages, getConversations } from '../api/chat'
 import { getInventoryDashboard, getInventoryItems } from '../api/inventory'
+import {
+  createRepository,
+  deleteRepository,
+  getRepositories,
+} from '../api/repositories'
 import blackSearchIcon from '../assets/icons/black_search.svg'
 import logomarkIcon from '../assets/icons/logomark.svg'
 import plusIcon from '../assets/icons/plus.svg'
@@ -21,6 +26,7 @@ import type {
   ChatMessage,
 } from '../types/chat'
 import type { InventoryDashboard, InventoryItem } from '../types/inventory'
+import type { Repository } from '../types/repository'
 import {
   InventoryManagementPage,
   type InventoryTab,
@@ -191,6 +197,8 @@ export function MainPage() {
   const [promptDraft, setPromptDraft] = useState('')
   const [isPromptMessagesLoading, setIsPromptMessagesLoading] = useState(false)
   const [isPromptSending, setIsPromptSending] = useState(false)
+  const [repositories, setRepositories] = useState<Repository[]>([])
+  const [isDirectoryLoading, setIsDirectoryLoading] = useState(false)
 
   useEffect(() => {
     const syncSectionFromHash = () => {
@@ -274,19 +282,30 @@ export function MainPage() {
 
     async function loadPromptConversations() {
       try {
-        const conversations = await getConversations(REPOSITORY_ID)
+        setIsDirectoryLoading(true)
+
+        const [conversations, repositoryList] = await Promise.all([
+          getConversations(REPOSITORY_ID),
+          getRepositories(),
+        ])
 
         if (!ignore) {
           setPromptConversations(conversations)
           setActivePromptConversationId(null)
           setPromptMessages([])
           setPromptDraft('')
+          setRepositories(repositoryList)
         }
       } catch {
         if (!ignore) {
           setPromptConversations([])
           setActivePromptConversationId(null)
           setPromptMessages([])
+          setRepositories([])
+        }
+      } finally {
+        if (!ignore) {
+          setIsDirectoryLoading(false)
         }
       }
     }
@@ -455,6 +474,52 @@ export function MainPage() {
     }
   }
 
+  const handleAddDirectory = async (payload: {
+    name: string
+    path: string
+  }) => {
+    try {
+      await createRepository(payload)
+
+      const repositoryList = await getRepositories()
+      setRepositories(repositoryList)
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : '저장소를 등록하지 못했습니다.',
+      )
+    }
+  }
+
+  const handleRemoveDirectory = async (repositoryId: string) => {
+    const target = repositories.find((repository) => repository.id === repositoryId)
+
+    if (!target) {
+      return
+    }
+
+    const confirmed = window.confirm(
+      `${target.name} 저장소를 삭제하시겠습니까?`,
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    try {
+      await deleteRepository(repositoryId)
+      const repositoryList = await getRepositories()
+      setRepositories(repositoryList)
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : '저장소를 삭제하지 못했습니다.',
+      )
+    }
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -593,8 +658,12 @@ export function MainPage() {
               isSending={isPromptSending}
               isLoadingMessages={isPromptMessagesLoading}
               messages={promptMessages}
+              repositories={repositories}
+              isDirectoryLoading={isDirectoryLoading}
               onDraftChange={setPromptDraft}
               onSend={handlePromptSend}
+              onAddDirectory={handleAddDirectory}
+              onRemoveDirectory={handleRemoveDirectory}
             />
           ) : (
             <>

@@ -74,29 +74,33 @@ export function MainSidebar({
           </button>
         ))}
       </nav>
+
       {activeSection === 'prompt' ? (
         <section className="sidebar-history" aria-label="대화 히스토리">
           <div className="sidebar-history-header">
             <img src={bookmarkIcon} alt="" />
             <strong>대화 히스토리</strong>
           </div>
-          {promptConversations.map((conversation) => {
-            const isActive = activePromptConversationId === conversation.id
 
-            return (
-              <button
-                key={conversation.id}
-                className={['sidebar-history-item', isActive ? 'active' : '']
-                  .filter(Boolean)
-                  .join(' ')}
-                type="button"
-                onClick={() => onPromptConversationSelect(conversation.id)}
-              >
-                <img src={isActive ? loaderIcon : checkIcon} alt="" />
-                <span>{conversation.title}</span>
-              </button>
-            )
-          })}
+          <div className="sidebar-history-list">
+            {promptConversations.map((conversation) => {
+              const isActive = activePromptConversationId === conversation.id
+
+              return (
+                <button
+                  key={conversation.id}
+                  className={['sidebar-history-item', isActive ? 'active' : '']
+                    .filter(Boolean)
+                    .join(' ')}
+                  type="button"
+                  onClick={() => onPromptConversationSelect(conversation.id)}
+                >
+                  <img src={isActive ? loaderIcon : checkIcon} alt="" />
+                  <span>{conversation.title}</span>
+                </button>
+              )
+            })}
+          </div>
         </section>
       ) : null}
     </aside>
