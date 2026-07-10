@@ -258,6 +258,7 @@ export function MainPage() {
     useState<string | null>(null)
   const [promptMessages, setPromptMessages] = useState<ChatMessage[]>([])
   const [promptDraft, setPromptDraft] = useState('')
+  const [mainChatDraft, setMainChatDraft] = useState('')
   const [isPromptMessagesLoading, setIsPromptMessagesLoading] = useState(false)
   const [isPromptSending, setIsPromptSending] = useState(false)
   const [repositories, setRepositories] = useState<Repository[]>([])
@@ -354,16 +355,11 @@ export function MainPage() {
 
         if (!ignore) {
           setPromptConversations(conversations)
-          setActivePromptConversationId(null)
-          setPromptMessages([])
-          setPromptDraft('')
           setRepositories(repositoryList)
         }
       } catch {
         if (!ignore) {
           setPromptConversations([])
-          setActivePromptConversationId(null)
-          setPromptMessages([])
           setRepositories([])
         }
       } finally {
@@ -463,9 +459,10 @@ export function MainPage() {
     }
   }
 
-  const handlePromptSend = async () => {
-    const message = promptDraft.trim()
-
+  const sendPromptMessage = async (
+    message: string,
+    conversationId: string | null,
+  ) => {
     if (!message || isPromptSending) {
       return
     }
@@ -475,12 +472,12 @@ export function MainPage() {
       `user-${timestamp}`,
       'user',
       message,
-      activePromptConversationId ?? 'pending',
+      conversationId ?? 'pending',
     )
 
-    const hadActiveConversation = activePromptConversationId !== null
+    const hadActiveConversation = conversationId !== null
     const pendingConversationId =
-      activePromptConversationId ?? `pending-${timestamp}`
+      conversationId ?? `pending-${timestamp}`
 
     setPromptMessages((current) => [...current, userMessage])
     setPromptDraft('')
@@ -502,7 +499,7 @@ export function MainPage() {
     try {
       const response = await askChat({
         repository_id: REPOSITORY_ID,
-        conversation_id: hadActiveConversation ? activePromptConversationId : null,
+        conversation_id: conversationId,
         message,
       })
 
@@ -536,13 +533,38 @@ export function MainPage() {
             ? '응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.'
             : '응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
           hadActiveConversation
-            ? activePromptConversationId ?? 'pending'
+            ? conversationId ?? 'pending'
             : 'pending',
         ),
       ])
     } finally {
       setIsPromptSending(false)
     }
+  }
+
+  const handlePromptSend = () => {
+    const message = promptDraft.trim()
+
+    if (!message) {
+      return
+    }
+
+    void sendPromptMessage(message, activePromptConversationId)
+  }
+
+  const handleMainChatSubmit = () => {
+    const message = mainChatDraft.trim()
+
+    if (!message || isPromptSending) {
+      return
+    }
+
+    setMainChatDraft('')
+    setActivePromptTab('prompt')
+    setActivePromptConversationId(null)
+    setPromptMessages([])
+    changeSection('prompt')
+    void sendPromptMessage(message, null)
   }
 
   const handleAddDirectory = async (payload: {
@@ -761,8 +783,20 @@ export function MainPage() {
                     aria-label="질문 입력"
                     placeholder={t('chat.askAnything')}
                     type="text"
+                    value={mainChatDraft}
+                    onChange={(event) => setMainChatDraft(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
+                        event.preventDefault()
+                        handleMainChatSubmit()
+                      }
+                    }}
                   />
-                  <button type="button" aria-label="질문 검색">
+                  <button
+                    type="button"
+                    aria-label="질문 검색"
+                    onClick={handleMainChatSubmit}
+                  >
                     <img src={searchIcon} alt="" />
                   </button>
                 </label>
