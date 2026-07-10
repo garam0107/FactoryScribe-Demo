@@ -1,7 +1,29 @@
-const { app, BrowserWindow, shell } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron");
 const path = require("path");
 
 const isDev = !app.isPackaged;
+
+ipcMain.handle("directory:select", async (event) => {
+  const options = {
+    title: "저장소 폴더 선택",
+    buttonLabel: "선택",
+    properties: ["openDirectory"],
+  };
+  const parentWindow = BrowserWindow.fromWebContents(event.sender);
+  const result = parentWindow
+    ? await dialog.showOpenDialog(parentWindow, options)
+    : await dialog.showOpenDialog(options);
+
+  if (result.canceled || result.filePaths.length === 0) {
+    return null;
+  }
+
+  const directoryPath = result.filePaths[0];
+  return {
+    name: path.basename(directoryPath),
+    path: directoryPath,
+  };
+});
 
 function createWindow() {
   const win = new BrowserWindow({

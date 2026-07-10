@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 
+import { ThreeDModelViewer } from '../components/ThreeDModelViewer'
+import part2ModelUrl from '../assets/3D/20810_part2.obj?url'
+import engineeringReviewModelUrl from '../assets/3D/PLH2_column_C1_engineering_review.obj?url'
 import fileAttachIcon from '../assets/icons/file-plus.svg'
 import bomXlsxFileUrl from '../assets/PLH2-420-EM134-11001_0-BOM.xlsx?url'
 
@@ -20,10 +23,34 @@ type BomRow = {
   stock: number | null
 }
 
+type ThreeDModel = {
+  label: string
+  url: string
+}
+
+type ThreeDModelSelection = {
+  fileName: string
+  model: ThreeDModel
+}
+
 const quoteDrawingTabs: { value: QuoteDrawingTab; label: string }[] = [
   { value: 'bom', label: 'BOM 생성' },
   { value: 'change', label: '3D 도면 생성' },
   { value: 'settings', label: '세부 설정' },
+]
+
+const threeDModelsByPdfName: { keyword: string; model: ThreeDModel }[] = [
+  {
+    keyword: 'part2',
+    model: { label: '20810_part2.obj', url: part2ModelUrl },
+  },
+  {
+    keyword: 'plh2-420-em134-11001_0',
+    model: {
+      label: 'PLH2_column_C1_engineering_review.obj',
+      url: engineeringReviewModelUrl,
+    },
+  },
 ]
 
 const demoBomRows: BomRow[] = [
@@ -137,11 +164,24 @@ function getDisplayFileName(fileName?: string): string {
   return fileName.replace(/\.png$/i, '')
 }
 
+function getThreeDModelForPdf(fileName: string): ThreeDModel | null {
+  const normalizedFileName = fileName.toLowerCase()
+
+  return (
+    threeDModelsByPdfName.find(({ keyword }) =>
+      normalizedFileName.includes(keyword),
+    )?.model ?? null
+  )
+}
+
 export function QuotationDrawingPage() {
-  const activeTab: QuoteDrawingTab = 'bom'
+  const [activeTab, setActiveTab] = useState<QuoteDrawingTab>('bom')
   const [previewFile, setPreviewFile] = useState<QuotationPreviewFile | null>(
     null,
   )
+  const [threeDModelSelection, setThreeDModelSelection] =
+    useState<ThreeDModelSelection | null>(null)
+  const [threeDFileError, setThreeDFileError] = useState<string | null>(null)
   const [isBomMenuOpen, setIsBomMenuOpen] = useState(false)
   const bomMenuRef = useRef<HTMLDivElement | null>(null)
 
@@ -154,6 +194,7 @@ export function QuotationDrawingPage() {
       }
     }
   }, [previewFile])
+
   useEffect(() => {
     if (!isBomMenuOpen) {
       return
@@ -191,6 +232,29 @@ export function QuotationDrawingPage() {
 
     event.target.value = ''
   }
+  const handleThreeDFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    const model = getThreeDModelForPdf(file.name)
+
+    if (!model) {
+      setThreeDModelSelection(null)
+      setThreeDFileError(
+        'part2 또는 PLH2-420-EM134-11001_0 PDF 파일만 지원합니다.',
+      )
+      event.target.value = ''
+      return
+    }
+
+    setThreeDModelSelection({ fileName: file.name, model })
+    setThreeDFileError(null)
+
+    event.target.value = ''
+  }
   const handleDownloadBomXlsx = () => {
     const link = document.createElement('a')
 
@@ -218,6 +282,11 @@ export function QuotationDrawingPage() {
             className={activeTab === tab.value ? 'active' : ''}
             type="button"
             key={tab.value}
+            onClick={() => {
+              if (tab.value !== 'settings') {
+                setActiveTab(tab.value)
+              }
+            }}
           >
             {tab.label}
           </button>
@@ -225,7 +294,59 @@ export function QuotationDrawingPage() {
       </nav>
 
       <div className="order-table-section quotation-drawing-section">
-        <div className="quotation-drawing-content">
+        {activeTab === 'change' ? (
+          <div className="quotation-three-d-content">
+            {threeDModelSelection ? (
+              <div className="quotation-three-d-model-panel">
+                <div className="quotation-three-d-model-header">
+                  <div className="quotation-three-d-model-details">
+                    <strong>{threeDModelSelection.fileName}</strong>
+                    <span>{threeDModelSelection.model.label}</span>
+                  </div>
+                  <div className="quotation-three-d-model-actions">
+                    <label className="quotation-three-d-reselect-button">
+                      <input
+                        type="file"
+                        accept="application/pdf,.pdf"
+                        aria-label="다른 2D 도면 선택"
+                        onChange={handleThreeDFileChange}
+                      />
+                      다른 도면 선택
+                    </label>
+                    <a
+                      className="quotation-three-d-download-button"
+                      href={threeDModelSelection.model.url}
+                      download={threeDModelSelection.model.label}
+                    >
+                      다운로드
+                    </a>
+                  </div>
+                </div>
+                <ThreeDModelViewer
+                  modelUrl={threeDModelSelection.model.url}
+                  modelName={threeDModelSelection.model.label}
+                />
+              </div>
+            ) : (
+              <label className="quotation-file-dropzone">
+                <input
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  aria-label="3D 도면 생성용 2D 도면 첨부"
+                  onChange={handleThreeDFileChange}
+                />
+                <img src={fileAttachIcon} alt="" />
+                <span>2D 도면 업로드</span>
+                {threeDFileError ? (
+                  <small className="quotation-three-d-file-error">
+                    {threeDFileError}
+                  </small>
+                ) : null}
+              </label>
+            )}
+          </div>
+        ) : (
+          <div className="quotation-drawing-content">
           <label
             className={`quotation-file-dropzone${
               hasPreviewFile ? ' has-preview' : ''
@@ -349,7 +470,8 @@ export function QuotationDrawingPage() {
               <span>{hasPreviewFile ? '7,420,000 KRW' : 'KRW'}</span>
             </div>
           </aside>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   )

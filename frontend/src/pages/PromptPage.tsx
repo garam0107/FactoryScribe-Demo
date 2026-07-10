@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent } from 'react'
+import { useState } from 'react'
 
 import minusCircleIcon from '../assets/icons/minus-circle.svg'
 import plusCircleIcon from '../assets/icons/plus-circle.svg'
@@ -25,11 +25,6 @@ type PromptPageProps = {
   onSend: () => void
   onAddDirectory: (payload: DirectoryCreatePayload) => void
   onRemoveDirectory: (repositoryId: string) => void
-}
-
-type BrowserFileWithPath = File & {
-  path?: string
-  webkitRelativePath?: string
 }
 
 const DIRECTORY_META = [
@@ -59,41 +54,23 @@ export function PromptPage({
   const [selectedDirectoryId, setSelectedDirectoryId] = useState<string | null>(
     null,
   )
-  const directoryInputRef = useRef<HTMLInputElement | null>(null)
-
   const showMessages = messages.length > 0 || isSending || isLoadingMessages
 
-  const handleDirectoryPick = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-
-    if (!files || files.length === 0) {
+  const handleAddDirectoryFromElectron = async () => {
+    if (!window.electronAPI) {
+      window.alert('저장소 등록은 Electron 앱에서만 사용할 수 있습니다.')
       return
     }
 
-    const firstFile = files[0] as BrowserFileWithPath
-    const topLevelName =
-      firstFile.webkitRelativePath?.split('/')[0] || firstFile.name
-    const fullPath = firstFile.path
+    try {
+      const directory = await window.electronAPI.selectDirectory()
 
-    if (!fullPath) {
-      window.alert(
-        '현재 브라우저에서는 폴더의 실제 경로를 가져올 수 없습니다. Electron 환경에서 다시 시도해주세요.',
-      )
-      event.target.value = ''
-      return
+      if (directory) {
+        onAddDirectory(directory)
+      }
+    } catch {
+      window.alert('폴더 선택 창을 열지 못했습니다.')
     }
-
-    const normalizedPath = fullPath.slice(
-      0,
-      Math.max(0, fullPath.length - firstFile.name.length - 1),
-    )
-
-    onAddDirectory({
-      name: topLevelName,
-      path: normalizedPath,
-    })
-
-    event.target.value = ''
   }
 
   return (
@@ -150,15 +127,6 @@ export function PromptPage({
             )
           ) : (
             <section className="directory-stage" aria-label="현재 디렉토리">
-              <input
-                ref={directoryInputRef}
-                className="directory-picker-input"
-                type="file"
-                multiple
-                onChange={handleDirectoryPick}
-                {...({ webkitdirectory: '' } as Record<string, string>)}
-              />
-
               <div className="directory-layout">
                 <div className="directory-panel">
                   <div className="directory-stage-header">
@@ -225,7 +193,7 @@ export function PromptPage({
                     className="directory-icon-button"
                     type="button"
                     aria-label="저장소 등록"
-                    onClick={() => directoryInputRef.current?.click()}
+                    onClick={handleAddDirectoryFromElectron}
                   >
                     <img src={plusCircleIcon} alt="" />
                   </button>
