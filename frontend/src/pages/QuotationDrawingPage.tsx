@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 
 import { ThreeDModelViewer } from '../components/ThreeDModelViewer'
-import part2ModelUrl from '../assets/3D/20810_part2.obj?url'
-import engineeringReviewModelUrl from '../assets/3D/PLH2_column_C1_engineering_review.obj?url'
+import part2ModelText from '../assets/3D/20810_part2.obj?raw'
+import engineeringReviewModelText from '../assets/3D/PLH2_column_C1_engineering_review.obj?raw'
 import fileAttachIcon from '../assets/icons/file-plus.svg'
 import bomXlsxFileUrl from '../assets/PLH2-420-EM134-11001_0-BOM.xlsx?url'
 
@@ -24,11 +24,12 @@ type BomRow = {
 }
 
 type ThreeDModel = {
+  content: string
   label: string
-  url: string
 }
 
 type ThreeDModelSelection = {
+  downloadUrl: string
   fileName: string
   model: ThreeDModel
 }
@@ -42,13 +43,13 @@ const quoteDrawingTabs: { value: QuoteDrawingTab; label: string }[] = [
 const threeDModelsByPdfName: { keyword: string; model: ThreeDModel }[] = [
   {
     keyword: 'part2',
-    model: { label: '20810_part2.obj', url: part2ModelUrl },
+    model: { content: part2ModelText, label: '20810_part2.obj' },
   },
   {
     keyword: 'plh2-420-em134-11001_0',
     model: {
+      content: engineeringReviewModelText,
       label: 'PLH2_column_C1_engineering_review.obj',
-      url: engineeringReviewModelUrl,
     },
   },
 ]
@@ -196,6 +197,14 @@ export function QuotationDrawingPage() {
   }, [previewFile])
 
   useEffect(() => {
+    return () => {
+      if (threeDModelSelection?.downloadUrl) {
+        URL.revokeObjectURL(threeDModelSelection.downloadUrl)
+      }
+    }
+  }, [threeDModelSelection])
+
+  useEffect(() => {
     if (!isBomMenuOpen) {
       return
     }
@@ -250,7 +259,11 @@ export function QuotationDrawingPage() {
       return
     }
 
-    setThreeDModelSelection({ fileName: file.name, model })
+    const downloadUrl = URL.createObjectURL(
+      new Blob([model.content], { type: 'text/plain;charset=utf-8' }),
+    )
+
+    setThreeDModelSelection({ downloadUrl, fileName: file.name, model })
     setThreeDFileError(null)
 
     event.target.value = ''
@@ -315,7 +328,7 @@ export function QuotationDrawingPage() {
                     </label>
                     <a
                       className="quotation-three-d-download-button"
-                      href={threeDModelSelection.model.url}
+                      href={threeDModelSelection.downloadUrl}
                       download={threeDModelSelection.model.label}
                     >
                       다운로드
@@ -323,7 +336,7 @@ export function QuotationDrawingPage() {
                   </div>
                 </div>
                 <ThreeDModelViewer
-                  modelUrl={threeDModelSelection.model.url}
+                  modelText={threeDModelSelection.model.content}
                   modelName={threeDModelSelection.model.label}
                 />
               </div>

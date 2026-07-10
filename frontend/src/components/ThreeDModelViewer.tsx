@@ -1,19 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 
 type ThreeDModelViewerProps = {
-  modelUrl: string
+  modelText: string
   modelName: string
 }
 
 export function ThreeDModelViewer({
-  modelUrl,
+  modelText,
   modelName,
 }: ThreeDModelViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     const container = containerRef.current
@@ -22,10 +21,7 @@ export function ThreeDModelViewer({
       return
     }
 
-    let disposed = false
     let animationFrameId = 0
-
-    setLoadError(false)
 
     const scene = new THREE.Scene()
     scene.background = new THREE.Color('#f8fbff')
@@ -69,51 +65,50 @@ export function ThreeDModelViewer({
       roughness: 0.56,
     })
 
-    new OBJLoader().load(
-      modelUrl,
-      (model) => {
-        if (disposed) {
-          return
+    try {
+      const model = new OBJLoader().parse(modelText)
+
+      model.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material = material
+          child.castShadow = true
+          child.receiveShadow = true
         }
+      })
 
-        model.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.material = material
-            child.castShadow = true
-            child.receiveShadow = true
-          }
-        })
+      const bounds = new THREE.Box3().setFromObject(model)
+      const size = bounds.getSize(new THREE.Vector3())
+      const center = bounds.getCenter(new THREE.Vector3())
+      const largestDimension = Math.max(size.x, size.y, size.z, 1)
 
-        const bounds = new THREE.Box3().setFromObject(model)
-        const size = bounds.getSize(new THREE.Vector3())
-        const center = bounds.getCenter(new THREE.Vector3())
-        const largestDimension = Math.max(size.x, size.y, size.z, 1)
+      model.position.sub(center)
+      scene.add(model)
 
-        model.position.sub(center)
-        scene.add(model)
+      const grid = new THREE.GridHelper(
+        largestDimension * 2,
+        20,
+        '#9eb0bf',
+        '#d8e1e8',
+      )
+      grid.position.y = -size.y / 2
+      scene.add(grid)
 
-        const grid = new THREE.GridHelper(largestDimension * 2, 20, '#9eb0bf', '#d8e1e8')
-        grid.position.y = -size.y / 2
-        scene.add(grid)
-
-        camera.near = Math.max(largestDimension / 1000, 0.01)
-        camera.far = largestDimension * 100
-        camera.position.set(
-          largestDimension * 1.45,
-          largestDimension * 1.05,
-          largestDimension * 1.45,
-        )
-        camera.updateProjectionMatrix()
-        controls.target.set(0, 0, 0)
-        controls.update()
-      },
-      undefined,
-      () => {
-        if (!disposed) {
-          setLoadError(true)
-        }
-      },
-    )
+      camera.near = Math.max(largestDimension / 1000, 0.01)
+      camera.far = largestDimension * 100
+      camera.position.set(
+        largestDimension * 1.45,
+        largestDimension * 1.05,
+        largestDimension * 1.45,
+      )
+      camera.updateProjectionMatrix()
+      controls.target.set(0, 0, 0)
+      controls.update()
+    } catch {
+      const errorMessage = document.createElement('p')
+      errorMessage.className = 'quotation-three-d-viewer-error'
+      errorMessage.textContent = '3D 모델을 불러올 수 없습니다.'
+      container.appendChild(errorMessage)
+    }
 
     const animate = () => {
       animationFrameId = window.requestAnimationFrame(animate)
@@ -124,27 +119,20 @@ export function ThreeDModelViewer({
     animate()
 
     return () => {
-      disposed = true
       window.cancelAnimationFrame(animationFrameId)
       resizeObserver.disconnect()
       controls.dispose()
       material.dispose()
       renderer.dispose()
-      renderer.domElement.remove()
+      container.replaceChildren()
     }
-  }, [modelUrl])
+  }, [modelText])
 
   return (
     <div
       ref={containerRef}
       className="quotation-three-d-viewer"
       aria-label={`${modelName} 3D 뷰어`}
-    >
-      {loadError ? (
-        <p className="quotation-three-d-viewer-error">
-          3D 모델을 불러올 수 없습니다.
-        </p>
-      ) : null}
-    </div>
+    />
   )
 }
