@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { LoaderCircle } from 'lucide-react'
 
 import { ThreeDModelViewer } from '../components/ThreeDModelViewer'
 import part2ModelText from '../assets/3D/20810_part2.obj?raw'
-import engineeringReviewModelText from '../assets/3D/PLH2_column_C1_engineering_review.obj?raw'
+import c1ModelDataUrl from '../assets/3D/C1_precision_turned_component_parametric_concept.stl?url'
+import c3ModelDataUrl from '../assets/3D/C3_linkage_reconstructed_v3_single_solid.stl?url'
+import c5ModelDataUrl from '../assets/3D/C5_Differential_Cylinder_Block_LH_concept.stl?url'
+import cf3ra010ModelDataUrl from '../assets/3D/CF3RA010_S2_21_structural_platform_concept.stl?url'
+import plh2ModelDataUrl from '../assets/3D/PLH2_column_C1_engineering_review.stl?url'
 import fileAttachIcon from '../assets/icons/file-plus.svg'
 import bomXlsxFileUrl from '../assets/PLH2-420-EM134-11001_0-BOM.xlsx?url'
 
@@ -25,6 +30,7 @@ type BomRow = {
 
 type ThreeDModel = {
   content: string
+  format: 'obj' | 'stl'
   label: string
 }
 
@@ -43,13 +49,50 @@ const quoteDrawingTabs: { value: QuoteDrawingTab; label: string }[] = [
 const threeDModelsByPdfName: { keyword: string; model: ThreeDModel }[] = [
   {
     keyword: 'part2',
-    model: { content: part2ModelText, label: '20810_part2.obj' },
+    model: {
+      content: part2ModelText,
+      format: 'obj',
+      label: '20810_part2.obj',
+    },
   },
   {
     keyword: 'plh2-420-em134-11001_0',
     model: {
-      content: engineeringReviewModelText,
-      label: 'PLH2_column_C1_engineering_review.obj',
+      content: plh2ModelDataUrl,
+      format: 'stl',
+      label: 'PLH2_column_C1_engineering_review.stl',
+    },
+  },
+  {
+    keyword: 'c1.png',
+    model: {
+      content: c1ModelDataUrl,
+      format: 'stl',
+      label: 'C1_precision_turned_component_parametric_concept.stl',
+    },
+  },
+  {
+    keyword: 'c3.png',
+    model: {
+      content: c3ModelDataUrl,
+      format: 'stl',
+      label: 'C3_linkage_reconstructed_v3_single_solid.stl',
+    },
+  },
+  {
+    keyword: 'c5.png',
+    model: {
+      content: c5ModelDataUrl,
+      format: 'stl',
+      label: 'C5_Differential_Cylinder_Block_LH_concept.stl',
+    },
+  },
+  {
+    keyword: 'cf3ra010-s2-21',
+    model: {
+      content: cf3ra010ModelDataUrl,
+      format: 'stl',
+      label: 'CF3RA010_S2_21_structural_platform_concept.stl',
     },
   },
 ]
@@ -165,7 +208,7 @@ function getDisplayFileName(fileName?: string): string {
   return fileName.replace(/\.png$/i, '')
 }
 
-function getThreeDModelForPdf(fileName: string): ThreeDModel | null {
+function getThreeDModelForFile(fileName: string): ThreeDModel | null {
   const normalizedFileName = fileName.toLowerCase()
 
   return (
@@ -183,8 +226,10 @@ export function QuotationDrawingPage() {
   const [threeDModelSelection, setThreeDModelSelection] =
     useState<ThreeDModelSelection | null>(null)
   const [threeDFileError, setThreeDFileError] = useState<string | null>(null)
+  const [isThreeDLoading, setIsThreeDLoading] = useState(false)
   const [isBomMenuOpen, setIsBomMenuOpen] = useState(false)
   const bomMenuRef = useRef<HTMLDivElement | null>(null)
+  const threeDLoadingTimerRef = useRef<number | null>(null)
 
   const hasPreviewFile = previewFile !== null
 
@@ -203,6 +248,14 @@ export function QuotationDrawingPage() {
       }
     }
   }, [threeDModelSelection])
+
+  useEffect(() => {
+    return () => {
+      if (threeDLoadingTimerRef.current !== null) {
+        window.clearTimeout(threeDLoadingTimerRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (!isBomMenuOpen) {
@@ -241,32 +294,51 @@ export function QuotationDrawingPage() {
 
     event.target.value = ''
   }
-  const handleThreeDFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+  const handleThreeDFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget
+    const file = input.files?.[0]
 
     if (!file) {
       return
     }
 
-    const model = getThreeDModelForPdf(file.name)
+    const model = getThreeDModelForFile(file.name)
 
     if (!model) {
+      if (threeDLoadingTimerRef.current !== null) {
+        window.clearTimeout(threeDLoadingTimerRef.current)
+        threeDLoadingTimerRef.current = null
+      }
+
+      setIsThreeDLoading(false)
       setThreeDModelSelection(null)
       setThreeDFileError(
-        'part2 또는 PLH2-420-EM134-11001_0 PDF 파일만 지원합니다.',
+        'part2/PLH2/CF3RA010-S2-21 PDF 또는 C1/C3/C5 PNG 파일만 지원합니다.',
       )
-      event.target.value = ''
+      input.value = ''
       return
     }
 
-    const downloadUrl = URL.createObjectURL(
-      new Blob([model.content], { type: 'text/plain;charset=utf-8' }),
-    )
+    if (threeDLoadingTimerRef.current !== null) {
+      window.clearTimeout(threeDLoadingTimerRef.current)
+    }
+
+    setIsThreeDLoading(true)
+    threeDLoadingTimerRef.current = window.setTimeout(() => {
+      setIsThreeDLoading(false)
+      threeDLoadingTimerRef.current = null
+    }, 6000)
+
+    const modelBlob =
+      model.format === 'obj'
+        ? new Blob([model.content], { type: 'text/plain;charset=utf-8' })
+        : await fetch(model.content).then((response) => response.blob())
+    const downloadUrl = URL.createObjectURL(modelBlob)
 
     setThreeDModelSelection({ downloadUrl, fileName: file.name, model })
     setThreeDFileError(null)
 
-    event.target.value = ''
+    input.value = ''
   }
   const handleDownloadBomXlsx = () => {
     const link = document.createElement('a')
@@ -320,7 +392,7 @@ export function QuotationDrawingPage() {
                     <label className="quotation-three-d-reselect-button">
                       <input
                         type="file"
-                        accept="application/pdf,.pdf"
+                        accept="application/pdf,.pdf,image/png,.png"
                         aria-label="다른 2D 도면 선택"
                         onChange={handleThreeDFileChange}
                       />
@@ -335,16 +407,25 @@ export function QuotationDrawingPage() {
                     </a>
                   </div>
                 </div>
-                <ThreeDModelViewer
-                  modelText={threeDModelSelection.model.content}
-                  modelName={threeDModelSelection.model.label}
-                />
+                {isThreeDLoading ? (
+                  <div className="quotation-three-d-loading" role="status">
+                    <LoaderCircle aria-hidden="true" />
+                    <strong>3D 모델을 생성하고 있습니다.</strong>
+                    <span>잠시만 기다려주세요.</span>
+                  </div>
+                ) : (
+                  <ThreeDModelViewer
+                    modelContent={threeDModelSelection.model.content}
+                    modelFormat={threeDModelSelection.model.format}
+                    modelName={threeDModelSelection.model.label}
+                  />
+                )}
               </div>
             ) : (
               <label className="quotation-file-dropzone">
                 <input
                   type="file"
-                  accept="application/pdf,.pdf"
+                  accept="application/pdf,.pdf,image/png,.png"
                   aria-label="3D 도면 생성용 2D 도면 첨부"
                   onChange={handleThreeDFileChange}
                 />

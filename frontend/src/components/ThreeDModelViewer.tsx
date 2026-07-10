@@ -1,15 +1,18 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js'
 
 type ThreeDModelViewerProps = {
-  modelText: string
+  modelContent: string
+  modelFormat: 'obj' | 'stl'
   modelName: string
 }
 
 export function ThreeDModelViewer({
-  modelText,
+  modelContent,
+  modelFormat,
   modelName,
 }: ThreeDModelViewerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -22,6 +25,7 @@ export function ThreeDModelViewer({
     }
 
     let animationFrameId = 0
+    let disposed = false
 
     const scene = new THREE.Scene()
     scene.background = new THREE.Color('#f8fbff')
@@ -33,10 +37,12 @@ export function ThreeDModelViewer({
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     container.appendChild(renderer.domElement)
 
-    const controls = new OrbitControls(camera, renderer.domElement)
-    controls.enableDamping = true
-    controls.dampingFactor = 0.08
-    controls.screenSpacePanning = false
+    const controls = new TrackballControls(camera, renderer.domElement)
+    controls.rotateSpeed = 4
+    controls.zoomSpeed = 1.2
+    controls.panSpeed = 0.8
+    controls.staticMoving = false
+    controls.dynamicDampingFactor = 0.12
 
     scene.add(new THREE.HemisphereLight('#ffffff', '#71849a', 2.5))
 
@@ -65,10 +71,32 @@ export function ThreeDModelViewer({
       roughness: 0.56,
     })
 
-    try {
-      const model = new OBJLoader().parse(modelText)
+    let model: THREE.Object3D | null = null
 
-      model.traverse((child) => {
+    const showLoadError = () => {
+      if (disposed) {
+        return
+      }
+
+      const errorMessage = document.createElement('p')
+      errorMessage.className = 'quotation-three-d-viewer-error'
+      errorMessage.textContent = '3D 모델을 불러올 수 없습니다.'
+      container.appendChild(errorMessage)
+    }
+
+    const displayModel = (loadedModel: THREE.Object3D) => {
+      if (disposed) {
+        loadedModel.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.geometry.dispose()
+          }
+        })
+        return
+      }
+
+      model = loadedModel
+
+      loadedModel.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.material = material
           child.castShadow = true
@@ -76,22 +104,13 @@ export function ThreeDModelViewer({
         }
       })
 
-      const bounds = new THREE.Box3().setFromObject(model)
+      const bounds = new THREE.Box3().setFromObject(loadedModel)
       const size = bounds.getSize(new THREE.Vector3())
       const center = bounds.getCenter(new THREE.Vector3())
       const largestDimension = Math.max(size.x, size.y, size.z, 1)
 
-      model.position.sub(center)
-      scene.add(model)
-
-      const grid = new THREE.GridHelper(
-        largestDimension * 2,
-        20,
-        '#9eb0bf',
-        '#d8e1e8',
-      )
-      grid.position.y = -size.y / 2
-      scene.add(grid)
+      loadedModel.position.sub(center)
+      scene.add(loadedModel)
 
       camera.near = Math.max(largestDimension / 1000, 0.01)
       camera.far = largestDimension * 100
@@ -103,11 +122,24 @@ export function ThreeDModelViewer({
       camera.updateProjectionMatrix()
       controls.target.set(0, 0, 0)
       controls.update()
-    } catch {
-      const errorMessage = document.createElement('p')
-      errorMessage.className = 'quotation-three-d-viewer-error'
-      errorMessage.textContent = '3D 모델을 불러올 수 없습니다.'
-      container.appendChild(errorMessage)
+    }
+
+    if (modelFormat === 'obj') {
+      try {
+        displayModel(new OBJLoader().parse(modelContent))
+      } catch {
+        showLoadError()
+      }
+    } else {
+      new STLLoader().load(
+        modelContent,
+        (geometry) => {
+          geometry.computeVertexNormals()
+          displayModel(new THREE.Mesh(geometry, material))
+        },
+        undefined,
+        showLoadError,
+      )
     }
 
     const animate = () => {
@@ -119,14 +151,20 @@ export function ThreeDModelViewer({
     animate()
 
     return () => {
+      disposed = true
       window.cancelAnimationFrame(animationFrameId)
       resizeObserver.disconnect()
       controls.dispose()
+      model?.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.geometry.dispose()
+        }
+      })
       material.dispose()
       renderer.dispose()
       container.replaceChildren()
     }
-  }, [modelText])
+  }, [modelContent, modelFormat])
 
   return (
     <div

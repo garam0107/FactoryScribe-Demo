@@ -139,6 +139,36 @@
   min-height: 0;
 }
 
+.quotation-three-d-loading {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  color: #35699f;
+  background: #f8fbff;
+}
+
+.quotation-three-d-loading svg {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 20px;
+  animation: quotation-three-d-spin 1.2s linear infinite;
+}
+
+.quotation-three-d-loading strong {
+  font-size: 18px;
+  line-height: 26px;
+}
+
+.quotation-three-d-loading span {
+  margin-top: 6px;
+  color: #71849a;
+  font-size: 14px;
+  line-height: 20px;
+}
+
 .quotation-three-d-viewer canvas {
   display: block;
   width: 100%;
@@ -164,6 +194,12 @@
 .quotation-three-d-file-error {
   max-width: 80%;
   margin-top: 12px;
+}
+
+@keyframes quotation-three-d-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .quotation-file-dropzone {
