@@ -47,7 +47,9 @@
     "sections": {
       "main": "Trang chính",
       "orders": "Đơn đặt hàng",
-      "inventory": "Quản lý tồn kho"
+      "inventory": "Quản lý tồn kho",
+      "quote": "Tính báo giá (Bản vẽ)",
+      "prompt": "Nâng cao: Nhập prompt"
     },
     "items": {
       "overallStatus": "Tình trạng tổng thể",
@@ -58,7 +60,11 @@
       "autoOrders": "Đơn đặt hàng tự động",
       "totalInventory": "Tình trạng tồn kho tổng",
       "lowStock": "Tồn kho thiếu hụt",
-      "quoteComparison": "So sánh báo giá"
+      "quoteComparison": "So sánh báo giá",
+      "bomGeneration": "Tạo BOM",
+      "threeDDrawingGeneration": "Tạo bản vẽ 3D",
+      "promptInput": "Nhập prompt",
+      "directorySettings": "Cài đặt thư mục"
     }
   }
 }

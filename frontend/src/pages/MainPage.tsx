@@ -32,10 +32,13 @@ import {
   type InventoryTab,
 } from './InventoryManagementPage'
 import { OrderPage, type OrderTab } from './OrderPage'
-import { PromptPage } from './PromptPage'
-import { QuotationDrawingPage } from './QuotationDrawingPage'
+import { PromptPage, type PromptTab } from './PromptPage'
+import {
+  QuotationDrawingPage,
+  type QuoteDrawingTab,
+} from './QuotationDrawingPage'
 
-const REPOSITORY_ID = 'repo_bb1b5f27db99'
+const REPOSITORY_ID = 'repo_ed87dd4ba0f8'
 const SECTIONS: AppSection[] = [
   'main',
   'orders',
@@ -52,6 +55,8 @@ type SearchResultItem = {
   mainTab?: MainDashboardTab
   orderTab?: OrderTab
   inventoryTab?: InventoryTab
+  quoteTab?: QuoteDrawingTab
+  promptTab?: PromptTab
 }
 
 type SearchResultGroup = {
@@ -61,6 +66,8 @@ type SearchResultGroup = {
   mainTab?: MainDashboardTab
   orderTab?: OrderTab
   inventoryTab?: InventoryTab
+  quoteTab?: QuoteDrawingTab
+  promptTab?: PromptTab
   items: SearchResultItem[]
 }
 
@@ -143,6 +150,58 @@ const SEARCH_RESULT_GROUPS: SearchResultGroup[] = [
       },
     ],
   },
+  {
+    titleKey: 'search.sections.quote',
+    section: 'quote',
+    quoteTab: 'bom',
+    keywords: [
+      '견적 계산',
+      '도면',
+      '견적 계산 도면',
+      'quote calculation',
+      'drawing',
+    ],
+    items: [
+      {
+        labelKey: 'search.items.bomGeneration',
+        section: 'quote',
+        quoteTab: 'bom',
+        keywords: ['견적 계산', 'bom', 'bom 생성', 'bill of materials'],
+      },
+      {
+        labelKey: 'search.items.threeDDrawingGeneration',
+        section: 'quote',
+        quoteTab: 'change',
+        keywords: ['도면', '3d', '3d 도면', '3d 도면 생성', '3d drawing'],
+      },
+    ],
+  },
+  {
+    titleKey: 'search.sections.prompt',
+    section: 'prompt',
+    promptTab: 'prompt',
+    keywords: [
+      '고급',
+      '프롬프트',
+      '프롬프트 입력',
+      'advanced',
+      'prompt input',
+    ],
+    items: [
+      {
+        labelKey: 'search.items.promptInput',
+        section: 'prompt',
+        promptTab: 'prompt',
+        keywords: ['고급', '프롬프트', '프롬프트 입력', 'advanced', 'prompt'],
+      },
+      {
+        labelKey: 'search.items.directorySettings',
+        section: 'prompt',
+        promptTab: 'directory',
+        keywords: ['디렉토리', '디렉토리 설정', '폴더 설정', 'directory', 'folder'],
+      },
+    ],
+  },
 ]
 
 const SIDEBAR_LABEL_KEYS: Record<AppSection, string> = {
@@ -183,6 +242,9 @@ export function MainPage() {
   const [activeOrderTab, setActiveOrderTab] = useState<OrderTab>('required')
   const [activeInventoryTab, setActiveInventoryTab] =
     useState<InventoryTab>('total')
+  const [activeQuoteTab, setActiveQuoteTab] =
+    useState<QuoteDrawingTab>('bom')
+  const [activePromptTab, setActivePromptTab] = useState<PromptTab>('prompt')
   const [dashboard, setDashboard] = useState<InventoryDashboard | null>(null)
   const [items, setItems] = useState<InventoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -365,6 +427,14 @@ export function MainPage() {
 
     if (target.inventoryTab) {
       setActiveInventoryTab(target.inventoryTab)
+    }
+
+    if (target.quoteTab) {
+      setActiveQuoteTab(target.quoteTab)
+    }
+
+    if (target.promptTab) {
+      setActivePromptTab(target.promptTab)
     }
 
     changeSection(target.section)
@@ -655,6 +725,8 @@ export function MainPage() {
             />
           ) : activeSection === 'prompt' ? (
             <PromptPage
+              activeTab={activePromptTab}
+              onTabChange={setActivePromptTab}
               draft={promptDraft}
               isSending={isPromptSending}
               isLoadingMessages={isPromptMessagesLoading}
@@ -667,7 +739,10 @@ export function MainPage() {
               onRemoveDirectory={handleRemoveDirectory}
             />
             ) : activeSection === 'quote' ? (
-                <QuotationDrawingPage />
+                <QuotationDrawingPage
+                  activeTab={activeQuoteTab}
+                  onTabChange={setActiveQuoteTab}
+                />
           ) : activeSection === 'admin' ? (
             <div className="empty-page" aria-label="관리자 설정">
               {/* 관리자 설정 화면은 아직 준비 중 */}
@@ -684,7 +759,7 @@ export function MainPage() {
                   <img src={plusIcon} alt="" />
                   <input
                     aria-label="질문 입력"
-                    placeholder={t('chat.searchPlaceholder')}
+                    placeholder={t('chat.askAnything')}
                     type="text"
                   />
                   <button type="button" aria-label="질문 검색">

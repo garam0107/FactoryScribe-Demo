@@ -7,7 +7,7 @@ import searchIcon from '../assets/icons/search.svg'
 import type { ChatMessage } from '../types/chat'
 import type { Repository } from '../types/repository'
 
-type PromptTab = 'prompt' | 'directory'
+export type PromptTab = 'prompt' | 'directory'
 
 type DirectoryCreatePayload = {
   name: string
@@ -15,6 +15,8 @@ type DirectoryCreatePayload = {
 }
 
 type PromptPageProps = {
+  activeTab: PromptTab
+  onTabChange: (tab: PromptTab) => void
   draft: string
   isSending: boolean
   isLoadingMessages: boolean
@@ -39,6 +41,8 @@ const DIRECTORY_META = [
 ]
 
 export function PromptPage({
+  activeTab,
+  onTabChange,
   draft,
   isSending,
   isLoadingMessages,
@@ -50,7 +54,6 @@ export function PromptPage({
   onAddDirectory,
   onRemoveDirectory,
 }: PromptPageProps) {
-  const [activeTab, setActiveTab] = useState<PromptTab>('prompt')
   const [selectedDirectoryId, setSelectedDirectoryId] = useState<string | null>(
     null,
   )
@@ -80,14 +83,14 @@ export function PromptPage({
           <button
             className={activeTab === 'prompt' ? 'active' : ''}
             type="button"
-            onClick={() => setActiveTab('prompt')}
+            onClick={() => onTabChange('prompt')}
           >
             프롬프트 입력
           </button>
           <button
             className={activeTab === 'directory' ? 'active' : ''}
             type="button"
-            onClick={() => setActiveTab('directory')}
+            onClick={() => onTabChange('directory')}
           >
             디렉토리 설정
           </button>

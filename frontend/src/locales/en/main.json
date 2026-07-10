@@ -47,7 +47,9 @@
     "sections": {
       "main": "Main",
       "orders": "Purchase Orders",
-      "inventory": "Inventory Management"
+      "inventory": "Inventory Management",
+      "quote": "Quote Calculation (Drawing)",
+      "prompt": "Advanced: Prompt Input"
     },
     "items": {
       "overallStatus": "Overall Status",
@@ -58,7 +60,11 @@
       "autoOrders": "Auto Orders",
       "totalInventory": "Total Inventory Status",
       "lowStock": "Low Stock",
-      "quoteComparison": "Quote Comparison"
+      "quoteComparison": "Quote Comparison",
+      "bomGeneration": "Generate BOM",
+      "threeDDrawingGeneration": "Generate 3D Drawing",
+      "promptInput": "Prompt Input",
+      "directorySettings": "Directory Settings"
     }
   }
 }

@@ -47,7 +47,9 @@
     "sections": {
       "main": "메인",
       "orders": "발주",
-      "inventory": "재고 관리"
+      "inventory": "재고 관리",
+      "quote": "견적 계산(도면)",
+      "prompt": "고급 : 프롬프트 입력"
     },
     "items": {
       "overallStatus": "전체 현황",
@@ -58,7 +60,11 @@
       "autoOrders": "자동 발주",
       "totalInventory": "총 재고 현황",
       "lowStock": "부족 재고",
-      "quoteComparison": "견적서 비교"
+      "quoteComparison": "견적서 비교",
+      "bomGeneration": "BOM 생성",
+      "threeDDrawingGeneration": "3D 도면 생성",
+      "promptInput": "프롬프트 입력",
+      "directorySettings": "디렉토리 설정"
     }
   }
 }

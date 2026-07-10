@@ -11,7 +11,12 @@ import plh2ModelDataUrl from '../assets/3D/PLH2_column_C1_engineering_review.stl
 import fileAttachIcon from '../assets/icons/file-plus.svg'
 import bomXlsxFileUrl from '../assets/PLH2-420-EM134-11001_0-BOM.xlsx?url'
 
-type QuoteDrawingTab = 'bom' | 'settings' | 'change'
+export type QuoteDrawingTab = 'bom' | 'settings' | 'change'
+
+type QuotationDrawingPageProps = {
+  activeTab: QuoteDrawingTab
+  onTabChange: (tab: QuoteDrawingTab) => void
+}
 
 type QuotationPreviewFile = {
   name: string
@@ -218,8 +223,10 @@ function getThreeDModelForFile(fileName: string): ThreeDModel | null {
   )
 }
 
-export function QuotationDrawingPage() {
-  const [activeTab, setActiveTab] = useState<QuoteDrawingTab>('bom')
+export function QuotationDrawingPage({
+  activeTab,
+  onTabChange,
+}: QuotationDrawingPageProps) {
   const [previewFile, setPreviewFile] = useState<QuotationPreviewFile | null>(
     null,
   )
@@ -369,7 +376,7 @@ export function QuotationDrawingPage() {
             key={tab.value}
             onClick={() => {
               if (tab.value !== 'settings') {
-                setActiveTab(tab.value)
+                onTabChange(tab.value)
               }
             }}
           >
