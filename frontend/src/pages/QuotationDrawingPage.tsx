@@ -47,7 +47,6 @@ type ThreeDModelSelection = {
 
 const quoteDrawingTabs: { value: QuoteDrawingTab; label: string }[] = [
   { value: 'bom', label: 'BOM 생성' },
-  { value: 'change', label: '3D 도면 생성' },
   { value: 'settings', label: '세부 설정' },
 ]
 

@@ -29,7 +29,7 @@
 
 .quotation-drawing-content {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 6.5fr) minmax(0, 3.5fr);
   align-items: stretch;
   gap: 12px;
 
