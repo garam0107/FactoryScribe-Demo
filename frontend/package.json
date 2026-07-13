@@ -47,7 +47,7 @@
   "build": {
     "appId": "com.nextvine.factoryscribe",
     "productName": "Fautory",
-    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "artifactName": "${productName}-${version}-${os}-${arch}-${target}.${ext}",
     "directories": {
       "output": "release",
       "buildResources": "build"
