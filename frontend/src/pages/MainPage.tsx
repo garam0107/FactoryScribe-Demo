@@ -171,7 +171,7 @@ const SEARCH_RESULT_GROUPS: SearchResultGroup[] = [
       {
         labelKey: 'search.items.threeDDrawingGeneration',
         section: 'quote',
-        quoteTab: 'change',
+        quoteTab: 'bom',
         keywords: ['도면', '3d', '3d 도면', '3d 도면 생성', '3d drawing'],
       },
     ],

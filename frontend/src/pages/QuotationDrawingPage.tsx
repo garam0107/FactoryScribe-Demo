@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type PointerEvent as ReactPointerEvent,
+  type WheelEvent as ReactWheelEvent,
+} from 'react'
 import { LoaderCircle } from 'lucide-react'
 
 import { ThreeDModelViewer } from '../components/ThreeDModelViewer'
@@ -23,6 +30,16 @@ type QuotationPreviewFile = {
   type: 'pdf' | 'image' | 'unknown'
   objectUrl: string
 }
+
+type ImageView = {
+  scale: number
+  x: number
+  y: number
+}
+
+const INITIAL_IMAGE_VIEW: ImageView = { scale: 1, x: 0, y: 0 }
+const MIN_IMAGE_SCALE = 1
+const MAX_IMAGE_SCALE = 4
 
 type BomRow = {
   mark: string
@@ -229,6 +246,11 @@ export function QuotationDrawingPage({
   const [previewFile, setPreviewFile] = useState<QuotationPreviewFile | null>(
     null,
   )
+  const [imageView, setImageView] = useState<ImageView>(INITIAL_IMAGE_VIEW)
+  const [isThreeDView, setIsThreeDView] = useState(false)
+  const [isImageDragging, setIsImageDragging] = useState(false)
+  const imageDragRef = useRef({ pointerId: -1, x: 0, y: 0 })
+  const quotationFileInputRef = useRef<HTMLInputElement | null>(null)
   const [threeDModelSelection, setThreeDModelSelection] =
     useState<ThreeDModelSelection | null>(null)
   const [threeDFileError, setThreeDFileError] = useState<string | null>(null)
@@ -238,6 +260,9 @@ export function QuotationDrawingPage({
   const threeDLoadingTimerRef = useRef<number | null>(null)
 
   const hasPreviewFile = previewFile !== null
+  const selectedThreeDModel = previewFile
+    ? getThreeDModelForFile(previewFile.name)
+    : null
 
   useEffect(() => {
     return () => {
@@ -292,6 +317,10 @@ export function QuotationDrawingPage({
 
     const type = getPreviewType(file)
 
+    setImageView(INITIAL_IMAGE_VIEW)
+    setIsImageDragging(false)
+    setIsThreeDView(false)
+
     setPreviewFile({
       name: file.name,
       type,
@@ -299,6 +328,74 @@ export function QuotationDrawingPage({
     })
 
     event.target.value = ''
+  }
+
+  const handleImageWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
+    event.preventDefault()
+
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const cursorX = event.clientX - bounds.left - bounds.width / 2
+    const cursorY = event.clientY - bounds.top - bounds.height / 2
+    const zoomFactor = event.deltaY < 0 ? 1.15 : 1 / 1.15
+
+    setImageView((current) => {
+      const scale = Math.min(
+        MAX_IMAGE_SCALE,
+        Math.max(MIN_IMAGE_SCALE, current.scale * zoomFactor),
+      )
+
+      if (scale === MIN_IMAGE_SCALE) {
+        return INITIAL_IMAGE_VIEW
+      }
+
+      const ratio = scale / current.scale
+      return {
+        scale,
+        x: cursorX - (cursorX - current.x) * ratio,
+        y: cursorY - (cursorY - current.y) * ratio,
+      }
+    })
+  }
+
+  const handleImagePointerDown = (
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    event.preventDefault()
+    if (imageView.scale <= MIN_IMAGE_SCALE) return
+
+    event.currentTarget.setPointerCapture(event.pointerId)
+    imageDragRef.current = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+    }
+    setIsImageDragging(true)
+  }
+
+  const handleImagePointerMove = (
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    if (imageDragRef.current.pointerId !== event.pointerId) return
+
+    const deltaX = event.clientX - imageDragRef.current.x
+    const deltaY = event.clientY - imageDragRef.current.y
+    imageDragRef.current.x = event.clientX
+    imageDragRef.current.y = event.clientY
+    setImageView((current) => ({
+      ...current,
+      x: current.x + deltaX,
+      y: current.y + deltaY,
+    }))
+  }
+
+  const handleImagePointerUp = (
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    if (imageDragRef.current.pointerId !== event.pointerId) return
+
+    imageDragRef.current.pointerId = -1
+    setIsImageDragging(false)
+    event.currentTarget.releasePointerCapture(event.pointerId)
   }
   const handleThreeDFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.currentTarget
@@ -447,12 +544,22 @@ export function QuotationDrawingPage({
           </div>
         ) : (
           <div className="quotation-drawing-content">
+          <div className="quotation-source-panel">
           <label
             className={`quotation-file-dropzone${
               hasPreviewFile ? ' has-preview' : ''
             }`}
+            onClick={(event) => {
+              if (
+                hasPreviewFile &&
+                event.target !== quotationFileInputRef.current
+              ) {
+                event.preventDefault()
+              }
+            }}
           >
             <input
+              ref={quotationFileInputRef}
               type="file"
               accept=".pdf,image/*"
               aria-label="견적서 첨부"
@@ -461,7 +568,19 @@ export function QuotationDrawingPage({
 
             {previewFile ? (
               <div className="quotation-file-preview">
-                {previewFile.type === 'pdf' ? (
+                {isThreeDView && selectedThreeDModel ? (
+                  <div className="quotation-inline-three-d-viewer">
+                    <ThreeDModelViewer
+                      modelContent={selectedThreeDModel.content}
+                      modelFormat={selectedThreeDModel.format}
+                      modelName={selectedThreeDModel.label}
+                    />
+                  </div>
+                ) : isThreeDView ? (
+                  <div className="quotation-inline-three-d-empty">
+                    이 파일의 3D 모델을 찾을 수 없습니다.
+                  </div>
+                ) : previewFile.type === 'pdf' ? (
                   <object
                     data={previewFile.objectUrl}
                     type="application/pdf"
@@ -470,12 +589,35 @@ export function QuotationDrawingPage({
                     <span>PDF 미리보기를 표시할 수 없습니다.</span>
                   </object>
                 ) : previewFile.type === 'image' ? (
-                  <img src={previewFile.objectUrl} alt={previewFile.name} />
+                  <div
+                    className={`quotation-image-viewport${
+                      imageView.scale > MIN_IMAGE_SCALE ? ' is-zoomed' : ''
+                    }${isImageDragging ? ' is-dragging' : ''}`}
+                    onWheel={handleImageWheel}
+                    onPointerDown={handleImagePointerDown}
+                    onPointerMove={handleImagePointerMove}
+                    onPointerUp={handleImagePointerUp}
+                    onPointerCancel={handleImagePointerUp}
+                    onDoubleClick={(event) => {
+                      event.preventDefault()
+                      setImageView(INITIAL_IMAGE_VIEW)
+                    }}
+                  >
+                    <img
+                      src={previewFile.objectUrl}
+                      alt={previewFile.name}
+                      draggable={false}
+                      style={{
+                        transform: `translate3d(${imageView.x}px, ${imageView.y}px, 0) scale(${imageView.scale})`,
+                      }}
+                    />
+                  </div>
                 ) : (
                   <div className="quotation-preview-unsupported">
                     미리보기를 지원하지 않는 파일입니다.
                   </div>
                 )}
+
               </div>
             ) : (
               <>
@@ -484,6 +626,40 @@ export function QuotationDrawingPage({
               </>
             )}
           </label>
+
+          <div
+            className="quotation-preview-toolbar"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="quotation-view-toggle" aria-label="2D 3D 보기 전환">
+              <span className={!isThreeDView && hasPreviewFile ? 'active' : ''}>
+                2D
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isThreeDView}
+                aria-label="3D 보기로 전환"
+                disabled={!hasPreviewFile}
+                onClick={() => setIsThreeDView((current) => !current)}
+              >
+                <span />
+              </button>
+              <span className={isThreeDView && hasPreviewFile ? 'active' : ''}>
+                3D
+              </span>
+            </div>
+
+            <button
+              className="quotation-open-another-file"
+              type="button"
+              disabled={!hasPreviewFile}
+              onClick={() => quotationFileInputRef.current?.click()}
+            >
+              다른 파일 열기
+            </button>
+          </div>
+          </div>
 
           <aside className="quotation-result-panel" aria-label="예상 BOM">
             <div className="quotation-result-header">
@@ -568,6 +744,14 @@ export function QuotationDrawingPage({
             <div className="quotation-total-price">
               <strong>예상 견적 가격 :</strong>
               <span>{hasPreviewFile ? '7,420,000 KRW' : 'KRW'}</span>
+            </div>
+            <div className="quotation-result-actions">
+              <button
+                className="quotation-export-pdf-button"
+                type="button"
+              >
+                PDF 내보내기
+              </button>
             </div>
           </aside>
           </div>
