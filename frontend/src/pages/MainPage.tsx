@@ -38,7 +38,7 @@ import {
   type QuoteDrawingTab,
 } from './QuotationDrawingPage'
 
-const REPOSITORY_ID = 'repo_ed87dd4ba0f8'
+const REPOSITORY_ID = 'repo_1050ea2fcd8c'
 const SECTIONS: AppSection[] = [
   'main',
   'orders',
