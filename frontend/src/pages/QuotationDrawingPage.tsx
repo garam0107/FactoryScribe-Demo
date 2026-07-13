@@ -248,6 +248,8 @@ export function QuotationDrawingPage({
   )
   const [imageView, setImageView] = useState<ImageView>(INITIAL_IMAGE_VIEW)
   const [isThreeDView, setIsThreeDView] = useState(false)
+  const [isAutoEstimateEnabled, setIsAutoEstimateEnabled] = useState(true)
+  const [isDefaultThreeDView, setIsDefaultThreeDView] = useState(false)
   const [isImageDragging, setIsImageDragging] = useState(false)
   const imageDragRef = useRef({ pointerId: -1, x: 0, y: 0 })
   const quotationFileInputRef = useRef<HTMLInputElement | null>(null)
@@ -470,11 +472,7 @@ export function QuotationDrawingPage({
             className={activeTab === tab.value ? 'active' : ''}
             type="button"
             key={tab.value}
-            onClick={() => {
-              if (tab.value !== 'settings') {
-                onTabChange(tab.value)
-              }
-            }}
+            onClick={() => onTabChange(tab.value)}
           >
             {tab.label}
           </button>
@@ -482,7 +480,57 @@ export function QuotationDrawingPage({
       </nav>
 
       <div className="order-table-section quotation-drawing-section">
-        {activeTab === 'change' ? (
+        {activeTab === 'settings' ? (
+          <div className="quotation-settings-panel">
+            <h2>기본 견적 설정</h2>
+            <div className="quotation-settings-list">
+              <div className="quotation-settings-row">
+                <span>자동 판단</span>
+                <button
+                  className="quotation-settings-switch"
+                  type="button"
+                  role="switch"
+                  aria-checked={isAutoEstimateEnabled}
+                  onClick={() => setIsAutoEstimateEnabled((current) => !current)}
+                >
+                  <span />
+                </button>
+              </div>
+              <div className="quotation-settings-row">
+                <span>마진율</span>
+                <strong>20%</strong>
+              </div>
+              <div className="quotation-settings-row">
+                <span>인건비</span>
+                <strong>20,000 KRW/h</strong>
+              </div>
+              <div className="quotation-settings-row">
+                <span>필요 인원</span>
+                <strong>5명</strong>
+              </div>
+              <div className="quotation-settings-row">
+                <span>제조 소요 기간</span>
+                <strong>15일</strong>
+              </div>
+              <div className="quotation-settings-row">
+                <span>작업 완료 시 기본 뷰</span>
+                <div className="quotation-settings-view-toggle">
+                  <strong className={!isDefaultThreeDView ? 'active' : ''}>2D</strong>
+                  <button
+                    className="quotation-settings-switch"
+                    type="button"
+                    role="switch"
+                    aria-checked={isDefaultThreeDView}
+                    onClick={() => setIsDefaultThreeDView((current) => !current)}
+                  >
+                    <span />
+                  </button>
+                  <strong className={isDefaultThreeDView ? 'active' : ''}>3D</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === 'change' ? (
           <div className="quotation-three-d-content">
             {threeDModelSelection ? (
               <div className="quotation-three-d-model-panel">
@@ -739,6 +787,21 @@ export function QuotationDrawingPage({
                   <div className="quotation-bom-line-row" key={index} />
                 ))
               )}
+            </div>
+
+            <div className="quotation-estimate-metrics" aria-label="견적 조건">
+              <div>
+                <span>마진율</span>
+                <strong>20%</strong>
+              </div>
+              <div>
+                <span>인건비</span>
+                <strong>20,000KRW/h</strong>
+              </div>
+              <div>
+                <span>인원</span>
+                <strong>5명</strong>
+              </div>
             </div>
 
             <div className="quotation-total-price">

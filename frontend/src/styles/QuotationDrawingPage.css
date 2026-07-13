@@ -716,6 +716,131 @@
   box-sizing: border-box;
 }
 
+.quotation-estimate-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 0 0 auto;
+  padding: 14px 0;
+  border-top: 1px solid #e3e3e3;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.quotation-estimate-metrics > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+  padding: 0 5px;
+  border-right: 1px solid #e3e3e3;
+}
+
+.quotation-estimate-metrics > div:last-child {
+  border-right: 0;
+}
+
+.quotation-estimate-metrics span,
+.quotation-estimate-metrics strong {
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quotation-estimate-metrics span {
+  color: #111;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.quotation-estimate-metrics strong {
+  color: #111;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.quotation-settings-panel {
+  width: min(100%, 896px);
+  height: 100%;
+  padding-top: 12px;
+  box-sizing: border-box;
+}
+
+.quotation-settings-panel h2 {
+  margin: 0 0 12px;
+  color: #111;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.quotation-settings-list {
+  width: min(100%, 350px);
+}
+
+.quotation-settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 76px;
+  gap: 24px;
+  color: #111;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.quotation-settings-row > span {
+  white-space: nowrap;
+}
+
+.quotation-settings-row > strong,
+.quotation-settings-view-toggle strong {
+  color: #aaa;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.quotation-settings-switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #ddd;
+  cursor: pointer;
+}
+
+.quotation-settings-switch span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 160ms ease;
+}
+
+.quotation-settings-switch[aria-checked='true'] {
+  background: #60a5e9;
+}
+
+.quotation-settings-switch[aria-checked='true'] span {
+  left: 18px;
+}
+
+.quotation-settings-view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quotation-settings-view-toggle strong.active {
+  color: #111;
+}
+
 .quotation-total-price strong {
   color: #111;
   font-size: 24px;
