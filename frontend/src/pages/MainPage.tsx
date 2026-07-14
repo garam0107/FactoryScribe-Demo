@@ -459,6 +459,16 @@ export function MainPage() {
     }
   }
 
+  const handleStartNewPromptConversation = () => {
+    if (isPromptSending) {
+      return
+    }
+
+    setActivePromptConversationId(null)
+    setPromptMessages([])
+    setPromptDraft('')
+  }
+
   const sendPromptMessage = async (
     message: string,
     conversationId: string | null,
@@ -719,7 +729,9 @@ export function MainPage() {
           onSectionChange={changeSection}
           promptConversations={promptConversations}
           activePromptConversationId={activePromptConversationId}
+          isPromptSending={isPromptSending}
           onPromptConversationSelect={handlePromptConversationSelect}
+          onStartNewPromptConversation={handleStartNewPromptConversation}
         />
 
         <section

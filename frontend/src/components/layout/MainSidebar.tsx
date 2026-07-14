@@ -4,6 +4,8 @@ import bookmarkIcon from '../../assets/icons/bookmark.svg'
 import checkIcon from '../../assets/icons/check.svg'
 import homeIcon from '../../assets/icons/home.svg'
 import loaderIcon from '../../assets/icons/loader.svg'
+import messageCircleIcon from '../../assets/icons/message-circle.svg'
+import plusIcon from '../../assets/icons/plus.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
 import toolsIcon from '../../assets/icons/tools.svg'
 import truckIcon from '../../assets/icons/truck.svg'
@@ -40,7 +42,9 @@ type MainSidebarProps = {
   onSectionChange: (section: AppSection) => void
   promptConversations: ChatConversationSummary[]
   activePromptConversationId: string | null
+  isPromptSending: boolean
   onPromptConversationSelect: (conversationId: string) => void
+  onStartNewPromptConversation: () => void
 }
 
 export function MainSidebar({
@@ -48,7 +52,9 @@ export function MainSidebar({
   onSectionChange,
   promptConversations,
   activePromptConversationId,
+  isPromptSending,
   onPromptConversationSelect,
+  onStartNewPromptConversation,
 }: MainSidebarProps) {
   const { t } = useTranslation('sidebar')
 
@@ -77,6 +83,19 @@ export function MainSidebar({
 
       {activeSection === 'prompt' ? (
         <section className="sidebar-history" aria-label="대화 히스토리">
+          <button
+            className="sidebar-new-conversation"
+            type="button"
+            disabled={isPromptSending}
+            onClick={onStartNewPromptConversation}
+          >
+            <span>
+              <img src={messageCircleIcon} alt="" />
+              새 대화 시작하기
+            </span>
+            <img src={plusIcon} alt="" />
+          </button>
+
           <div className="sidebar-history-header">
             <img src={bookmarkIcon} alt="" />
             <strong>대화 히스토리</strong>
