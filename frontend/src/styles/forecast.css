@@ -46,7 +46,7 @@
   gap: 32px;
   align-self: start;
   min-width: 0;
-  height: 370px;
+  height: 394px;
   padding: 24px;
   overflow: hidden;
   border: 1px solid var(--azure-900);
@@ -69,6 +69,13 @@
   font-size: 17px;
   font-weight: 650;
   line-height: 24px;
+}
+
+.forecast-card-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
 .forecast-more {

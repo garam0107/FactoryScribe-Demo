@@ -251,30 +251,32 @@ function ForecastCard({
 
   return (
     <article className="forecast-card">
-      <header className="forecast-card-header">
-        <h3>{category}</h3>
-        <button
-          className="forecast-more"
-          type="button"
-          onClick={() => onExpand(category)}
-        >
-          <span>{t('dashboard.viewMore')}</span>
-          <img src={chevronRightIcon} alt="" aria-hidden="true" />
-        </button>
-      </header>
+      <div className="forecast-card-summary">
+        <header className="forecast-card-header">
+          <h3>{category}</h3>
+          <button
+            className="forecast-more"
+            type="button"
+            onClick={() => onExpand(category)}
+          >
+            <span>{t('dashboard.viewMore')}</span>
+            <img src={chevronRightIcon} alt="" aria-hidden="true" />
+          </button>
+        </header>
 
-      <div className="forecast-product">
-        <div className="forecast-meta">
-          <span>{item.supplier || '공급사 미지정'}</span>
-          <i aria-hidden="true" />
-          <span>{item.item_name}</span>
+        <div className="forecast-product">
+          <div className="forecast-meta">
+            <span>{item.supplier || '공급사 미지정'}</span>
+            <i aria-hidden="true" />
+            <span>{item.item_name}</span>
+          </div>
+
+          <strong>{formatPrice(item.current_unit_price, item.unit)}</strong>
+
+          <p className={`forecast-change ${priceChange.className}`}>
+            {priceChange.text}
+          </p>
         </div>
-
-        <strong>{formatPrice(item.current_unit_price, item.unit)}</strong>
-
-        <p className={`forecast-change ${priceChange.className}`}>
-          {priceChange.text}
-        </p>
       </div>
 
       <div className="forecast-quantity-box">
