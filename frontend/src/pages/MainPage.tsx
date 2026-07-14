@@ -616,7 +616,16 @@ export function MainPage() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <a className="brand" href="/" aria-label="FAUTORY 홈">
+                <a
+          className="brand"
+          href="#main"
+          aria-label="FAUTORY 홈"
+          onClick={(event) => {
+            event.preventDefault()
+            window.location.hash = 'main'
+            window.location.reload()
+          }}
+        >
           <img src={logomarkIcon} alt="" />
           <span>FAUTORY</span>
         </a>
