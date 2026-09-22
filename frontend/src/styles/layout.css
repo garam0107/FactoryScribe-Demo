@@ -325,6 +325,9 @@
   gap: 16px;
   align-items: center;
   min-width: 0;
+  flex: 1 1 auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .sidebar-new-conversation img {

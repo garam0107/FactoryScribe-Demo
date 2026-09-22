@@ -59,7 +59,7 @@ export function MainSidebar({
   const { t } = useTranslation('sidebar')
 
   return (
-    <aside className="sidebar" aria-label="주요 메뉴">
+    <aside className="sidebar" aria-label={t('accessibility.mainMenu')}>
       <nav className="side-nav">
         {navItems.map((item) => (
           <button
@@ -82,7 +82,7 @@ export function MainSidebar({
       </nav>
 
       {activeSection === 'prompt' ? (
-        <section className="sidebar-history" aria-label="대화 히스토리">
+        <section className="sidebar-history" aria-label={t('prompt.conversationHistory')}>
           <button
             className="sidebar-new-conversation"
             type="button"
@@ -91,14 +91,14 @@ export function MainSidebar({
           >
             <span>
               <img src={messageCircleIcon} alt="" />
-              새 대화 시작하기
+              {t('prompt.startNewConversation')}
             </span>
             <img src={plusIcon} alt="" />
           </button>
 
           <div className="sidebar-history-header">
             <img src={bookmarkIcon} alt="" />
-            <strong>대화 히스토리</strong>
+            <strong>{t('prompt.conversationHistory')}</strong>
           </div>
 
           <div className="sidebar-history-list">

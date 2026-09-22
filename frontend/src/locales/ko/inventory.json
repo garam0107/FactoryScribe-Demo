@@ -12,11 +12,18 @@
     "lowStock": "부족 재고",
     "addInventory": "재고 추가",
     "inventorySearchPlaceholder": "재고명, 거래처명을 입력해주세요.",
-    "lowStockUsedInNextQuotation": "부족 재고 : {{count}}가지 는 다음 견적서에 사용 됩니다."
+    "lowStockUsedInNextQuotation": "부족 재고 : {{count}}가지 는 다음 견적서에 사용 됩니다.",
+    "lowStockCount": "부족 재고 : {{count}}가지", "usedInNextQuotation": "는 다음 견적서에 사용 됩니다.",
+    "currentInventoryCount": "현재 재고 : {{count}} 가지", "remainingQuantityWithCount": "잔여 수량 : {{count}}개"
   },
   "quotation": {
     "comparison": "견적서 비교",
     "comparisonPreparing": "견적서 비교 화면은 준비 중입니다.",
-    "searchPlaceholder": "품목명, 거래처명, 납기일자 등을 입력해주세요."
-  }
+    "searchPlaceholder": "품목명, 거래처명, 납기일자 등을 입력해주세요.",
+    "dueSoon": "납기 임박", "shortageDescriptionStart": "해당 견적서에", "shortageDescriptionEmphasis": "필요하지만 부족한 재고", "shortageDescriptionEnd": " 입니다."
+  },
+  "status": { "shortageQuotationsLoadError": "부족 재고 연관 견적서를 불러오지 못했습니다.", "loadingShortageQuotations": "부족 재고 견적서를 불러오는 중입니다.", "noShortageQuotations": "표시할 부족 재고 견적서가 없습니다.", "loadingInventory": "재고 데이터를 불러오는 중입니다.", "noInventory": "표시할 재고 데이터가 없습니다." },
+  "preview": { "createError": "파일 미리보기를 생성하지 못했습니다.", "noSheetData": "표시할 시트 데이터가 없습니다.", "pdfUnavailable": "PDF 미리보기를 표시할 수 없습니다.", "unsupported": "미리보기 불가", "selectedCount": "총 {{count}}건 선택됨", "deleteCurrentStatement": "현재 명세서 삭제", "reset": "초기화", "addFile": "파일 추가", "attachStatement": "여기에 거래명세서 첨부", "inventoryList": "재고 목록", "statementDetails": "거래명세서 상세 정보", "currentlyViewing": "현재 보기" },
+  "actions": { "cancel": "취소" }, "units": { "each": "개" },
+  "accessibility": { "inventoryPages": "재고 페이지", "firstPage": "첫 페이지", "previousPage": "이전 페이지", "nextPage": "다음 페이지", "lastPage": "마지막 페이지", "inventoryManagement": "재고 관리", "inventoryTabs": "재고 관리 탭", "moreInventoryOptions": "재고 관리 더보기", "selectCurrentPage": "현재 페이지 전체 선택", "shortageQuotationSearch": "부족 재고 견적서 검색", "selectItem": "{{itemName}} 선택", "inventorySearch": "재고 검색", "moreQuotationOptions": "견적서 더보기" }
 }

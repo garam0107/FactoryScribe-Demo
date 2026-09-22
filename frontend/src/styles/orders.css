@@ -22,6 +22,8 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .order-summary-row h1 {
@@ -31,14 +33,16 @@
   font-weight: 400;
   line-height: 40px;
   letter-spacing: -0.32px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .order-actions {
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 36px;
+  min-height: 36px;
+  height: auto;
   flex: 0 0 auto;
 }
 
@@ -46,7 +50,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  min-height: 36px;
+  height: auto;
   padding: 8px 16px;
   border: 0;
   border-radius: 8px;
@@ -55,7 +60,9 @@
   font-size: 15px;
   font-weight: 500;
   line-height: 20px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .order-more-button {
@@ -128,11 +135,12 @@
   gap: 8px;
   min-width: 0;
   flex: 1 1 auto;
+  width: 100%;
 }
 
 .order-search input {
   width: 100%;
-  max-width: 360px;
+  max-width: none;
   padding: 0;
   border: 0;
   outline: 0;
@@ -401,7 +409,9 @@
   color: var(--black);
   font-size: clamp(20px, 1.8vw, 24px);
   line-height: 1;
-  white-space: nowrap;
+  white-space: normal;
+  flex-wrap: wrap;
+  text-align: right;
   margin-top: auto;
 }
 
@@ -472,7 +482,9 @@
 }
 
 .auto-order-field > span {
-  flex: 0 0 auto;
+  flex: 1 1 45%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .auto-order-table .bulk-order-cost {
@@ -570,14 +582,49 @@
   align-items: center;
   justify-content: center;
   min-width: clamp(68px, 5.6vw, 76px);
-  height: clamp(34px, 2.7vw, 36px);
+  min-height: clamp(34px, 2.7vw, 36px);
+  height: auto;
   padding: 8px clamp(14px, 1.2vw, 16px);
   border: 0;
   border-radius: 8px;
   font-size: clamp(14px, 1.05vw, 15px);
   font-weight: 500;
   line-height: 20px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+html:lang(en) .order-search input,
+html:lang(vi) .order-search input {
+  font-size: clamp(12px, 1.05vw, 15px);
+}
+
+@media (max-width: 900px) {
+  .order-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .order-search {
+    flex: 1 0 100%;
+  }
+
+  .order-search input {
+    text-align: left;
+  }
+}
+
+@media (max-width: 900px) {
+  .auto-order-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bulk-order-modal {
+    width: min(94vw, 720px);
+    height: min(92vh, 840px);
+    aspect-ratio: auto;
+    overflow-y: auto;
+  }
 }
 
 .bulk-order-cancel {

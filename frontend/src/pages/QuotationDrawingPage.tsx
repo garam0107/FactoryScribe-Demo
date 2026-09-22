@@ -7,6 +7,7 @@ import {
   type WheelEvent as ReactWheelEvent,
 } from 'react'
 import { LoaderCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { ThreeDModelViewer } from '../components/ThreeDModelViewer'
 import part2ModelText from '../assets/3D/20810_part2.obj?raw'
@@ -62,9 +63,9 @@ type ThreeDModelSelection = {
   model: ThreeDModel
 }
 
-const quoteDrawingTabs: { value: QuoteDrawingTab; label: string }[] = [
-  { value: 'bom', label: 'BOM 생성' },
-  { value: 'settings', label: '세부 설정' },
+const quoteDrawingTabs: { value: QuoteDrawingTab; labelKey: string }[] = [
+  { value: 'bom', labelKey: 'quotation.generateBom' },
+  { value: 'settings', labelKey: 'quotation.detailedSettings' },
 ]
 
 const threeDModelsByPdfName: { keyword: string; model: ThreeDModel }[] = [
@@ -243,6 +244,7 @@ export function QuotationDrawingPage({
   activeTab,
   onTabChange,
 }: QuotationDrawingPageProps) {
+  const { t } = useTranslation('main')
   const [previewFile, setPreviewFile] = useState<QuotationPreviewFile | null>(
     null,
   )
@@ -418,7 +420,7 @@ export function QuotationDrawingPage({
       setIsThreeDLoading(false)
       setThreeDModelSelection(null)
       setThreeDFileError(
-        'part2/PLH2/CF3RA010-S2-21 PDF 또는 C1/C3/C5 PNG 파일만 지원합니다.',
+        t('quotation.supportedFilesOnly'),
       )
       input.value = ''
       return
@@ -461,11 +463,11 @@ export function QuotationDrawingPage({
   return (
     <section
       className="order-page quotation-drawing-page"
-      aria-label="견적 계산 도면"
+      aria-label={t('quotation.pageLabel')}
     >
       <nav
         className="tabs order-tabs quotation-drawing-tabs"
-        aria-label="견적 계산 도면 탭"
+        aria-label={t('quotation.tabsLabel')}
       >
         {quoteDrawingTabs.map((tab) => (
           <button
@@ -474,7 +476,7 @@ export function QuotationDrawingPage({
             key={tab.value}
             onClick={() => onTabChange(tab.value)}
           >
-            {tab.label}
+            {t(tab.labelKey)}
           </button>
         ))}
       </nav>
@@ -482,10 +484,10 @@ export function QuotationDrawingPage({
       <div className="order-table-section quotation-drawing-section">
         {activeTab === 'settings' ? (
           <div className="quotation-settings-panel">
-            <h2>기본 견적 설정</h2>
+            <h2>{t('quotation.basicSettings')}</h2>
             <div className="quotation-settings-list">
               <div className="quotation-settings-row">
-                <span>자동 판단</span>
+                <span>{t('quotation.automaticDecision')}</span>
                 <button
                   className="quotation-settings-switch"
                   type="button"
@@ -497,23 +499,23 @@ export function QuotationDrawingPage({
                 </button>
               </div>
               <div className="quotation-settings-row">
-                <span>마진율</span>
+                <span>{t('quotation.marginRate')}</span>
                 <strong>20%</strong>
               </div>
               <div className="quotation-settings-row">
-                <span>인건비</span>
+                <span>{t('quotation.laborCost')}</span>
                 <strong>20,000 KRW/h</strong>
               </div>
               <div className="quotation-settings-row">
-                <span>필요 인원</span>
-                <strong>5명</strong>
+                <span>{t('quotation.requiredPersonnel')}</span>
+                <strong>{t('quotation.peopleCount', { count: 5 })}</strong>
               </div>
               <div className="quotation-settings-row">
-                <span>제조 소요 기간</span>
-                <strong>15일</strong>
+                <span>{t('quotation.manufacturingLeadTime')}</span>
+                <strong>{t('quotation.dayCount', { count: 15 })}</strong>
               </div>
               <div className="quotation-settings-row">
-                <span>작업 완료 시 기본 뷰</span>
+                <span>{t('quotation.defaultViewOnCompletion')}</span>
                 <div className="quotation-settings-view-toggle">
                   <strong className={!isDefaultThreeDView ? 'active' : ''}>2D</strong>
                   <button
@@ -544,25 +546,25 @@ export function QuotationDrawingPage({
                       <input
                         type="file"
                         accept="application/pdf,.pdf,image/png,.png"
-                        aria-label="다른 2D 도면 선택"
+                        aria-label={t('quotation.selectAnother2DDrawing')}
                         onChange={handleThreeDFileChange}
                       />
-                      다른 도면 선택
+                      {t('quotation.selectAnotherDrawing')}
                     </label>
                     <a
                       className="quotation-three-d-download-button"
                       href={threeDModelSelection.downloadUrl}
                       download={threeDModelSelection.model.label}
                     >
-                      다운로드
+                      {t('quotation.download')}
                     </a>
                   </div>
                 </div>
                 {isThreeDLoading ? (
                   <div className="quotation-three-d-loading" role="status">
                     <LoaderCircle aria-hidden="true" />
-                    <strong>3D 모델을 생성하고 있습니다.</strong>
-                    <span>잠시만 기다려주세요.</span>
+                    <strong>{t('quotation.generating3DModel')}</strong>
+                    <span>{t('quotation.pleaseWait')}</span>
                   </div>
                 ) : (
                   <ThreeDModelViewer
@@ -577,11 +579,11 @@ export function QuotationDrawingPage({
                 <input
                   type="file"
                   accept="application/pdf,.pdf,image/png,.png"
-                  aria-label="3D 도면 생성용 2D 도면 첨부"
+                  aria-label={t('quotation.attach2DDrawingFor3D')}
                   onChange={handleThreeDFileChange}
                 />
                 <img src={fileAttachIcon} alt="" />
-                <span>2D 도면 업로드</span>
+                <span>{t('quotation.upload2DDrawing')}</span>
                 {threeDFileError ? (
                   <small className="quotation-three-d-file-error">
                     {threeDFileError}
@@ -610,7 +612,7 @@ export function QuotationDrawingPage({
               ref={quotationFileInputRef}
               type="file"
               accept=".pdf,image/*"
-              aria-label="견적서 첨부"
+              aria-label={t('quotation.attachQuotation')}
               onChange={handleQuotationFileChange}
             />
 
@@ -626,7 +628,7 @@ export function QuotationDrawingPage({
                   </div>
                 ) : isThreeDView ? (
                   <div className="quotation-inline-three-d-empty">
-                    이 파일의 3D 모델을 찾을 수 없습니다.
+                    {t('quotation.modelNotFound')}
                   </div>
                 ) : previewFile.type === 'pdf' ? (
                   <object
@@ -634,7 +636,7 @@ export function QuotationDrawingPage({
                     type="application/pdf"
                     aria-label={previewFile.name}
                   >
-                    <span>PDF 미리보기를 표시할 수 없습니다.</span>
+                    <span>{t('quotation.pdfPreviewUnavailable')}</span>
                   </object>
                 ) : previewFile.type === 'image' ? (
                   <div
@@ -662,7 +664,7 @@ export function QuotationDrawingPage({
                   </div>
                 ) : (
                   <div className="quotation-preview-unsupported">
-                    미리보기를 지원하지 않는 파일입니다.
+                    {t('quotation.previewUnsupported')}
                   </div>
                 )}
 
@@ -670,7 +672,7 @@ export function QuotationDrawingPage({
             ) : (
               <>
                 <img src={fileAttachIcon} alt="" />
-                <span>여기에 견적서 첨부</span>
+                <span>{t('quotation.attachQuotationHere')}</span>
               </>
             )}
           </label>
@@ -679,7 +681,7 @@ export function QuotationDrawingPage({
             className="quotation-preview-toolbar"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="quotation-view-toggle" aria-label="2D 3D 보기 전환">
+            <div className="quotation-view-toggle" aria-label={t('quotation.viewToggle')}>
               <span className={!isThreeDView && hasPreviewFile ? 'active' : ''}>
                 2D
               </span>
@@ -687,7 +689,7 @@ export function QuotationDrawingPage({
                 type="button"
                 role="switch"
                 aria-checked={isThreeDView}
-                aria-label="3D 보기로 전환"
+                aria-label={t('quotation.switchTo3D')}
                 disabled={!hasPreviewFile}
                 onClick={() => setIsThreeDView((current) => !current)}
               >
@@ -704,27 +706,27 @@ export function QuotationDrawingPage({
               disabled={!hasPreviewFile}
               onClick={() => quotationFileInputRef.current?.click()}
             >
-              다른 파일 열기
+              {t('quotation.openAnotherFile')}
             </button>
           </div>
           </div>
 
-          <aside className="quotation-result-panel" aria-label="예상 BOM">
+          <aside className="quotation-result-panel" aria-label={t('quotation.expectedBom')}>
             <div className="quotation-result-header">
               <div className="quotation-result-title">
                 <div className="quotation-file-name-row">
-                  <strong>견적서명 :</strong>
+                  <strong>{t('quotation.quotationName')} :</strong>
                   <span>{getDisplayFileName(previewFile?.name)}</span>
                 </div>
 
-                <p>예상 BOM</p>
+                <p>{t('quotation.expectedBom')}</p>
               </div>
 
               <div className="quotation-more-menu-wrap" ref={bomMenuRef}>
                 <button
                   className="quotation-more-button"
                   type="button"
-                  aria-label="BOM 메뉴 열기"
+                  aria-label={t('quotation.openBomMenu')}
                   aria-haspopup="menu"
                   aria-expanded={isBomMenuOpen}
                   onClick={() => setIsBomMenuOpen((prev) => !prev)}
@@ -735,7 +737,7 @@ export function QuotationDrawingPage({
                 {isBomMenuOpen ? (
                   <div className="quotation-more-menu" role="menu">
                     <button type="button" role="menuitem" onClick={handleDownloadBomXlsx}>
-                      다운로드
+                      {t('quotation.download')}
                     </button>
                   </div>
                 ) : null}
@@ -775,7 +777,9 @@ export function QuotationDrawingPage({
                               : 'quotation-stock-badge'
                           }
                         >
-            {row.stock === null ? `${row.qty}개 부족` : `재고 ${row.stock}개`}
+            {row.stock === null
+              ? t('quotation.shortageCount', { count: row.qty })
+              : t('quotation.stockCount', { count: row.stock })}
                         </span>
                       </td>
                     </tr>
@@ -789,23 +793,23 @@ export function QuotationDrawingPage({
               )}
             </div>
 
-            <div className="quotation-estimate-metrics" aria-label="견적 조건">
+            <div className="quotation-estimate-metrics" aria-label={t('quotation.estimateConditions')}>
               <div>
-                <span>마진율</span>
+                <span>{t('quotation.marginRate')}</span>
                 <strong>20%</strong>
               </div>
               <div>
-                <span>인건비</span>
+                <span>{t('quotation.laborCost')}</span>
                 <strong>20,000KRW/h</strong>
               </div>
               <div>
-                <span>인원</span>
-                <strong>5명</strong>
+                <span>{t('quotation.personnel')}</span>
+                <strong>{t('quotation.peopleCount', { count: 5 })}</strong>
               </div>
             </div>
 
             <div className="quotation-total-price">
-              <strong>예상 견적 가격 :</strong>
+              <strong>{t('quotation.estimatedPrice')} :</strong>
               <span>{hasPreviewFile ? '7,420,000 KRW' : 'KRW'}</span>
             </div>
             <div className="quotation-result-actions">
@@ -813,7 +817,7 @@ export function QuotationDrawingPage({
                 className="quotation-export-pdf-button"
                 type="button"
               >
-                PDF 내보내기
+                {t('quotation.exportPdf')}
               </button>
             </div>
           </aside>

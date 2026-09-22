@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 
 import { getInventoryItems } from '../api/inventory'
 import { getRequiredOrders } from '../api/purchaseRecommendations'
@@ -44,90 +45,90 @@ type AutoOrderDraft = {
   designatedUnitPrice: string
 }
 
-const orderTabs: { label: string; value: OrderTab }[] = [
-  { label: '필요 발주', value: 'required' },
-  { label: '추가 발주', value: 'additional' },
-  { label: '자동 발주', value: 'auto' },
+const orderTabs: { labelKey: string; value: OrderTab }[] = [
+  { labelKey: 'inventory.requiredOrders', value: 'required' },
+  { labelKey: 'inventory.additionalOrders', value: 'additional' },
+  { labelKey: 'inventory.autoOrder', value: 'auto' },
 ]
 
-const additionalOrderRows: OrderRow[] = [
+const additionalOrderRowDefinitions = [
   {
     id: 'additional-cleaning-cloth',
-    itemName: '극세사 작업용 와이퍼',
+    itemNameKey: 'demoItems.cleaningCloth',
     itemCode: 'ADD-WIPER-001',
-    partnerName: '(주) 현장소모품',
+    partnerNameKey: 'demoSuppliers.siteConsumables',
     trackingNo: '-',
     estimatedCost: 185000,
   },
   {
     id: 'additional-cable-tie',
-    itemName: '케이블 타이 200mm',
+    itemNameKey: 'demoItems.cableTie',
     itemCode: 'ADD-TIE-200',
-    partnerName: '(주) 산업자재몰',
+    partnerNameKey: 'demoSuppliers.industrialMaterials',
     trackingNo: '-',
     estimatedCost: 96000,
   },
   {
     id: 'additional-nitrile-glove',
-    itemName: '니트릴 장갑 L',
+    itemNameKey: 'demoItems.nitrileGloves',
     itemCode: 'ADD-GLOVE-L',
-    partnerName: 'Vietnam Safety Co.',
+    partnerNameKey: 'demoSuppliers.vietnamSafety',
     trackingNo: '-',
     estimatedCost: 132000,
   },
   {
     id: 'additional-mask',
-    itemName: '방진 마스크',
+    itemNameKey: 'demoItems.dustMask',
     itemCode: 'ADD-MASK-01',
-    partnerName: '(주) 세이프라인',
+    partnerNameKey: 'demoSuppliers.safeLine',
     trackingNo: '-',
     estimatedCost: 218000,
   },
   {
     id: 'additional-label',
-    itemName: '공정 식별 라벨',
+    itemNameKey: 'demoItems.processLabel',
     itemCode: 'ADD-LABEL-01',
-    partnerName: '(주) 라벨테크',
+    partnerNameKey: 'demoSuppliers.labelTech',
     trackingNo: '-',
     estimatedCost: 74000,
   },
   {
     id: 'additional-tape',
-    itemName: '절연 테이프',
+    itemNameKey: 'demoItems.insulationTape',
     itemCode: 'ADD-TAPE-01',
-    partnerName: 'Tech Supply VN',
+    partnerNameKey: 'demoSuppliers.techSupply',
     trackingNo: '-',
     estimatedCost: 58000,
   },
   {
     id: 'additional-marker',
-    itemName: '유성 마킹펜',
+    itemNameKey: 'demoItems.permanentMarker',
     itemCode: 'ADD-MARKER-01',
-    partnerName: '(주) 오피스팩토리',
+    partnerNameKey: 'demoSuppliers.officeFactory',
     trackingNo: '-',
     estimatedCost: 41000,
   },
   {
     id: 'additional-pallet-wrap',
-    itemName: '팔레트 랩 필름',
+    itemNameKey: 'demoItems.palletWrap',
     itemCode: 'ADD-WRAP-01',
-    partnerName: 'Global Pack Co.',
+    partnerNameKey: 'demoSuppliers.globalPack',
     trackingNo: '-',
     estimatedCost: 266000,
   },
   {
     id: 'additional-cleaner',
-    itemName: '부품 세척제',
+    itemNameKey: 'demoItems.partsCleaner',
     itemCode: 'ADD-CLEANER-01',
-    partnerName: '(주) 케미컬라인',
+    partnerNameKey: 'demoSuppliers.chemicalLine',
     trackingNo: '-',
     estimatedCost: 305000,
   },
   {
     id: 'additional-desiccant',
-    itemName: '제습제 50g',
+    itemNameKey: 'demoItems.desiccant',
     itemCode: 'ADD-DESICCANT-50',
-    partnerName: '(주) 패키징허브',
+    partnerNameKey: 'demoSuppliers.packagingHub',
     trackingNo: '-',
     estimatedCost: 89000,
   },
@@ -191,48 +192,20 @@ function toRequiredOrderRow(item: RequiredOrderItem): OrderRow {
   }
 }
 
-function toAutoOrderRow(item: InventoryItem): OrderRow {
+function toAutoOrderRow(item: InventoryItem, unspecifiedPartner: string): OrderRow {
   return {
     id: item.id,
     itemName: item.item_name,
     itemCode: item.item_code,
-    partnerName: item.supplier || '거래처 미지정',
+    partnerName: item.supplier || unspecifiedPartner,
     trackingNo: '-',
     estimatedCost: item.current_unit_price ?? 0,
     searchSource: [item.category, item.stock_status, item.current_stock],
   }
 }
 
-function formatCurrency(value: number) {
-  return `${Math.round(value).toLocaleString('ko-KR')} KRW(원)`
-}
-
-function getTabTitle(activeTab: OrderTab, count: number) {
-  if (activeTab === 'additional') {
-    return `공정 외 추가 물품 : ${count}건`
-  }
-
-  if (activeTab === 'auto') {
-    return `자동 발주 필요 물품 : ${count}건`
-  }
-
-  return `공정 내 필요 물품 : ${count}건`
-}
-
-function getPrimaryButtonLabel(activeTab: OrderTab) {
-  return activeTab === 'auto' ? '자동 발주 등록' : '일괄 발주'
-}
-
-function getEmptyMessage(activeTab: OrderTab) {
-  if (activeTab === 'additional') {
-    return '표시할 추가 발주 품목이 없습니다.'
-  }
-
-  if (activeTab === 'auto') {
-    return '표시할 자동 발주 품목이 없습니다.'
-  }
-
-  return '표시할 필요 발주 품목이 없습니다.'
+function formatCurrency(value: number, currencyLabel: string) {
+  return `${Math.round(value).toLocaleString()} ${currencyLabel}`
 }
 
 export function OrderPage({
@@ -240,9 +213,29 @@ export function OrderPage({
   activeTab: controlledActiveTab,
   onTabChange,
 }: OrderPageProps) {
+  const { t } = useTranslation('orders')
   const [internalActiveTab, setInternalActiveTab] =
     useState<OrderTab>('required')
   const activeTab = controlledActiveTab ?? internalActiveTab
+  const getTabTitle = (tab: OrderTab, count: number) =>
+    t(
+      tab === 'additional'
+        ? 'inventory.additionalItemsOutsideProcessCount'
+        : tab === 'auto'
+          ? 'inventory.itemsRequiringAutoOrderCount'
+          : 'inventory.requiredItemsInProcessCount',
+      { count },
+    )
+  const getPrimaryButtonLabel = (tab: OrderTab) =>
+    t(tab === 'auto' ? 'inventory.registerAutoOrder' : 'inventory.bulkOrder')
+  const getEmptyMessage = (tab: OrderTab) =>
+    t(
+      tab === 'additional'
+        ? 'status.noAdditionalOrders'
+        : tab === 'auto'
+          ? 'status.noAutoOrders'
+          : 'status.noRequiredOrders',
+    )
   const [requiredOrders, setRequiredOrders] = useState<RequiredOrderItem[]>([])
   const [autoOrders, setAutoOrders] = useState<InventoryItem[]>([])
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
@@ -263,6 +256,18 @@ export function OrderPage({
     null,
   )
   const [autoErrorMessage, setAutoErrorMessage] = useState<string | null>(null)
+  const additionalOrderRows = useMemo<OrderRow[]>(
+    () =>
+      additionalOrderRowDefinitions.map((row) => ({
+        id: row.id,
+        itemName: t(row.itemNameKey),
+        itemCode: row.itemCode,
+        partnerName: t(row.partnerNameKey),
+        trackingNo: row.trackingNo,
+        estimatedCost: row.estimatedCost,
+      })),
+    [t],
+  )
   
   useEffect(() => {
     let ignore = false
@@ -281,7 +286,7 @@ export function OrderPage({
           setRequiredErrorMessage(
             error instanceof Error
               ? error.message
-              : '필요 발주 데이터를 불러오지 못했습니다.',
+              : t('status.requiredOrdersLoadError'),
           )
         }
       } finally {
@@ -305,7 +310,7 @@ export function OrderPage({
           setAutoErrorMessage(
             error instanceof Error
               ? error.message
-              : '자동 발주 데이터를 불러오지 못했습니다.',
+              : t('status.autoOrdersLoadError'),
           )
         }
       } finally {
@@ -320,7 +325,7 @@ export function OrderPage({
     return () => {
       ignore = true
     }
-  }, [repositoryId])
+  }, [repositoryId, t])
 
   useEffect(() => {
     if (!isBulkModalOpen && !isAutoOrderModalOpen) {
@@ -363,11 +368,13 @@ export function OrderPage({
     }
 
     if (activeTab === 'auto') {
-      return autoOrders.map(toAutoOrderRow)
+      return autoOrders.map((item) =>
+        toAutoOrderRow(item, t('inventory.partnerUnspecified')),
+      )
     }
 
     return requiredOrders.map(toRequiredOrderRow)
-  }, [activeTab, autoOrders, requiredOrders])
+  }, [activeTab, additionalOrderRows, autoOrders, requiredOrders, t])
 
   const isLoading =
     (activeTab === 'required' && isRequiredLoading) ||
@@ -465,8 +472,8 @@ export function OrderPage({
   }
 
   return (
-    <section className="order-page" aria-label="발주">
-      <nav className="tabs order-tabs" aria-label="발주 탭">
+    <section className="order-page" aria-label={t('accessibility.orders')}>
+      <nav className="tabs order-tabs" aria-label={t('accessibility.orderTabs')}>
         {orderTabs.map((tab) => (
           <button
             className={activeTab === tab.value ? 'active' : ''}
@@ -474,7 +481,7 @@ export function OrderPage({
             key={tab.value}
             onClick={() => handleTabChange(tab.value)}
           >
-            {tab.label}
+            {t(tab.labelKey)}
           </button>
         ))}
       </nav>
@@ -489,13 +496,13 @@ export function OrderPage({
               onClick={() => {
                 if (activeTab === 'auto') {
                   if (selectedAutoItems.length === 0) {
-                    window.alert('자동 발주를 등록할 품목을 선택해주세요.')
+                    window.alert(t('alerts.selectAutoOrderItem'))
                     return
                   }
 
                   if (selectedAutoItems.length > 1) {
                     window.alert(
-                      '자동 발주 등록은 한 번에 1개 품목만 설정할 수 있습니다.',
+                      t('alerts.onlyOneAutoOrderItem'),
                     )
                     return
                   }
@@ -505,7 +512,7 @@ export function OrderPage({
                   return
                 }
                 if (modalRows.length === 0) {
-                  window.alert('발주하실 품목을 선택해주세요.')
+                  window.alert(t('alerts.selectOrderItems'))
                   return
                 }
                 setBulkModalRows(modalRows)
@@ -517,7 +524,7 @@ export function OrderPage({
             <button
               className="order-more-button"
               type="button"
-              aria-label="발주 더보기"
+              aria-label={t('accessibility.moreOrders')}
             >
               ...
             </button>
@@ -534,7 +541,7 @@ export function OrderPage({
                   type="checkbox"
                   checked={allVisibleSelected}
                   onChange={toggleVisibleRows}
-                  aria-label="현재 페이지 전체 선택"
+                  aria-label={t('accessibility.selectCurrentPage')}
                 />
               </label>
             )}
@@ -548,7 +555,7 @@ export function OrderPage({
                 setCurrentPage(1)
               }}
             >
-              <span>이름 순</span>
+              <span>{t('inventory.sortByName')}</span>
               <img
                 className={sortDirection === 'desc' ? 'rotate' : ''}
                 src={caretDownIcon}
@@ -559,8 +566,8 @@ export function OrderPage({
               <input
                 type="search"
                 value={query}
-                placeholder="부품명, 거래처, 운송장 번호 등을 입력해주세요."
-                aria-label="발주 검색"
+                placeholder={t('chat.searchPlaceholder')}
+                aria-label={t('accessibility.orderSearch')}
                 onChange={(event) => {
                   setQuery(event.target.value)
                   setCurrentPage(1)
@@ -572,7 +579,7 @@ export function OrderPage({
 
           {isLoading ? (
             <div className="empty-inventory">
-              발주 데이터를 불러오는 중입니다.
+              {t('status.loadingOrders')}
             </div>
           ) : errorMessage ? (
             <div className="empty-inventory">{errorMessage}</div>
@@ -588,7 +595,7 @@ export function OrderPage({
                         type="checkbox"
                         checked={selectedItemIds.has(row.id)}
                         onChange={() => toggleRow(row.id)}
-                        aria-label={`${row.itemName} 선택`}
+                        aria-label={t('accessibility.selectItem', { itemName: row.itemName })}
                       />
                     </label>
                     <span className="order-row-name">{row.itemName}</span>
@@ -607,10 +614,10 @@ export function OrderPage({
                   aria-hidden="true"
                 />
               ))}
-              <div className="purchase-pagination" aria-label="발주 페이지">
+              <div className="purchase-pagination" aria-label={t('accessibility.orderPages')}>
                 <button
                   type="button"
-                  aria-label="첫 페이지"
+                  aria-label={t('accessibility.firstPage')}
                   disabled={safeCurrentPage === 1}
                   onClick={() => setCurrentPage(1)}
                 >
@@ -618,7 +625,7 @@ export function OrderPage({
                 </button>
                 <button
                   type="button"
-                  aria-label="이전 페이지"
+                  aria-label={t('accessibility.previousPage')}
                   disabled={safeCurrentPage === 1}
                   onClick={() =>
                     setCurrentPage((page) => Math.max(1, page - 1))
@@ -641,7 +648,7 @@ export function OrderPage({
                 })}
                 <button
                   type="button"
-                  aria-label="다음 페이지"
+                  aria-label={t('accessibility.nextPage')}
                   disabled={safeCurrentPage === pageCount}
                   onClick={() =>
                     setCurrentPage((page) => Math.min(pageCount, page + 1))
@@ -651,7 +658,7 @@ export function OrderPage({
                 </button>
                 <button
                   type="button"
-                  aria-label="마지막 페이지"
+                  aria-label={t('accessibility.lastPage')}
                   disabled={safeCurrentPage === pageCount}
                   onClick={() => setCurrentPage(pageCount)}
                 >
@@ -668,9 +675,9 @@ export function OrderPage({
             className="bulk-order-modal"
             role="dialog"
             aria-modal="true"
-            aria-label="일괄 발주"
+            aria-label={t('inventory.bulkOrder')}
           >
-            <p className="bulk-order-description">다음 발주를 일괄 진행합니다</p>
+            <p className="bulk-order-description">{t('bulk.description')}</p>
             <div className="bulk-order-table">
               <div className="bulk-order-row-list">
                 {bulkModalRows.map((row) => (
@@ -681,7 +688,7 @@ export function OrderPage({
                             type="checkbox"
                             checked={selectedItemIds.has(row.id)}
                             onChange={() => toggleRow(row.id)}
-                            aria-label={`${row.itemName} 선택`}
+                            aria-label={t('accessibility.selectItem', { itemName: row.itemName })}
                           />
                         </label>
                         <span>{row.itemName}</span>
@@ -696,8 +703,8 @@ export function OrderPage({
               </div>
 
               <div className="bulk-order-cost">
-                <span>예상 비용</span>
-                <strong>: {formatCurrency(modalEstimatedCost)}</strong>
+                <span>{t('bulk.estimatedCost')}</span>
+                <strong>: {formatCurrency(modalEstimatedCost, t('units.currency'))}</strong>
               </div>
             </div>
 
@@ -707,10 +714,10 @@ export function OrderPage({
                 type="button"
                 onClick={() => setIsBulkModalOpen(false)}
               >
-                취소
+                {t('actions.cancel')}
               </button>
               <button className="bulk-order-submit" type="button">
-                발주 신청 진행
+                {t('actions.submitOrder')}
               </button>
             </div>
           </section>
@@ -723,14 +730,14 @@ export function OrderPage({
             className="bulk-order-modal auto-order-modal"
             role="dialog"
             aria-modal="true"
-            aria-label="자동 발주 등록"
+            aria-label={t('inventory.registerAutoOrder')}
           >
-            <p className="bulk-order-description">자동 발주 등록</p>
+            <p className="bulk-order-description">{t('inventory.registerAutoOrder')}</p>
             <div className="bulk-order-table auto-order-table">
               <div className="auto-order-grid">
                 <div className="auto-order-column">
                   <label className="auto-order-field">
-                    <span>부품명</span>
+                    <span>{t('autoOrder.partName')}</span>
                     <input
                       type="text"
                       value={autoOrderDraft.itemName}
@@ -744,7 +751,7 @@ export function OrderPage({
                     />
                   </label>
                   <label className="auto-order-field">
-                    <span>납품업체</span>
+                    <span>{t('autoOrder.supplier')}</span>
                     <input
                       type="text"
                       value={autoOrderDraft.supplierName}
@@ -758,7 +765,7 @@ export function OrderPage({
                     />
                   </label>
                   <label className="auto-order-field">
-                    <span>단가</span>
+                    <span>{t('autoOrder.unitPrice')}</span>
                     <div className="auto-order-inline-input">
                       <input
                         type="text"
@@ -775,7 +782,7 @@ export function OrderPage({
                     </div>
                   </label>
                   <label className="auto-order-field">
-                    <span>납품 담당자</span>
+                    <span>{t('autoOrder.contactPerson')}</span>
                     <input
                       type="text"
                       value={autoOrderDraft.contactName}
@@ -789,7 +796,7 @@ export function OrderPage({
                     />
                   </label>
                   <label className="auto-order-field">
-                    <span>연락처</span>
+                    <span>{t('autoOrder.contact')}</span>
                     <input
                       type="text"
                       value={autoOrderDraft.contactValue}
@@ -803,7 +810,7 @@ export function OrderPage({
                     />
                   </label>
                   <label className="auto-order-field auto-order-divider">
-                    <span>최대 납기일</span>
+                    <span>{t('autoOrder.maxLeadTime')}</span>
                     <div className="auto-order-inline-input">
                       <input
                         type="text"
@@ -821,14 +828,14 @@ export function OrderPage({
                           )
                         }
                       />
-                      <em>일</em>
+                      <em>{t('units.days')}</em>
                     </div>
                   </label>
                 </div>
 
                 <div className="auto-order-column">
                   <div className="auto-order-field">
-                    <span>자동 판단</span>
+                    <span>{t('autoOrder.automaticDecision')}</span>
                     <button
                       className="auto-order-toggle"
                       type="button"
@@ -839,7 +846,7 @@ export function OrderPage({
                     </button>
                   </div>
                   <label className="auto-order-field">
-                    <span>최저 부품 개수</span>
+                    <span>{t('autoOrder.minimumPartQuantity')}</span>
                     <div className="auto-order-inline-input">
                       <input
                         type="text"
@@ -850,7 +857,7 @@ export function OrderPage({
                     </div>
                   </label>
                   <label className="auto-order-field">
-                    <span>자동 발주 개수</span>
+                    <span>{t('autoOrder.autoOrderQuantity')}</span>
                     <div className="auto-order-inline-input">
                       <input
                         type="text"
@@ -867,7 +874,7 @@ export function OrderPage({
                     </div>
                   </label>
                   <div className="auto-order-field">
-                    <span>최근 거래 단가 사용</span>
+                    <span>{t('autoOrder.useRecentUnitPrice')}</span>
                     <button
                       className={`auto-order-toggle${autoOrderDraft.useRecentUnitPrice ? ' active' : ''}`}
                       type="button"
@@ -893,7 +900,7 @@ export function OrderPage({
                     </button>
                   </div>
                   <label className="auto-order-field">
-                    <span>지정 단가</span>
+                    <span>{t('autoOrder.designatedUnitPrice')}</span>
                     <div className="auto-order-inline-input">
                       <input
                         type="text"
@@ -917,8 +924,8 @@ export function OrderPage({
               </div>
 
               <div className="bulk-order-cost">
-                <span>예상 비용</span>
-                <strong>: {formatCurrency(autoOrderEstimatedCost)}</strong>
+                <span>{t('bulk.estimatedCost')}</span>
+                <strong>: {formatCurrency(autoOrderEstimatedCost, t('units.currency'))}</strong>
               </div>
             </div>
 
@@ -928,10 +935,10 @@ export function OrderPage({
                 type="button"
                 onClick={() => setIsAutoOrderModalOpen(false)}
               >
-                취소
+                {t('actions.cancel')}
               </button>
               <button className="bulk-order-submit" type="button">
-                발주 신청 진행
+                {t('actions.submitOrder')}
               </button>
             </div>
           </section>

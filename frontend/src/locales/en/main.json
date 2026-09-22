@@ -33,13 +33,43 @@
     "previousYearUsageQuantity": "Previous Year Usage Quantity",
     "currentRemainingQuantity": "Current Remaining Quantity",
     "currentYearExpectedUsageQuantity": "Expected Usage Quantity This Year",
-    "priceChangeAria": "{{itemName}} previous month price change"
+    "priceChangeAria": "{{itemName}} previous month price change",
+    "tabsLabel": "Dashboard tabs", "loadingInventory": "Loading inventory data.", "noInventoryData": "There is no inventory data to display.",
+    "supplierUnspecified": "Supplier not specified", "noCategoryData": "There is no {{category}} data to display.", "quantityWithUnit": "{{count}} pcs", "additionalNeeded": "Additional Needed",
+    "loadingForecast": "Loading expected consumption data.", "noPriceData": "There is no price data to display.",
+    "purchaseOrdersLoadError": "Failed to load purchase order data.", "loadingPurchaseOrders": "Loading purchase order data.", "noMonthlyPurchaseOrders": "There are no purchase orders to display for this month.",
+    "orderSearch": "Search purchase orders", "orderPages": "Purchase order pages", "firstPage": "First page", "previousPage": "Previous page", "nextPage": "Next page", "lastPage": "Last page",
+    "categories": { "rawMaterials": "Raw Materials", "auxiliaryMaterials": "Auxiliary Materials", "consumables": "Consumables", "packagingMaterials": "Packaging Materials" }
+  },
+  "errors": { "inventoryLoad": "Failed to load inventory data.", "conversationLoad": "Failed to load the conversation.", "responseLoad": "Failed to load a response. Please try again shortly.", "repositoryAdd": "Failed to add the repository.", "repositoryRemove": "Failed to remove the repository." },
+  "confirm": { "removeRepository": "Remove the {{name}} repository?" },
+  "accessibility": { "home": "FAUTORY home", "search": "Search", "mainDashboard": "Main dashboard", "adminSettings": "Admin settings", "questionInput": "Question input", "questionSearch": "Search question" },
+  "quotation": {
+    "generateBom": "Generate BOM", "detailedSettings": "Detailed Settings", "pageLabel": "Quotation Calculation Drawing", "tabsLabel": "Quotation calculation drawing tabs",
+    "basicSettings": "Basic Quotation Settings", "automaticDecision": "Automatic Decision", "marginRate": "Margin Rate", "laborCost": "Labor Cost", "requiredPersonnel": "Required Personnel", "personnel": "Personnel",
+    "peopleCount": "{{count}} people", "manufacturingLeadTime": "Manufacturing Lead Time", "dayCount": "{{count}} days", "defaultViewOnCompletion": "Default View on Completion",
+    "selectAnother2DDrawing": "Select another 2D drawing", "selectAnotherDrawing": "Select Another Drawing", "download": "Download", "generating3DModel": "Generating the 3D model.", "pleaseWait": "Please wait.",
+    "attach2DDrawingFor3D": "Attach a 2D drawing for 3D generation", "upload2DDrawing": "Upload 2D Drawing", "attachQuotation": "Attach quotation", "modelNotFound": "No 3D model was found for this file.",
+    "pdfPreviewUnavailable": "The PDF preview cannot be displayed.", "previewUnsupported": "Preview is not supported for this file.", "attachQuotationHere": "Attach quotation here",
+    "viewToggle": "Switch between 2D and 3D views", "switchTo3D": "Switch to 3D view", "openAnotherFile": "Open Another File", "expectedBom": "Estimated BOM", "quotationName": "Quotation Name", "openBomMenu": "Open BOM menu",
+    "shortageCount": "{{count}} short", "stockCount": "Stock {{count}}", "estimateConditions": "Quotation Conditions", "estimatedPrice": "Estimated Quotation Price", "exportPdf": "Export PDF",
+    "supportedFilesOnly": "Only part2/PLH2/CF3RA010-S2-21 PDF or C1/C3/C5 PNG files are supported.", "modelLoadError": "Unable to load the 3D model.", "modelViewerLabel": "{{modelName}} 3D viewer"
   },
   "chat": {
     "greeting": "Hello, 김OO님. ",
     "help": "How can I help you?",
     "askAnything": "Ask me anything.",
     "searchPlaceholder": "Please enter a part name, client/vendor, tracking number, etc."
+  },
+  "prompt": {
+    "pageLabel": "Advanced Prompt Input", "tabsLabel": "Prompt tabs",
+    "generatingResponse": "Generating response", "emptyState": "Enter a question to continue the conversation here.",
+    "currentDirectory": "Current Directory", "loadingRepositories": "Loading repositories.",
+    "noRepositories": "No repositories have been registered.", "directoryActions": "Directory actions",
+    "addRepository": "Add repository", "removeRepository": "Remove repository",
+    "selectRepositoryToRemove": "Please select an item to remove.", "electronOnly": "Repositories can only be added in the Electron app.",
+    "directoryPickerError": "Unable to open the folder picker.", "inputPlaceholder": "Ask anything you'd like to know", "send": "Send prompt",
+    "sharedBy": "Shared with {{count}} people", "scope": { "common": "Common", "team": "Team", "project": "Project" }
   },
   "search": {
     "placeholder": "Please enter a search term",

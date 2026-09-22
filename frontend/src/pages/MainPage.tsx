@@ -38,7 +38,7 @@ import {
   type QuoteDrawingTab,
 } from './QuotationDrawingPage'
 
-const REPOSITORY_ID = 'repo_1050ea2fcd8c'
+const REPOSITORY_ID = 'repo_ed87dd4ba0f8'
 const SECTIONS: AppSection[] = [
   'main',
   'orders',
@@ -320,7 +320,7 @@ export function MainPage() {
           setErrorMessage(
             error instanceof Error
               ? error.message
-              : '재고 데이터를 불러오지 못했습니다.',
+              : t('errors.inventoryLoad'),
           )
         }
       } finally {
@@ -335,7 +335,7 @@ export function MainPage() {
     return () => {
       ignore = true
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     if (activeSection !== 'prompt') {
@@ -450,7 +450,7 @@ export function MainPage() {
         createLocalMessage(
           `load-error-${Date.now()}`,
           'assistant',
-          '대화 내용을 불러오지 못했습니다.',
+          t('errors.conversationLoad'),
           conversationId,
         ),
       ])
@@ -540,8 +540,8 @@ export function MainPage() {
           `assistant-error-${Date.now()}`,
           'assistant',
           error instanceof Error
-            ? '응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.'
-            : '응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
+            ? t('errors.responseLoad')
+            : t('errors.responseLoad'),
           hadActiveConversation
             ? conversationId ?? 'pending'
             : 'pending',
@@ -590,7 +590,7 @@ export function MainPage() {
       window.alert(
         error instanceof Error
           ? error.message
-          : '저장소를 등록하지 못했습니다.',
+          : t('errors.repositoryAdd'),
       )
     }
   }
@@ -603,7 +603,7 @@ export function MainPage() {
     }
 
     const confirmed = window.confirm(
-      `${target.name} 저장소를 삭제하시겠습니까?`,
+      t('confirm.removeRepository', { name: target.name }),
     )
 
     if (!confirmed) {
@@ -618,7 +618,7 @@ export function MainPage() {
       window.alert(
         error instanceof Error
           ? error.message
-          : '저장소를 삭제하지 못했습니다.',
+          : t('errors.repositoryRemove'),
       )
     }
   }
@@ -629,7 +629,7 @@ export function MainPage() {
                 <a
           className="brand"
           href="#main"
-          aria-label="FAUTORY 홈"
+          aria-label={t('accessibility.home')}
           onClick={(event) => {
             event.preventDefault()
             window.location.hash = 'main'
@@ -643,7 +643,7 @@ export function MainPage() {
           <button
             className="icon-button"
             type="button"
-            aria-label="검색"
+            aria-label={t('accessibility.search')}
             aria-expanded={isSearchOpen}
             onClick={() => setIsSearchOpen(true)}
           >
@@ -738,12 +738,12 @@ export function MainPage() {
           className="content"
           aria-label={
             activeSection === 'orders'
-              ? '발주'
+              ? t('search.sections.orders')
               : activeSection === 'inventory'
-                ? '재고 관리'
+                ? t('search.sections.inventory')
                 : activeSection === 'prompt'
-                  ? '고급 프롬프트 입력'
-                  : '메인 대시보드'
+                  ? t('search.sections.prompt')
+                  : t('accessibility.mainDashboard')
           }
         >
           <div className="company-row">
@@ -787,12 +787,12 @@ export function MainPage() {
                   onTabChange={setActiveQuoteTab}
                 />
           ) : activeSection === 'admin' ? (
-            <div className="empty-page" aria-label="관리자 설정">
+            <div className="empty-page" aria-label={t('accessibility.adminSettings')}>
               {/* 관리자 설정 화면은 아직 준비 중 */}
             </div>
           ) : (
             <>
-              <section className="assistant-panel" aria-label="질문 입력">
+              <section className="assistant-panel" aria-label={t('accessibility.questionInput')}>
                 <div className="greeting">
                   <p className="hello">{t('chat.greeting')}</p>
                   <p className="prompt">{t('chat.help')}</p>
@@ -801,7 +801,7 @@ export function MainPage() {
                 <label className="query-box">
                   <img src={plusIcon} alt="" />
                   <input
-                    aria-label="질문 입력"
+                    aria-label={t('accessibility.questionInput')}
                     placeholder={t('chat.askAnything')}
                     type="text"
                     value={mainChatDraft}
@@ -815,7 +815,7 @@ export function MainPage() {
                   />
                   <button
                     type="button"
-                    aria-label="질문 검색"
+                    aria-label={t('accessibility.questionSearch')}
                     onClick={handleMainChatSubmit}
                   >
                     <img src={searchIcon} alt="" />

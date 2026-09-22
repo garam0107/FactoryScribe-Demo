@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import minusCircleIcon from '../assets/icons/minus-circle.svg'
 import plusCircleIcon from '../assets/icons/plus-circle.svg'
@@ -30,14 +31,14 @@ type PromptPageProps = {
 }
 
 const DIRECTORY_META = [
-  { scope: '공통', capacity: '50.36 MB', shared: '000명 공유' },
-  { scope: '팀', capacity: '19.2 TB', shared: '317명 공유' },
-  { scope: '팀', capacity: '195 GB', shared: '317명 공유' },
-  { scope: '팀', capacity: '278 GB', shared: '317명 공유' },
-  { scope: '팀', capacity: '13.5 MB', shared: '317명 공유' },
-  { scope: '팀', capacity: '27.4 MB', shared: '317명 공유' },
-  { scope: '프로젝트', capacity: '12.8 MB', shared: '317명 공유' },
-  { scope: '프로젝트', capacity: '2.4 MB', shared: '317명 공유' },
+  { scope: 'common', capacity: '50.36 MB', sharedCount: 0 },
+  { scope: 'team', capacity: '19.2 TB', sharedCount: 317 },
+  { scope: 'team', capacity: '195 GB', sharedCount: 317 },
+  { scope: 'team', capacity: '278 GB', sharedCount: 317 },
+  { scope: 'team', capacity: '13.5 MB', sharedCount: 317 },
+  { scope: 'team', capacity: '27.4 MB', sharedCount: 317 },
+  { scope: 'project', capacity: '12.8 MB', sharedCount: 317 },
+  { scope: 'project', capacity: '2.4 MB', sharedCount: 317 },
 ]
 
 export function PromptPage({
@@ -54,6 +55,7 @@ export function PromptPage({
   onAddDirectory,
   onRemoveDirectory,
 }: PromptPageProps) {
+  const { t } = useTranslation('main')
   const [selectedDirectoryId, setSelectedDirectoryId] = useState<string | null>(
     null,
   )
@@ -61,7 +63,7 @@ export function PromptPage({
 
   const handleAddDirectoryFromElectron = async () => {
     if (!window.electronAPI) {
-      window.alert('저장소 등록은 Electron 앱에서만 사용할 수 있습니다.')
+      window.alert(t('prompt.electronOnly'))
       return
     }
 
@@ -72,27 +74,27 @@ export function PromptPage({
         onAddDirectory(directory)
       }
     } catch {
-      window.alert('폴더 선택 창을 열지 못했습니다.')
+      window.alert(t('prompt.directoryPickerError'))
     }
   }
 
   return (
-    <section className="prompt-page" aria-label="고급 프롬프트 입력">
+    <section className="prompt-page" aria-label={t('prompt.pageLabel')}>
       <div className="prompt-main-panel">
-        <nav className="tabs prompt-tabs" aria-label="프롬프트 탭">
+        <nav className="tabs prompt-tabs" aria-label={t('prompt.tabsLabel')}>
           <button
             className={activeTab === 'prompt' ? 'active' : ''}
             type="button"
             onClick={() => onTabChange('prompt')}
           >
-            프롬프트 입력
+            {t('search.items.promptInput')}
           </button>
           <button
             className={activeTab === 'directory' ? 'active' : ''}
             type="button"
             onClick={() => onTabChange('directory')}
           >
-            디렉토리 설정
+            {t('search.items.directorySettings')}
           </button>
         </nav>
 
@@ -114,7 +116,7 @@ export function PromptPage({
 
                   {(isSending || isLoadingMessages) && (
                     <div className="chat-bubble-row assistant">
-                      <div className="chat-loading-bubble" aria-label="응답 생성 중">
+                      <div className="chat-loading-bubble" aria-label={t('prompt.generatingResponse')}>
                         <span />
                         <span />
                         <span />
@@ -125,20 +127,20 @@ export function PromptPage({
               </div>
             ) : (
               <div className="prompt-empty-state">
-                질문을 입력하면 여기에서 대화를 이어갈 수 있습니다.
+                {t('prompt.emptyState')}
               </div>
             )
           ) : (
-            <section className="directory-stage" aria-label="현재 디렉토리">
+            <section className="directory-stage" aria-label={t('prompt.currentDirectory')}>
               <div className="directory-layout">
                 <div className="directory-panel">
                   <div className="directory-stage-header">
-                    <h2>현재 디렉토리</h2>
+                    <h2>{t('prompt.currentDirectory')}</h2>
                   </div>
 
                   {isDirectoryLoading ? (
                     <div className="directory-empty-state">
-                      저장소를 불러오는 중입니다.
+                      {t('prompt.loadingRepositories')}
                     </div>
                   ) : repositories.length > 0 ? (
                     <div className="directory-table">
@@ -163,7 +165,7 @@ export function PromptPage({
                             >
                               <span className="directory-name">{repository.name}</span>
                               <div className="directory-meta">
-                                <span className="directory-scope">{meta.scope}</span>
+                                <span className="directory-scope">{t(`prompt.scope.${meta.scope}`)}</span>
                                 <span
                                   className="directory-meta-separator"
                                   aria-hidden="true"
@@ -176,7 +178,7 @@ export function PromptPage({
                                   aria-hidden="true"
                                 />
                                 <span className="directory-shared">
-                                  {meta.shared}
+                                  {t('prompt.sharedBy', { count: meta.sharedCount })}
                                 </span>
                               </div>
                             </button>
@@ -186,16 +188,16 @@ export function PromptPage({
                     </div>
                   ) : (
                     <div className="directory-empty-state">
-                      등록된 저장소가 없습니다.
+                      {t('prompt.noRepositories')}
                     </div>
                   )}
                 </div>
 
-                <div className="directory-icon-rail" aria-label="디렉토리 작업">
+                <div className="directory-icon-rail" aria-label={t('prompt.directoryActions')}>
                   <button
                     className="directory-icon-button"
                     type="button"
-                    aria-label="저장소 등록"
+                    aria-label={t('prompt.addRepository')}
                     onClick={handleAddDirectoryFromElectron}
                   >
                     <img src={plusCircleIcon} alt="" />
@@ -203,10 +205,10 @@ export function PromptPage({
                   <button
                     className="directory-icon-button remove"
                     type="button"
-                    aria-label="저장소 삭제"
+                    aria-label={t('prompt.removeRepository')}
                     onClick={() => {
                       if (!selectedDirectoryId) {
-                        window.alert('삭제하실 항목을 선택해주세요')
+                        window.alert(t('prompt.selectRepositoryToRemove'))
                         return
                       }
 
@@ -228,8 +230,8 @@ export function PromptPage({
           <label className="query-box prompt-query-box">
             <img src={plusIcon} alt="" />
             <input
-              aria-label="프롬프트 입력"
-              placeholder="궁금하신 것을 물어보세요"
+              aria-label={t('search.items.promptInput')}
+              placeholder={t('prompt.inputPlaceholder')}
               type="text"
               value={draft}
               onChange={(event) => onDraftChange(event.target.value)}
@@ -240,7 +242,7 @@ export function PromptPage({
                 }
               }}
             />
-            <button type="button" aria-label="프롬프트 전송" onClick={onSend}>
+            <button type="button" aria-label={t('prompt.send')} onClick={onSend}>
               <img src={searchIcon} alt="" />
             </button>
           </label>

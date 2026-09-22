@@ -7,9 +7,44 @@
     "requiredItemsInProcess": "Vật tư cần thiết trong quy trình",
     "bulkOrder": "Đặt hàng hàng loạt",
     "additionalItemsOutsideProcess": "Vật tư bổ sung ngoài quy trình",
-    "itemsRequiringAutoOrder": "Vật tư cần đặt hàng tự động"
+    "itemsRequiringAutoOrder": "Vật tư cần đặt hàng tự động",
+    "requiredItemsInProcessCount": "Vật tư cần thiết trong quy trình: {{count}}",
+    "additionalItemsOutsideProcessCount": "Vật tư bổ sung ngoài quy trình: {{count}}",
+    "itemsRequiringAutoOrderCount": "Vật tư cần đặt hàng tự động: {{count}}",
+    "registerAutoOrder": "Đăng ký đặt hàng tự động", "partnerUnspecified": "Chưa chỉ định đối tác"
   },
   "chat": {
     "searchPlaceholder": "Vui lòng nhập tên linh kiện, đối tác giao dịch, số vận đơn, v.v."
+  },
+  "status": {
+    "loadingOrders": "Đang tải dữ liệu đơn đặt hàng.",
+    "noRequiredOrders": "Không có mặt hàng cần đặt nào để hiển thị.",
+    "noAdditionalOrders": "Không có mặt hàng đặt bổ sung nào để hiển thị.",
+    "noAutoOrders": "Không có mặt hàng đặt tự động nào để hiển thị.",
+    "requiredOrdersLoadError": "Không thể tải dữ liệu đơn hàng cần đặt.",
+    "autoOrdersLoadError": "Không thể tải dữ liệu đặt hàng tự động."
+  },
+  "alerts": {
+    "selectAutoOrderItem": "Vui lòng chọn một mặt hàng để đăng ký đặt hàng tự động.",
+    "onlyOneAutoOrderItem": "Mỗi lần chỉ có thể thiết lập một mặt hàng đặt tự động.",
+    "selectOrderItems": "Vui lòng chọn các mặt hàng bạn muốn đặt."
+  },
+  "bulk": { "description": "Các đơn hàng sau sẽ được đặt hàng loạt.", "estimatedCost": "Chi phí ước tính" },
+  "autoOrder": {
+    "partName": "Tên linh kiện", "supplier": "Nhà cung cấp", "unitPrice": "Đơn giá",
+    "contactPerson": "Người phụ trách giao hàng", "contact": "Thông tin liên hệ", "maxLeadTime": "Thời gian giao hàng tối đa",
+    "automaticDecision": "Tự động đánh giá", "minimumPartQuantity": "Số lượng linh kiện tối thiểu",
+    "autoOrderQuantity": "Số lượng đặt tự động", "useRecentUnitPrice": "Dùng đơn giá giao dịch gần nhất",
+    "designatedUnitPrice": "Đơn giá chỉ định"
+  },
+  "actions": { "cancel": "Hủy", "submitOrder": "Gửi yêu cầu đặt hàng" },
+  "units": { "days": "ngày", "currency": "KRW" },
+  "demoItems": { "cleaningCloth": "Khăn lau sợi nhỏ dùng trong công việc", "cableTie": "Dây rút 200mm", "nitrileGloves": "Găng tay nitrile cỡ L", "dustMask": "Khẩu trang chống bụi", "processLabel": "Nhãn nhận diện quy trình", "insulationTape": "Băng keo cách điện", "permanentMarker": "Bút lông dầu", "palletWrap": "Màng quấn pallet", "partsCleaner": "Dung dịch vệ sinh linh kiện", "desiccant": "Gói hút ẩm 50g" },
+  "demoSuppliers": { "siteConsumables": "Công ty Vật tư Tiêu hao Công trường", "industrialMaterials": "Công ty Vật liệu Công nghiệp", "vietnamSafety": "Vietnam Safety Co.", "safeLine": "Công ty SafeLine", "labelTech": "Công ty LabelTech", "techSupply": "Tech Supply VN", "officeFactory": "Công ty Office Factory", "globalPack": "Global Pack Co.", "chemicalLine": "Công ty Chemical Line", "packagingHub": "Công ty Packaging Hub" },
+  "accessibility": {
+    "orders": "Đơn đặt hàng", "orderTabs": "Các tab đơn đặt hàng", "moreOrders": "Thêm tùy chọn đặt hàng",
+    "selectCurrentPage": "Chọn tất cả mặt hàng trên trang hiện tại", "orderSearch": "Tìm kiếm đơn đặt hàng",
+    "selectItem": "Chọn {{itemName}}", "orderPages": "Các trang đơn đặt hàng",
+    "firstPage": "Trang đầu", "previousPage": "Trang trước", "nextPage": "Trang tiếp", "lastPage": "Trang cuối"
   }
 }

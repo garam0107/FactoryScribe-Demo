@@ -102,7 +102,7 @@ export function PriceChangeGraph({ item }: PriceChangeGraphProps) {
             <span aria-hidden="true">...</span>
           </div>
         </div>
-        <div className="empty-price-graph">표시할 가격 데이터가 없습니다.</div>
+        <div className="empty-price-graph">{t('dashboard.noPriceData')}</div>
       </article>
     )
   }
@@ -125,7 +125,7 @@ export function PriceChangeGraph({ item }: PriceChangeGraphProps) {
   const changeRate = formatChangeRate(item)
   const isIncrease = changeRate >= 0
   const changeText = `${isIncrease ? '+' : ''}${changeRate.toFixed(1)}%`
-  const supplier = item.supplier || '(주) 한솔'
+  const supplier = item.supplier || t('dashboard.supplierUnspecified')
 
   return (
     <article className="price-graph-card">

@@ -46,9 +46,10 @@
   gap: 32px;
   align-self: start;
   min-width: 0;
-  height: 394px;
+  min-height: 394px;
+  height: auto;
   padding: 24px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--azure-900);
   border-radius: 16px;
   background: var(--white);
@@ -288,7 +289,7 @@
   align-items: center;
   width: 100%;
   padding: 7px 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .forecast-quantities {
@@ -307,7 +308,8 @@
   gap: 24px;
   width: 100%;
   line-height: 16px;
-  white-space: nowrap;
+  white-space: normal;
+  flex-wrap: wrap;
 }
 
 .forecast-quantities dt {
@@ -315,6 +317,7 @@
   color: #555;
   font-size: 14px;
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 
 .forecast-quantities dd {
@@ -341,7 +344,8 @@
   width: 100%;
   padding: 0 25px;
   line-height: 16px;
-  white-space: nowrap;
+  white-space: normal;
+  flex-wrap: wrap;
 }
 
 .forecast-needed span {

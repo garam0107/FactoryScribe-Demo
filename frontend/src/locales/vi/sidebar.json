@@ -6,5 +6,7 @@
     "quotationCalculationDrawing": "Tính báo giá (Bản vẽ)",
     "advancedPromptInput": "Nhập : prompt nâng cao",
     "adminSettings": "Cài đặt quản trị"
-  }
+  },
+  "prompt": { "startNewConversation": "Bắt đầu cuộc trò chuyện mới", "conversationHistory": "Lịch sử trò chuyện" },
+  "accessibility": { "mainMenu": "Menu chính" }
 }

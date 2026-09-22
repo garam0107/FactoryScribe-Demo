@@ -6,5 +6,7 @@
     "quotationCalculationDrawing": "견적 계산(도면)",
     "advancedPromptInput": "고급 : 프롬프트 입력",
     "adminSettings": "관리자 설정"
-  }
+  },
+  "prompt": { "startNewConversation": "새 대화 시작하기", "conversationHistory": "대화 히스토리" },
+  "accessibility": { "mainMenu": "주요 메뉴" }
 }

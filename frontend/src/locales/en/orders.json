@@ -7,9 +7,44 @@
     "requiredItemsInProcess": "Required Items in Process",
     "bulkOrder": "Bulk Order",
     "additionalItemsOutsideProcess": "Additional Items Outside Process",
-    "itemsRequiringAutoOrder": "Items Requiring Auto Order"
+    "itemsRequiringAutoOrder": "Items Requiring Auto Order",
+    "requiredItemsInProcessCount": "Required Items in Process: {{count}}",
+    "additionalItemsOutsideProcessCount": "Additional Items Outside Process: {{count}}",
+    "itemsRequiringAutoOrderCount": "Items Requiring Auto Order: {{count}}",
+    "registerAutoOrder": "Register Auto Order", "partnerUnspecified": "Partner not specified"
   },
   "chat": {
     "searchPlaceholder": "Please enter a part name, client/vendor, tracking number, etc."
+  },
+  "status": {
+    "loadingOrders": "Loading purchase order data.",
+    "noRequiredOrders": "There are no required-order items to display.",
+    "noAdditionalOrders": "There are no additional-order items to display.",
+    "noAutoOrders": "There are no auto-order items to display.",
+    "requiredOrdersLoadError": "Failed to load required-order data.",
+    "autoOrdersLoadError": "Failed to load auto-order data."
+  },
+  "alerts": {
+    "selectAutoOrderItem": "Please select an item to register for auto ordering.",
+    "onlyOneAutoOrderItem": "You can configure only one auto-order item at a time.",
+    "selectOrderItems": "Please select the items you want to order."
+  },
+  "bulk": { "description": "The following orders will be placed in bulk.", "estimatedCost": "Estimated Cost" },
+  "autoOrder": {
+    "partName": "Part Name", "supplier": "Supplier", "unitPrice": "Unit Price",
+    "contactPerson": "Supplier Contact", "contact": "Contact Information", "maxLeadTime": "Maximum Lead Time",
+    "automaticDecision": "Automatic Decision", "minimumPartQuantity": "Minimum Part Quantity",
+    "autoOrderQuantity": "Auto-order Quantity", "useRecentUnitPrice": "Use Recent Transaction Price",
+    "designatedUnitPrice": "Specified Unit Price"
+  },
+  "actions": { "cancel": "Cancel", "submitOrder": "Submit Order Request" },
+  "units": { "days": "days", "currency": "KRW" },
+  "demoItems": { "cleaningCloth": "Microfiber Work Wiper", "cableTie": "Cable Tie 200mm", "nitrileGloves": "Nitrile Gloves L", "dustMask": "Dust Mask", "processLabel": "Process Identification Label", "insulationTape": "Insulation Tape", "permanentMarker": "Permanent Marker", "palletWrap": "Pallet Wrap Film", "partsCleaner": "Parts Cleaner", "desiccant": "Desiccant 50g" },
+  "demoSuppliers": { "siteConsumables": "Site Consumables Co.", "industrialMaterials": "Industrial Materials Mall Co.", "vietnamSafety": "Vietnam Safety Co.", "safeLine": "SafeLine Co.", "labelTech": "LabelTech Co.", "techSupply": "Tech Supply VN", "officeFactory": "Office Factory Co.", "globalPack": "Global Pack Co.", "chemicalLine": "Chemical Line Co.", "packagingHub": "Packaging Hub Co." },
+  "accessibility": {
+    "orders": "Purchase orders", "orderTabs": "Purchase order tabs", "moreOrders": "More order options",
+    "selectCurrentPage": "Select all items on the current page", "orderSearch": "Search purchase orders",
+    "selectItem": "Select {{itemName}}", "orderPages": "Purchase order pages",
+    "firstPage": "First page", "previousPage": "Previous page", "nextPage": "Next page", "lastPage": "Last page"
   }
 }

@@ -7,9 +7,53 @@
     "requiredItemsInProcess": "공정 내 필요 물품",
     "bulkOrder": "일괄 발주",
     "additionalItemsOutsideProcess": "공정 외 추가 물품",
-    "itemsRequiringAutoOrder": "자동 발주 필요 물품"
+    "itemsRequiringAutoOrder": "자동 발주 필요 물품",
+    "requiredItemsInProcessCount": "공정 내 필요 물품 : {{count}}건",
+    "additionalItemsOutsideProcessCount": "공정 외 추가 물품 : {{count}}건",
+    "itemsRequiringAutoOrderCount": "자동 발주 필요 물품 : {{count}}건",
+    "registerAutoOrder": "자동 발주 등록", "partnerUnspecified": "거래처 미지정"
   },
   "chat": {
     "searchPlaceholder": "부품명, 거래처, 운송장 번호 등을 입력해주세요."
+  },
+  "status": {
+    "loadingOrders": "발주 데이터를 불러오는 중입니다.",
+    "noRequiredOrders": "표시할 필요 발주 품목이 없습니다.",
+    "noAdditionalOrders": "표시할 추가 발주 품목이 없습니다.",
+    "noAutoOrders": "표시할 자동 발주 품목이 없습니다.",
+    "requiredOrdersLoadError": "필요 발주 데이터를 불러오지 못했습니다.",
+    "autoOrdersLoadError": "자동 발주 데이터를 불러오지 못했습니다."
+  },
+  "alerts": {
+    "selectAutoOrderItem": "자동 발주를 등록할 품목을 선택해주세요.",
+    "onlyOneAutoOrderItem": "자동 발주 등록은 한 번에 1개 품목만 설정할 수 있습니다.",
+    "selectOrderItems": "발주하실 품목을 선택해주세요."
+  },
+  "bulk": {
+    "description": "다음 발주를 일괄 진행합니다",
+    "estimatedCost": "예상 비용"
+  },
+  "autoOrder": {
+    "partName": "부품명",
+    "supplier": "납품업체",
+    "unitPrice": "단가",
+    "contactPerson": "납품 담당자",
+    "contact": "연락처",
+    "maxLeadTime": "최대 납기일",
+    "automaticDecision": "자동 판단",
+    "minimumPartQuantity": "최저 부품 개수",
+    "autoOrderQuantity": "자동 발주 개수",
+    "useRecentUnitPrice": "최근 거래 단가 사용",
+    "designatedUnitPrice": "지정 단가"
+  },
+  "actions": { "cancel": "취소", "submitOrder": "발주 신청 진행" },
+  "units": { "days": "일", "currency": "KRW(원)" },
+  "demoItems": { "cleaningCloth": "극세사 작업용 와이퍼", "cableTie": "케이블 타이 200mm", "nitrileGloves": "니트릴 장갑 L", "dustMask": "방진 마스크", "processLabel": "공정 식별 라벨", "insulationTape": "절연 테이프", "permanentMarker": "유성 마킹펜", "palletWrap": "팔레트 랩 필름", "partsCleaner": "부품 세척제", "desiccant": "제습제 50g" },
+  "demoSuppliers": { "siteConsumables": "(주) 현장소모품", "industrialMaterials": "(주) 산업자재몰", "vietnamSafety": "Vietnam Safety Co.", "safeLine": "(주) 세이프라인", "labelTech": "(주) 라벨테크", "techSupply": "Tech Supply VN", "officeFactory": "(주) 오피스팩토리", "globalPack": "Global Pack Co.", "chemicalLine": "(주) 케미컬라인", "packagingHub": "(주) 패키징허브" },
+  "accessibility": {
+    "orders": "발주", "orderTabs": "발주 탭", "moreOrders": "발주 더보기",
+    "selectCurrentPage": "현재 페이지 전체 선택", "orderSearch": "발주 검색",
+    "selectItem": "{{itemName}} 선택", "orderPages": "발주 페이지",
+    "firstPage": "첫 페이지", "previousPage": "이전 페이지", "nextPage": "다음 페이지", "lastPage": "마지막 페이지"
   }
 }

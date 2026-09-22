@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import * as THREE from 'three'
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
@@ -15,6 +16,7 @@ export function ThreeDModelViewer({
   modelFormat,
   modelName,
 }: ThreeDModelViewerProps) {
+  const { t } = useTranslation('main')
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -80,7 +82,7 @@ export function ThreeDModelViewer({
 
       const errorMessage = document.createElement('p')
       errorMessage.className = 'quotation-three-d-viewer-error'
-      errorMessage.textContent = '3D 모델을 불러올 수 없습니다.'
+      errorMessage.textContent = t('quotation.modelLoadError')
       container.appendChild(errorMessage)
     }
 
@@ -164,13 +166,13 @@ export function ThreeDModelViewer({
       renderer.dispose()
       container.replaceChildren()
     }
-  }, [modelContent, modelFormat])
+  }, [modelContent, modelFormat, t])
 
   return (
     <div
       ref={containerRef}
       className="quotation-three-d-viewer"
-      aria-label={`${modelName} 3D 뷰어`}
+      aria-label={t('quotation.modelViewerLabel', { modelName })}
     />
   )
 }

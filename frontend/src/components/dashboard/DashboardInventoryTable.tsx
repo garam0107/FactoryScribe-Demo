@@ -56,11 +56,11 @@ export function DashboardInventoryTable({
       </div>
 
       {isLoading ? (
-        <div className="empty-inventory">재고 데이터를 불러오는 중입니다.</div>
+        <div className="empty-inventory">{t('dashboard.loadingInventory')}</div>
       ) : errorMessage ? (
         <div className="empty-inventory">{errorMessage}</div>
       ) : items.length === 0 ? (
-        <div className="empty-inventory">표시할 재고 데이터가 없습니다.</div>
+        <div className="empty-inventory">{t('dashboard.noInventoryData')}</div>
       ) : (
         <>
           {items.map((item) => (

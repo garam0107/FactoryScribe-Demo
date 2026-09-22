@@ -17,7 +17,7 @@ export function DashboardTabs({ activeTab, onTabChange }: DashboardTabsProps) {
   const { t } = useTranslation('main')
 
   return (
-    <nav className="tabs" aria-label="대시보드 탭">
+    <nav className="tabs" aria-label={t('dashboard.tabsLabel')}>
       {tabs.map((tab) => (
         <button
           className={activeTab === tab.value ? 'active' : ''}

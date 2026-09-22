@@ -12,11 +12,18 @@
     "lowStock": "Hàng tồn kho thiếu",
     "addInventory": "Thêm hàng tồn kho",
     "inventorySearchPlaceholder": "Vui lòng nhập tên hàng tồn kho hoặc tên đối tác giao dịch.",
-    "lowStockUsedInNextQuotation": "{{count}} mặt hàng thiếu tồn kho sẽ được sử dụng trong báo giá tiếp theo."
+    "lowStockUsedInNextQuotation": "{{count}} mặt hàng thiếu tồn kho sẽ được sử dụng trong báo giá tiếp theo.",
+    "lowStockCount": "Tồn kho thiếu: {{count}} mặt hàng", "usedInNextQuotation": "sẽ được sử dụng trong báo giá tiếp theo.",
+    "currentInventoryCount": "Tồn kho hiện tại: {{count}} mặt hàng", "remainingQuantityWithCount": "Số lượng còn lại: {{count}} cái"
   },
   "quotation": {
     "comparison": "So sánh báo giá",
     "comparisonPreparing": "Màn hình so sánh báo giá hiện đang được chuẩn bị.",
-    "searchPlaceholder": "Vui lòng nhập tên mặt hàng, tên đối tác giao dịch, ngày giao hàng, v.v."
-  }
+    "searchPlaceholder": "Vui lòng nhập tên mặt hàng, tên đối tác giao dịch, ngày giao hàng, v.v.",
+    "dueSoon": "Sắp đến hạn", "shortageDescriptionStart": "Báo giá này có", "shortageDescriptionEmphasis": "hàng tồn kho cần thiết nhưng đang thiếu", "shortageDescriptionEnd": "."
+  },
+  "status": { "shortageQuotationsLoadError": "Không thể tải báo giá liên quan đến tồn kho thiếu.", "loadingShortageQuotations": "Đang tải báo giá tồn kho thiếu.", "noShortageQuotations": "Không có báo giá tồn kho thiếu để hiển thị.", "loadingInventory": "Đang tải dữ liệu tồn kho.", "noInventory": "Không có dữ liệu tồn kho để hiển thị." },
+  "preview": { "createError": "Không thể tạo bản xem trước tệp.", "noSheetData": "Không có dữ liệu trang tính để hiển thị.", "pdfUnavailable": "Không thể hiển thị bản xem trước PDF.", "unsupported": "Không thể xem trước", "selectedCount": "Đã chọn {{count}} tệp", "deleteCurrentStatement": "Xóa phiếu giao dịch hiện tại", "reset": "Đặt lại", "addFile": "Thêm tệp", "attachStatement": "Đính kèm phiếu giao dịch tại đây", "inventoryList": "Danh sách tồn kho", "statementDetails": "Chi tiết phiếu giao dịch", "currentlyViewing": "Đang xem" },
+  "actions": { "cancel": "Hủy" }, "units": { "each": " cái" },
+  "accessibility": { "inventoryPages": "Các trang tồn kho", "firstPage": "Trang đầu", "previousPage": "Trang trước", "nextPage": "Trang tiếp", "lastPage": "Trang cuối", "inventoryManagement": "Quản lý tồn kho", "inventoryTabs": "Các tab quản lý tồn kho", "moreInventoryOptions": "Thêm tùy chọn tồn kho", "selectCurrentPage": "Chọn tất cả mặt hàng trên trang hiện tại", "shortageQuotationSearch": "Tìm kiếm báo giá tồn kho thiếu", "selectItem": "Chọn {{itemName}}", "inventorySearch": "Tìm kiếm tồn kho", "moreQuotationOptions": "Thêm tùy chọn báo giá" }
 }

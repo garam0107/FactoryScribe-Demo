@@ -64,7 +64,7 @@ export function MonthlyPurchaseOrdersPanel({
           setErrorMessage(
             error instanceof Error
               ? error.message
-              : '발주서 데이터를 불러오지 못했습니다.',
+              : t('dashboard.purchaseOrdersLoadError'),
           )
         }
       } finally {
@@ -79,7 +79,7 @@ export function MonthlyPurchaseOrdersPanel({
     return () => {
       ignore = true
     }
-  }, [currentMonth, repositoryId])
+  }, [currentMonth, repositoryId, t])
 
   const rows = useMemo<PurchaseOrderRow[]>(() => {
     return documents.flatMap((document) =>
@@ -161,7 +161,7 @@ export function MonthlyPurchaseOrdersPanel({
               type="search"
               value={query}
               placeholder={t('chat.searchPlaceholder')}
-              aria-label="발주 검색"
+              aria-label={t('dashboard.orderSearch')}
               onChange={(event) => {
                 setQuery(event.target.value)
                 setCurrentPage(1)
@@ -172,11 +172,11 @@ export function MonthlyPurchaseOrdersPanel({
         </div>
 
         {isLoading ? (
-          <div className="empty-inventory">발주서 데이터를 불러오는 중입니다.</div>
+          <div className="empty-inventory">{t('dashboard.loadingPurchaseOrders')}</div>
         ) : errorMessage ? (
           <div className="empty-inventory">{errorMessage}</div>
         ) : visibleRows.length === 0 ? (
-          <div className="empty-inventory">표시할 이번 달 발주 데이터가 없습니다.</div>
+          <div className="empty-inventory">{t('dashboard.noMonthlyPurchaseOrders')}</div>
         ) : (
           <>
             {visibleRows.map((row) => (
@@ -199,10 +199,10 @@ export function MonthlyPurchaseOrdersPanel({
                 aria-hidden="true"
               />
             ))}
-            <div className="purchase-pagination" aria-label="발주 페이지">
+            <div className="purchase-pagination" aria-label={t('dashboard.orderPages')}>
               <button
                 type="button"
-                aria-label="첫 페이지"
+                aria-label={t('dashboard.firstPage')}
                 disabled={safeCurrentPage === 1}
                 onClick={() => setCurrentPage(1)}
               >
@@ -210,7 +210,7 @@ export function MonthlyPurchaseOrdersPanel({
               </button>
               <button
                 type="button"
-                aria-label="이전 페이지"
+                aria-label={t('dashboard.previousPage')}
                 disabled={safeCurrentPage === 1}
                 onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
               >
@@ -231,7 +231,7 @@ export function MonthlyPurchaseOrdersPanel({
               })}
               <button
                 type="button"
-                aria-label="다음 페이지"
+                aria-label={t('dashboard.nextPage')}
                 disabled={safeCurrentPage === pageCount}
                 onClick={() =>
                   setCurrentPage((page) => Math.min(pageCount, page + 1))
@@ -241,7 +241,7 @@ export function MonthlyPurchaseOrdersPanel({
               </button>
               <button
                 type="button"
-                aria-label="마지막 페이지"
+                aria-label={t('dashboard.lastPage')}
                 disabled={safeCurrentPage === pageCount}
                 onClick={() => setCurrentPage(pageCount)}
               >

@@ -28,6 +28,13 @@ const CATEGORY_ALIASES: Record<string, ForecastCategory> = {
   포장재: '포장재',
 }
 
+const CATEGORY_KEYS: Record<ForecastCategory, string> = {
+  원자재: 'dashboard.categories.rawMaterials',
+  부자재: 'dashboard.categories.auxiliaryMaterials',
+  소모품: 'dashboard.categories.consumables',
+  포장재: 'dashboard.categories.packagingMaterials',
+}
+
 function normalizeCategory(category: string | null): ForecastCategory | null {
   if (!category) {
     return null
@@ -180,7 +187,7 @@ function ForecastCard({
     return (
       <article className="forecast-card forecast-card-expanded">
         <header className="forecast-card-header">
-          <h3>{category}</h3>
+          <h3>{t(CATEGORY_KEYS[category])}</h3>
           <button
             className="forecast-more forecast-close-button"
             type="button"
@@ -204,7 +211,7 @@ function ForecastCard({
                   {listItem.item_name}
                 </span>
                 <span className="forecast-item-row-detail">
-                  <span>{listItem.supplier || '공급사 미지정'}</span>
+                  <span>{listItem.supplier || t('dashboard.supplierUnspecified')}</span>
                   <i aria-hidden="true" />
                   <span>{formatPrice(listItem.current_unit_price, null)}</span>
                 </span>
@@ -212,7 +219,7 @@ function ForecastCard({
             ))
           ) : (
             <div className="forecast-expanded-empty">
-              표시할 {category} 데이터가 없습니다.
+              {t('dashboard.noCategoryData', { category: t(CATEGORY_KEYS[category]) })}
             </div>
           )}
         </div>
@@ -224,7 +231,7 @@ function ForecastCard({
     return (
       <article className="forecast-card">
         <header className="forecast-card-header">
-          <h3>{category}</h3>
+          <h3>{t(CATEGORY_KEYS[category])}</h3>
           <button
             className="forecast-more"
             type="button"
@@ -236,7 +243,7 @@ function ForecastCard({
         </header>
 
         <div className="forecast-empty">
-          표시할 {category} 데이터가 없습니다.
+          {t('dashboard.noCategoryData', { category: t(CATEGORY_KEYS[category]) })}
         </div>
       </article>
     )
@@ -253,7 +260,7 @@ function ForecastCard({
     <article className="forecast-card">
       <div className="forecast-card-summary">
         <header className="forecast-card-header">
-          <h3>{category}</h3>
+          <h3>{t(CATEGORY_KEYS[category])}</h3>
           <button
             className="forecast-more"
             type="button"
@@ -266,7 +273,7 @@ function ForecastCard({
 
         <div className="forecast-product">
           <div className="forecast-meta">
-            <span>{item.supplier || '공급사 미지정'}</span>
+            <span>{item.supplier || t('dashboard.supplierUnspecified')}</span>
             <i aria-hidden="true" />
             <span>{item.item_name}</span>
           </div>
@@ -283,23 +290,23 @@ function ForecastCard({
         <dl className="forecast-quantities">
           <div>
             <dt>{t('dashboard.previousYearUsageQuantity')}</dt>
-            <dd className="muted">{formatNumber(previousYearUsage)} 개</dd>
+            <dd className="muted">{t('dashboard.quantityWithUnit', { count: formatNumber(previousYearUsage) })}</dd>
           </div>
           <div>
             <dt>{t('dashboard.currentRemainingQuantity')}</dt>
-            <dd>{formatNumber(remainingQuantity)} 개</dd>
+            <dd>{t('dashboard.quantityWithUnit', { count: formatNumber(remainingQuantity) })}</dd>
           </div>
           <div>
             <dt>{t('dashboard.currentYearExpectedUsageQuantity')}</dt>
-            <dd>{formatNumber(expectedQuantity)} 개</dd>
+            <dd>{t('dashboard.quantityWithUnit', { count: formatNumber(expectedQuantity) })}</dd>
           </div>
         </dl>
 
         <div className="forecast-divider" />
 
         <div className="forecast-needed">
-          <span>추가 필요</span>
-          <strong>{formatNumber(additionalNeeded)} 개</strong>
+          <span>{t('dashboard.additionalNeeded')}</span>
+          <strong>{t('dashboard.quantityWithUnit', { count: formatNumber(additionalNeeded) })}</strong>
         </div>
       </div>
     </article>
@@ -331,25 +338,25 @@ export function ForecastPanel({
 
   if (isLoading) {
     return (
-      <section className="forecast-panel" aria-label="예상 소모도">
-        <div className="forecast-status">예상 소모도 데이터를 불러오는 중입니다.</div>
+      <section className="forecast-panel" aria-label={t('dashboard.expectedConsumption')}>
+        <div className="forecast-status">{t('dashboard.loadingForecast')}</div>
       </section>
     )
   }
 
   if (errorMessage) {
     return (
-      <section className="forecast-panel" aria-label="예상 소모도">
+      <section className="forecast-panel" aria-label={t('dashboard.expectedConsumption')}>
         <div className="forecast-status">{errorMessage}</div>
       </section>
     )
   }
 
   return (
-    <section className="forecast-panel" aria-label="예상 소모도">
+    <section className="forecast-panel" aria-label={t('dashboard.expectedConsumption')}>
       <div className="forecast-headline">
         <p>{t('dashboard.expectedShortageSummaryStart')}</p>
-        <strong>{mostNeededCategory.category}</strong>
+        <strong>{t(CATEGORY_KEYS[mostNeededCategory.category])}</strong>
         <p>{t('dashboard.expectedShortageSummaryEnd')}</p>
       </div>
 

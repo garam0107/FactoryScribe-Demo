@@ -6,5 +6,7 @@
     "quotationCalculationDrawing": "Quotation Calculation (Drawing)",
     "advancedPromptInput": "Advanced : Prompt Input",
     "adminSettings": "Admin Settings"
-  }
+  },
+  "prompt": { "startNewConversation": "Start a New Conversation", "conversationHistory": "Conversation History" },
+  "accessibility": { "mainMenu": "Main menu" }
 }

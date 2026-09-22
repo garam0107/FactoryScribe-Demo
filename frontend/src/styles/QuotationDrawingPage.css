@@ -239,9 +239,9 @@
   font-weight: 700;
   line-height: 20px;
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .quotation-file-dropzone.has-preview {
@@ -450,8 +450,9 @@
   align-items: flex-start;
   justify-content: space-between;
 
-  height: 76px;
-  flex: 0 0 76px;
+  min-height: 76px;
+  height: auto;
+  flex: 0 0 auto;
   border-bottom: 1px solid #111;
 }
 
@@ -741,10 +742,11 @@
 
 .quotation-estimate-metrics span,
 .quotation-estimate-metrics strong {
-  overflow: hidden;
+  overflow: visible;
   max-width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .quotation-estimate-metrics span {
@@ -790,7 +792,8 @@
 }
 
 .quotation-settings-row > span {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .quotation-settings-row > strong,
@@ -846,6 +849,7 @@
   font-size: 24px;
   font-weight: 400;
   line-height: 24px;
+  overflow-wrap: anywhere;
 }
 
 .quotation-total-price span {
@@ -853,6 +857,12 @@
   font-size: 24px;
   font-weight: 700;
   line-height: 24px;
+  overflow-wrap: anywhere;
+}
+
+.quotation-total-price {
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .quotation-result-actions {

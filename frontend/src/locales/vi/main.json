@@ -33,13 +33,43 @@
     "previousYearUsageQuantity": "Số lượng sử dụng năm trước",
     "currentRemainingQuantity": "Số lượng còn lại hiện tại",
     "currentYearExpectedUsageQuantity": "Số lượng sử dụng dự kiến năm nay",
-    "priceChangeAria": "Biến động giá của {{itemName}} so với tháng trước"
+    "priceChangeAria": "Biến động giá của {{itemName}} so với tháng trước",
+    "tabsLabel": "Các tab bảng điều khiển", "loadingInventory": "Đang tải dữ liệu tồn kho.", "noInventoryData": "Không có dữ liệu tồn kho để hiển thị.",
+    "supplierUnspecified": "Chưa chỉ định nhà cung cấp", "noCategoryData": "Không có dữ liệu {{category}} để hiển thị.", "quantityWithUnit": "{{count}} cái", "additionalNeeded": "Cần bổ sung",
+    "loadingForecast": "Đang tải dữ liệu mức tiêu hao dự kiến.", "noPriceData": "Không có dữ liệu giá để hiển thị.",
+    "purchaseOrdersLoadError": "Không thể tải dữ liệu đơn đặt hàng.", "loadingPurchaseOrders": "Đang tải dữ liệu đơn đặt hàng.", "noMonthlyPurchaseOrders": "Không có đơn đặt hàng nào trong tháng này để hiển thị.",
+    "orderSearch": "Tìm kiếm đơn đặt hàng", "orderPages": "Các trang đơn đặt hàng", "firstPage": "Trang đầu", "previousPage": "Trang trước", "nextPage": "Trang tiếp", "lastPage": "Trang cuối",
+    "categories": { "rawMaterials": "Nguyên vật liệu", "auxiliaryMaterials": "Vật liệu phụ", "consumables": "Vật tư tiêu hao", "packagingMaterials": "Vật liệu đóng gói" }
+  },
+  "errors": { "inventoryLoad": "Không thể tải dữ liệu tồn kho.", "conversationLoad": "Không thể tải nội dung cuộc trò chuyện.", "responseLoad": "Không thể tải phản hồi. Vui lòng thử lại sau ít phút.", "repositoryAdd": "Không thể thêm kho lưu trữ.", "repositoryRemove": "Không thể xóa kho lưu trữ." },
+  "confirm": { "removeRepository": "Xóa kho lưu trữ {{name}}?" },
+  "accessibility": { "home": "Trang chủ FAUTORY", "search": "Tìm kiếm", "mainDashboard": "Bảng điều khiển chính", "adminSettings": "Cài đặt quản trị", "questionInput": "Nhập câu hỏi", "questionSearch": "Tìm kiếm câu hỏi" },
+  "quotation": {
+    "generateBom": "Tạo BOM", "detailedSettings": "Cài đặt chi tiết", "pageLabel": "Bản vẽ tính báo giá", "tabsLabel": "Các tab bản vẽ tính báo giá",
+    "basicSettings": "Cài đặt báo giá cơ bản", "automaticDecision": "Tự động đánh giá", "marginRate": "Tỷ suất lợi nhuận", "laborCost": "Chi phí nhân công", "requiredPersonnel": "Nhân sự cần thiết", "personnel": "Nhân sự",
+    "peopleCount": "{{count}} người", "manufacturingLeadTime": "Thời gian sản xuất", "dayCount": "{{count}} ngày", "defaultViewOnCompletion": "Chế độ xem mặc định khi hoàn tất",
+    "selectAnother2DDrawing": "Chọn bản vẽ 2D khác", "selectAnotherDrawing": "Chọn bản vẽ khác", "download": "Tải xuống", "generating3DModel": "Đang tạo mô hình 3D.", "pleaseWait": "Vui lòng chờ.",
+    "attach2DDrawingFor3D": "Đính kèm bản vẽ 2D để tạo 3D", "upload2DDrawing": "Tải bản vẽ 2D lên", "attachQuotation": "Đính kèm báo giá", "modelNotFound": "Không tìm thấy mô hình 3D cho tệp này.",
+    "pdfPreviewUnavailable": "Không thể hiển thị bản xem trước PDF.", "previewUnsupported": "Tệp này không hỗ trợ xem trước.", "attachQuotationHere": "Đính kèm báo giá tại đây",
+    "viewToggle": "Chuyển đổi chế độ xem 2D/3D", "switchTo3D": "Chuyển sang chế độ xem 3D", "openAnotherFile": "Mở tệp khác", "expectedBom": "BOM dự kiến", "quotationName": "Tên báo giá", "openBomMenu": "Mở menu BOM",
+    "shortageCount": "Thiếu {{count}}", "stockCount": "Tồn kho {{count}}", "estimateConditions": "Điều kiện báo giá", "estimatedPrice": "Giá báo dự kiến", "exportPdf": "Xuất PDF",
+    "supportedFilesOnly": "Chỉ hỗ trợ tệp PDF part2/PLH2/CF3RA010-S2-21 hoặc PNG C1/C3/C5.", "modelLoadError": "Không thể tải mô hình 3D.", "modelViewerLabel": "Trình xem 3D {{modelName}}"
   },
   "chat": {
     "greeting": "Xin chào, 김OO님. ",
     "help": "Tôi có thể giúp gì cho bạn?",
     "askAnything": "Hãy hỏi tôi bất cứ điều gì.",
     "searchPlaceholder": "Vui lòng nhập tên linh kiện, đối tác giao dịch, số vận đơn, v.v."
+  },
+  "prompt": {
+    "pageLabel": "Nhập prompt nâng cao", "tabsLabel": "Các tab prompt",
+    "generatingResponse": "Đang tạo phản hồi", "emptyState": "Nhập câu hỏi để tiếp tục cuộc trò chuyện tại đây.",
+    "currentDirectory": "Thư mục hiện tại", "loadingRepositories": "Đang tải kho lưu trữ.",
+    "noRepositories": "Chưa có kho lưu trữ nào được đăng ký.", "directoryActions": "Thao tác thư mục",
+    "addRepository": "Thêm kho lưu trữ", "removeRepository": "Xóa kho lưu trữ",
+    "selectRepositoryToRemove": "Vui lòng chọn mụt mục để xóa.", "electronOnly": "Chỉ có thể thêm kho lưu trữ trong ứng dụng Electron.",
+    "directoryPickerError": "Không thể mở cửa sổ chọn thư mục.", "inputPlaceholder": "Hãy hỏi bất cứ điều gì bạn muốn biết", "send": "Gửi prompt",
+    "sharedBy": "Chia sẻ với {{count}} người", "scope": { "common": "Chung", "team": "Nhóm", "project": "Dự án" }
   },
   "search": {
     "placeholder": "Vui lòng nhập từ khóa tìm kiếm",

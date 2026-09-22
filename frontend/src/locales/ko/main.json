@@ -33,13 +33,45 @@
     "previousYearUsageQuantity": "전년도 사용 수량",
     "currentRemainingQuantity": "현 시점 잔여 수량",
     "currentYearExpectedUsageQuantity": "금년도 예상 사용 수량",
-    "priceChangeAria": "{{itemName}} 전월 대비 가격 변화"
+    "priceChangeAria": "{{itemName}} 전월 대비 가격 변화",
+    "tabsLabel": "대시보드 탭", "loadingInventory": "재고 데이터를 불러오는 중입니다.",
+    "noInventoryData": "표시할 재고 데이터가 없습니다.", "supplierUnspecified": "공급사 미지정",
+    "noCategoryData": "표시할 {{category}} 데이터가 없습니다.", "quantityWithUnit": "{{count}} 개", "additionalNeeded": "추가 필요",
+    "loadingForecast": "예상 소모도 데이터를 불러오는 중입니다.", "noPriceData": "표시할 가격 데이터가 없습니다.",
+    "purchaseOrdersLoadError": "발주서 데이터를 불러오지 못했습니다.", "loadingPurchaseOrders": "발주서 데이터를 불러오는 중입니다.",
+    "noMonthlyPurchaseOrders": "표시할 이번 달 발주 데이터가 없습니다.", "orderSearch": "발주 검색", "orderPages": "발주 페이지",
+    "firstPage": "첫 페이지", "previousPage": "이전 페이지", "nextPage": "다음 페이지", "lastPage": "마지막 페이지",
+    "categories": { "rawMaterials": "원자재", "auxiliaryMaterials": "부자재", "consumables": "소모품", "packagingMaterials": "포장재" }
+  },
+  "errors": { "inventoryLoad": "재고 데이터를 불러오지 못했습니다.", "conversationLoad": "대화 내용을 불러오지 못했습니다.", "responseLoad": "응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.", "repositoryAdd": "저장소를 등록하지 못했습니다.", "repositoryRemove": "저장소를 삭제하지 못했습니다." },
+  "confirm": { "removeRepository": "{{name}} 저장소를 삭제하시겠습니까?" },
+  "accessibility": { "home": "FAUTORY 홈", "search": "검색", "mainDashboard": "메인 대시보드", "adminSettings": "관리자 설정", "questionInput": "질문 입력", "questionSearch": "질문 검색" },
+  "quotation": {
+    "generateBom": "BOM 생성", "detailedSettings": "세부 설정", "pageLabel": "견적 계산 도면", "tabsLabel": "견적 계산 도면 탭",
+    "basicSettings": "기본 견적 설정", "automaticDecision": "자동 판단", "marginRate": "마진율", "laborCost": "인건비", "requiredPersonnel": "필요 인원", "personnel": "인원",
+    "peopleCount": "{{count}}명", "manufacturingLeadTime": "제조 소요 기간", "dayCount": "{{count}}일", "defaultViewOnCompletion": "작업 완료 시 기본 뷰",
+    "selectAnother2DDrawing": "다른 2D 도면 선택", "selectAnotherDrawing": "다른 도면 선택", "download": "다운로드", "generating3DModel": "3D 모델을 생성하고 있습니다.", "pleaseWait": "잠시만 기다려주세요.",
+    "attach2DDrawingFor3D": "3D 도면 생성용 2D 도면 첨부", "upload2DDrawing": "2D 도면 업로드", "attachQuotation": "견적서 첨부", "modelNotFound": "이 파일의 3D 모델을 찾을 수 없습니다.",
+    "pdfPreviewUnavailable": "PDF 미리보기를 표시할 수 없습니다.", "previewUnsupported": "미리보기를 지원하지 않는 파일입니다.", "attachQuotationHere": "여기에 견적서 첨부",
+    "viewToggle": "2D 3D 보기 전환", "switchTo3D": "3D 보기로 전환", "openAnotherFile": "다른 파일 열기", "expectedBom": "예상 BOM", "quotationName": "견적서명", "openBomMenu": "BOM 메뉴 열기",
+    "shortageCount": "{{count}}개 부족", "stockCount": "재고 {{count}}개", "estimateConditions": "견적 조건", "estimatedPrice": "예상 견적 가격", "exportPdf": "PDF 내보내기",
+    "supportedFilesOnly": "part2/PLH2/CF3RA010-S2-21 PDF 또는 C1/C3/C5 PNG 파일만 지원합니다.", "modelLoadError": "3D 모델을 불러올 수 없습니다.", "modelViewerLabel": "{{modelName}} 3D 뷰어"
   },
   "chat": {
     "greeting": "안녕하세요. 김OO님.",
     "help": "무엇을 도와드릴까요?",
     "askAnything": "무엇이든 물어보세요.",
     "searchPlaceholder": "부품명, 거래처, 운송장 번호 등을 입력해주세요."
+  },
+  "prompt": {
+    "pageLabel": "고급 프롬프트 입력", "tabsLabel": "프롬프트 탭",
+    "generatingResponse": "응답 생성 중", "emptyState": "질문을 입력하면 여기에서 대화를 이어갈 수 있습니다.",
+    "currentDirectory": "현재 디렉토리", "loadingRepositories": "저장소를 불러오는 중입니다.",
+    "noRepositories": "등록된 저장소가 없습니다.", "directoryActions": "디렉토리 작업",
+    "addRepository": "저장소 등록", "removeRepository": "저장소 삭제",
+    "selectRepositoryToRemove": "삭제하실 항목을 선택해주세요", "electronOnly": "저장소 등록은 Electron 앱에서만 사용할 수 있습니다.",
+    "directoryPickerError": "폴더 선택 창을 열지 못했습니다.", "inputPlaceholder": "궁금하신 것을 물어보세요", "send": "프롬프트 전송",
+    "sharedBy": "{{count}}명 공유", "scope": { "common": "공통", "team": "팀", "project": "프로젝트" }
   },
   "search": {
     "placeholder": "검색어를 입력해주세요",

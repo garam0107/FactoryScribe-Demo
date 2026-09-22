@@ -1,5 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import * as XLSX from 'xlsx'
 
 import {
@@ -39,10 +40,10 @@ type InventoryPreviewFile = {
 
 const PAGE_SIZE = 9
 
-const inventoryTabs: { value: InventoryTab; label: string }[] = [
-  { value: 'total', label: '총 재고 현황' },
-  { value: 'shortage', label: '부족 재고' },
-  { value: 'comparison', label: '견적서 비교' },
+const inventoryTabs: { value: InventoryTab; labelKey: string }[] = [
+  { value: 'total', labelKey: 'inventory.totalInventoryStatus' },
+  { value: 'shortage', labelKey: 'inventory.lowStock' },
+  { value: 'comparison', labelKey: 'quotation.comparison' },
 ]
 
 function normalizeText(value: string | number | null | undefined) {
@@ -121,17 +122,13 @@ function formatPrice(item: InventoryItem) {
   return `${Math.round(price).toLocaleString('ko-KR')} KRW${item.unit ? ` /${item.unit}` : ''}`
 }
 
-function formatRemainingStock(item: InventoryItem) {
+function formatRemainingStock(item: InventoryItem, defaultUnit: string) {
   const quantity = item.current_remaining_quantity ?? item.current_stock
-  return `${Math.round(quantity).toLocaleString('ko-KR')}${item.unit?.trim() || '개'}`
+  return `${Math.round(quantity).toLocaleString('ko-KR')}${item.unit?.trim() || defaultUnit}`
 }
 
 function formatShortagePrice(unitPrice: number | null) {
   return `${Math.round(unitPrice ?? 0).toLocaleString('ko-KR')} KRW /ea`
-}
-
-function formatShortageStock(currentStock: number) {
-  return `잔여 수량 : ${Math.round(currentStock).toLocaleString('ko-KR')}개`
 }
 
 function formatQuotationDate(value: string | null) {
@@ -221,6 +218,7 @@ export function InventoryManagementPage({
   activeTab: controlledActiveTab,
   onTabChange,
 }: InventoryManagementPageProps) {
+  const { t } = useTranslation('inventory')
   const [internalActiveTab, setInternalActiveTab] =
     useState<InventoryTab>('total')
   const activeTab = controlledActiveTab ?? internalActiveTab
@@ -277,7 +275,7 @@ export function InventoryManagementPage({
           setShortageErrorMessage(
             error instanceof Error
               ? error.message
-              : '부족 재고 연관 견적서를 불러오지 못했습니다.',
+              : t('status.shortageQuotationsLoadError'),
           )
         }
       } finally {
@@ -293,7 +291,7 @@ export function InventoryManagementPage({
     return () => {
       ignore = true
     }
-  }, [activeTab, hasAttemptedShortageQuotations, repositoryId])
+  }, [activeTab, hasAttemptedShortageQuotations, repositoryId, t])
 
   useEffect(() => {
     if (!isInventoryAddModalOpen) {
@@ -467,7 +465,7 @@ export function InventoryManagementPage({
       alert(
         error instanceof Error
           ? error.message
-          : '파일 미리보기를 생성하지 못했습니다.',
+          : t('preview.createError'),
       )
     } finally {
       input.value = ''
@@ -544,10 +542,10 @@ export function InventoryManagementPage({
   }
 
   const renderPagination = () => (
-    <div className="purchase-pagination" aria-label="재고 페이지">
+    <div className="purchase-pagination" aria-label={t('accessibility.inventoryPages')}>
       <button
         type="button"
-        aria-label="첫 페이지"
+        aria-label={t('accessibility.firstPage')}
         disabled={safeCurrentPage === 1}
         onClick={() => changePage(1)}
       >
@@ -555,7 +553,7 @@ export function InventoryManagementPage({
       </button>
       <button
         type="button"
-        aria-label="이전 페이지"
+        aria-label={t('accessibility.previousPage')}
         disabled={safeCurrentPage === 1}
         onClick={() => changePageWithUpdater((page) => Math.max(1, page - 1))}
       >
@@ -576,7 +574,7 @@ export function InventoryManagementPage({
       })}
       <button
         type="button"
-        aria-label="다음 페이지"
+        aria-label={t('accessibility.nextPage')}
         disabled={safeCurrentPage === pageCount}
         onClick={() =>
           changePageWithUpdater((page) => Math.min(pageCount, page + 1))
@@ -586,7 +584,7 @@ export function InventoryManagementPage({
       </button>
       <button
         type="button"
-        aria-label="마지막 페이지"
+        aria-label={t('accessibility.lastPage')}
         disabled={safeCurrentPage === pageCount}
         onClick={() => changePage(pageCount)}
       >
@@ -613,7 +611,7 @@ export function InventoryManagementPage({
           </tbody>
         </table>
       ) : (
-        <span>표시할 시트 데이터가 없습니다.</span>
+        <span>{t('preview.noSheetData')}</span>
       )}
     </div>
   )
@@ -629,7 +627,7 @@ export function InventoryManagementPage({
     if (file.kind === 'pdf' && file.objectUrl) {
       return (
         <object data={file.objectUrl} type="application/pdf" aria-label={file.name}>
-          <span>PDF 미리보기를 표시할 수 없습니다.</span>
+          <span>{t('preview.pdfUnavailable')}</span>
         </object>
       )
     }
@@ -638,14 +636,14 @@ export function InventoryManagementPage({
       return renderSpreadsheetPreview(file, variant)
     }
 
-    return <span className="inventory-add-unsupported">미리보기 불가</span>
+    return <span className="inventory-add-unsupported">{t('preview.unsupported')}</span>
   }
 
   return (
     <>
-    <section className="inventory-management-page" aria-label="재고 관리">
+    <section className="inventory-management-page" aria-label={t('accessibility.inventoryManagement')}>
       <div className="inventory-page-header">
-        <nav className="inventory-page-tabs" aria-label="재고 관리 탭">
+        <nav className="inventory-page-tabs" aria-label={t('accessibility.inventoryTabs')}>
           {inventoryTabs.map((tab) => (
             <button
               className={activeTab === tab.value ? 'active' : ''}
@@ -653,7 +651,7 @@ export function InventoryManagementPage({
               key={tab.value}
               onClick={() => handleTabChange(tab.value)}
             >
-              {tab.label}
+              {t(tab.labelKey)}
             </button>
           ))}
         </nav>
@@ -664,8 +662,8 @@ export function InventoryManagementPage({
           <>
             <div className="inventory-summary-row inventory-shortage-summary">
               <h2 className="inventory-shortage-title">
-                <span>부족 재고 : {shortageItems}가지</span>
-                <strong>는 다음 견적서에 사용 됩니다.</strong>
+                <span>{t('inventory.lowStockCount', { count: shortageItems })}</span>
+                <strong>{t('inventory.usedInNextQuotation')}</strong>
               </h2>
 
               <div className="inventory-page-actions">
@@ -674,12 +672,12 @@ export function InventoryManagementPage({
                   type="button"
                   onClick={() => setIsInventoryAddModalOpen(true)}
                 >
-                  재고 추가
+                  {t('inventory.addInventory')}
                 </button>
                 <button
                   className="inventory-more-button"
                   type="button"
-                  aria-label="재고 관리 더보기"
+                  aria-label={t('accessibility.moreInventoryOptions')}
                 >
                   ...
                 </button>
@@ -693,7 +691,7 @@ export function InventoryManagementPage({
                     type="checkbox"
                     checked={allVisibleSelected}
                     onChange={toggleVisibleRows}
-                    aria-label="현재 페이지 전체 선택"
+                    aria-label={t('accessibility.selectCurrentPage')}
                   />
                 </label>
                 <button
@@ -706,7 +704,7 @@ export function InventoryManagementPage({
                     changePage(1)
                   }}
                 >
-                  <span>이름 순</span>
+                  <span>{t('inventory.sortByName')}</span>
                   <img
                     className={sortDirection === 'desc' ? 'rotate' : ''}
                     src={caretDownIcon}
@@ -717,8 +715,8 @@ export function InventoryManagementPage({
                   <input
                     type="search"
                     value={query}
-                    placeholder="품목명, 거래처명, 납기일자 등을 입력해주세요."
-                    aria-label="부족 재고 견적서 검색"
+                    placeholder={t('quotation.searchPlaceholder')}
+                    aria-label={t('accessibility.shortageQuotationSearch')}
                     onChange={(event) => {
                       setQuery(event.target.value)
                       changePage(1)
@@ -729,11 +727,11 @@ export function InventoryManagementPage({
               </div>
 
               {isShortageLoading ? (
-                <div className="empty-inventory">부족 재고 견적서를 불러오는 중입니다.</div>
+                <div className="empty-inventory">{t('status.loadingShortageQuotations')}</div>
               ) : shortageErrorMessage ? (
                 <div className="empty-inventory">{shortageErrorMessage}</div>
               ) : visibleRows.length === 0 ? (
-                <div className="empty-inventory">표시할 부족 재고 견적서가 없습니다.</div>
+                <div className="empty-inventory">{t('status.noShortageQuotations')}</div>
               ) : (
                 <>
                   {(visibleRows as ShortageQuotationDocument[]).map((document) => {
@@ -766,7 +764,7 @@ export function InventoryManagementPage({
                                 onChange={() =>
                                   toggleRow(document.quotation_document_id)
                                 }
-                                aria-label={`${quotationTitle} 선택`}
+                                aria-label={t('accessibility.selectItem', { itemName: quotationTitle })}
                               />
                             </label>
                             <span className="inventory-shortage-card-name inventory-row-name">
@@ -775,7 +773,7 @@ export function InventoryManagementPage({
                             {isDueWithinWeek(document) ? (
                               <span className="due-soon-badge">
                                 <span className="due-soon-dot" />
-                                납기 임박
+                                {t('quotation.dueSoon')}
                               </span>
                             ) : (
                               <span className="due-soon-badge due-soon-badge-placeholder" aria-hidden="true" />
@@ -797,7 +795,7 @@ export function InventoryManagementPage({
                         {isExpanded ? (
                           <div className="inventory-shortage-panel">
                             <p className="inventory-shortage-panel-title">
-                              해당 견적서에 <strong>필요하지만 부족한 재고</strong> 입니다.
+                              {t('quotation.shortageDescriptionStart')} <strong>{t('quotation.shortageDescriptionEmphasis')}</strong>{t('quotation.shortageDescriptionEnd')}
                             </p>
 
                             <div className="inventory-shortage-item-list">
@@ -818,7 +816,7 @@ export function InventoryManagementPage({
                                   <div className="inventory-shortage-item-detail">
                                     <span className="inventory-detail-primary">{formatShortagePrice(item.unit_price)}</span>
                                     <i aria-hidden="true" />
-                                    <span className="inventory-detail-secondary">{formatShortageStock(item.current_stock)}</span>
+                                    <span className="inventory-detail-secondary">{t('inventory.remainingQuantityWithCount', { count: Math.round(item.current_stock) })}</span>
                                   </div>
                                 </div>
                               ))}
@@ -844,14 +842,14 @@ export function InventoryManagementPage({
           </>
         ) : activeTab === 'comparison' ? (
           <div className="inventory-page-table">
-            <div className="empty-inventory">견적서 비교 화면은 준비 중입니다.</div>
+            <div className="empty-inventory">{t('quotation.comparisonPreparing')}</div>
           </div>
         ) : (
           <>
             <div className="inventory-summary-row">
               <h2>
-                현재 재고 : {totalItems} 가지
-                <span>부족 재고 : {shortageItems}가지</span>
+                {t('inventory.currentInventoryCount', { count: totalItems })}
+                <span>{t('inventory.lowStockCount', { count: shortageItems })}</span>
               </h2>
 
               <div className="inventory-page-actions">
@@ -860,12 +858,12 @@ export function InventoryManagementPage({
                   type="button"
                   onClick={() => setIsInventoryAddModalOpen(true)}
                 >
-                  재고 추가
+                  {t('inventory.addInventory')}
                 </button>
                 <button
                   className="inventory-more-button"
                   type="button"
-                  aria-label="재고 관리 더보기"
+                  aria-label={t('accessibility.moreInventoryOptions')}
                 >
                   ...
                 </button>
@@ -879,7 +877,7 @@ export function InventoryManagementPage({
                     type="checkbox"
                     checked={allVisibleSelected}
                     onChange={toggleVisibleRows}
-                    aria-label="현재 페이지 전체 선택"
+                    aria-label={t('accessibility.selectCurrentPage')}
                   />
                 </label>
                 <button
@@ -892,7 +890,7 @@ export function InventoryManagementPage({
                     changePage(1)
                   }}
                 >
-                  <span>이름 순</span>
+                  <span>{t('inventory.sortByName')}</span>
                   <img
                     className={sortDirection === 'desc' ? 'rotate' : ''}
                     src={caretDownIcon}
@@ -903,8 +901,8 @@ export function InventoryManagementPage({
                   <input
                     type="search"
                     value={query}
-                    placeholder="재고명 거래처명을 입력해주세요."
-                    aria-label="재고 검색"
+                    placeholder={t('inventory.inventorySearchPlaceholder')}
+                    aria-label={t('accessibility.inventorySearch')}
                     onChange={(event) => {
                       setQuery(event.target.value)
                       changePage(1)
@@ -915,11 +913,11 @@ export function InventoryManagementPage({
               </div>
 
               {isLoading ? (
-                <div className="empty-inventory">재고 데이터를 불러오는 중입니다.</div>
+                <div className="empty-inventory">{t('status.loadingInventory')}</div>
               ) : errorMessage ? (
                 <div className="empty-inventory">{errorMessage}</div>
               ) : visibleRows.length === 0 ? (
-                <div className="empty-inventory">표시할 재고 데이터가 없습니다.</div>
+                <div className="empty-inventory">{t('status.noInventory')}</div>
               ) : (
                 <>
                   {(visibleRows as InventoryItem[]).map((item) => (
@@ -930,14 +928,14 @@ export function InventoryManagementPage({
                             type="checkbox"
                             checked={selectedItemIds.has(item.id)}
                             onChange={() => toggleRow(item.id)}
-                            aria-label={`${item.item_name} 선택`}
+                            aria-label={t('accessibility.selectItem', { itemName: item.item_name })}
                           />
                         </label>
                         <span className="inventory-row-name">{item.item_name}</span>
                         {item.is_shortage ? (
                           <span className="shortage-badge">
                             <span className="shortage-dot" />
-                            부족
+                            {t('dashboard.shortage')}
                           </span>
                         ) : (
                           <span className="shortage-badge shortage-badge-placeholder" aria-hidden="true" />
@@ -946,7 +944,7 @@ export function InventoryManagementPage({
                       <div className="inventory-page-row-detail">
                         <span className="inventory-detail-primary">{formatPrice(item)}</span>
                         <i aria-hidden="true" />
-                        <span className="inventory-detail-secondary">잔여 수량 : {formatRemainingStock(item)}</span>
+                        <span className="inventory-detail-secondary">{t('inventory.remainingQuantity')}: {formatRemainingStock(item, t('units.each'))}</span>
                       </div>
                     </article>
                   ))}
@@ -972,10 +970,10 @@ export function InventoryManagementPage({
               className="bulk-order-modal inventory-add-modal"
               role="dialog"
               aria-modal="true"
-              aria-label="재고 추가"
+              aria-label={t('inventory.addInventory')}
             >
               <div className="inventory-add-heading">
-                <p className="bulk-order-description">재고 추가</p>
+                <p className="bulk-order-description">{t('inventory.addInventory')}</p>
               </div>
 
               <div
@@ -986,13 +984,13 @@ export function InventoryManagementPage({
                 {activePreviewFile ? (
                   <div className="inventory-add-preview-zone">
                     <div className="inventory-add-preview-toolbar">
-                      <span>총 {inventoryPreviewFiles.length}건 선택됨</span>
+                      <span>{t('preview.selectedCount', { count: inventoryPreviewFiles.length })}</span>
                       <div className="inventory-add-file-actions">
                         <button type="button" onClick={deleteActivePreviewFile}>
-                          현재 명세서 삭제
+                          {t('preview.deleteCurrentStatement')}
                         </button>
                         <button type="button" onClick={resetPreviewFiles}>
-                          초기화
+                          {t('preview.reset')}
                         </button>
                       </div>
                     </div>
@@ -1026,7 +1024,7 @@ export function InventoryManagementPage({
                               onChange={handleInventoryFileChange}
                             />
                             <span>+</span>
-                            <small>파일 추가</small>
+                            <small>{t('preview.addFile')}</small>
                           </label>
                         </div>
                       </aside>
@@ -1041,23 +1039,23 @@ export function InventoryManagementPage({
                       onChange={handleInventoryFileChange}
                     />
                     <img src={filePlusIcon} alt="" />
-                    <span>여기에 거래명세서 첨부</span>
+                    <span>{t('preview.attachStatement')}</span>
                   </label>
                 )}
 
                 <div className="inventory-add-preview">
                   <div className="inventory-add-quote-row">
-                    <span>재고 목록 :</span>
+                    <span>{t('preview.inventoryList')} :</span>
                     <button
                       className="inventory-add-more-button"
                       type="button"
-                      aria-label="견적서 더보기"
+                      aria-label={t('accessibility.moreQuotationOptions')}
                     >
                       ...
                     </button>
                   </div>
 
-                  <strong className="inventory-add-bom-title">거래명세서 상세 정보</strong>
+                  <strong className="inventory-add-bom-title">{t('preview.statementDetails')}</strong>
 
                   <div className="inventory-add-bom-list">
                     {inventoryPreviewFiles.length > 0 ? (
@@ -1070,7 +1068,7 @@ export function InventoryManagementPage({
                                   type="checkbox"
                                   checked={selectedPreviewFileIds.has(file.id)}
                                   onChange={() => togglePreviewFileSelection(file.id)}
-                                  aria-label={`${file.name} 선택`}
+                                  aria-label={t('accessibility.selectItem', { itemName: file.name })}
                                 />
                               </label>
                               <span>{file.name}</span>
@@ -1078,7 +1076,7 @@ export function InventoryManagementPage({
                             <div className="inventory-add-document-detail">
                               <span>{file.kind.toUpperCase()}</span>
                               <i aria-hidden="true" />
-                              <span>{file.id === activePreviewFile.id ? '현재 보기' : '-'}</span>
+                              <span>{file.id === activePreviewFile.id ? t('preview.currentlyViewing') : '-'}</span>
                             </div>
                           </div>
                         ))}
@@ -1107,14 +1105,14 @@ export function InventoryManagementPage({
                   type="button"
                   onClick={closeInventoryAddModal}
                 >
-                  취소
+                  {t('actions.cancel')}
                 </button>
                 <button
                   className="bulk-order-submit"
                   type="button"
                   onClick={closeInventoryAddModal}
                 >
-                  재고 추가
+                  {t('inventory.addInventory')}
                 </button>
               </div>
             </section>

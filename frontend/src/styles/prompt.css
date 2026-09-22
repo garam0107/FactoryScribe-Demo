@@ -186,7 +186,7 @@
 
 .directory-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   width: 100%;
@@ -208,7 +208,8 @@
   color: var(--black);
   font-size: 14px;
   line-height: 18px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .directory-meta {
@@ -216,16 +217,28 @@
   flex: 0 0 auto;
   align-items: center;
   gap: 8px;
-  white-space: nowrap;
+  white-space: normal;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .directory-scope,
 .directory-capacity,
 .directory-shared {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   min-width: 0;
   font-size: 14px;
   line-height: 20px;
+}
+
+@media (max-width: 900px) {
+  .directory-layout {
+    grid-template-columns: minmax(0, 1fr) 24px;
+  }
+
+  .directory-spacer {
+    display: none;
+  }
 }
 
 .directory-capacity {

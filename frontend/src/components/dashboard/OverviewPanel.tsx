@@ -130,7 +130,7 @@ export function OverviewPanel({
     <>
       <DashboardSummary metrics={metrics} />
 
-      <section className="inventory-section" aria-label="현재 재고">
+      <section className="inventory-section" aria-label={t('dashboard.currentInventory')}>
         <DashboardInventoryToolbar
           totalItems={totalItems}
           shortageItems={shortageItems}
@@ -151,7 +151,7 @@ export function OverviewPanel({
         />
       </section>
 
-      <section className="graphs-section" aria-label="데이터 그래프">
+      <section className="graphs-section" aria-label={t('dashboard.dataGraph')}>
         <h2>{t('dashboard.dataGraph')}</h2>
         <div className="graph-grid">
           <PriceChangeGraph item={activePriceItem} />
