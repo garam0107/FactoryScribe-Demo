@@ -37,7 +37,7 @@
     "tabsLabel": "Dashboard tabs", "loadingInventory": "Loading inventory data.", "noInventoryData": "There is no inventory data to display.",
     "supplierUnspecified": "Supplier not specified", "noCategoryData": "There is no {{category}} data to display.", "quantityWithUnit": "{{count}} pcs", "additionalNeeded": "Additional Needed",
     "loadingForecast": "Loading expected consumption data.", "noPriceData": "There is no price data to display.",
-    "purchaseOrdersLoadError": "Failed to load purchase order data.", "loadingPurchaseOrders": "Loading purchase order data.", "noMonthlyPurchaseOrders": "There are no purchase orders to display for this month.",
+    "purchaseOrdersLoadError": "Failed to load purchase order data.", "loadingPurchaseOrders": "Loading purchase order data.", "noMonthlyPurchaseOrders": "No results found.",
     "orderSearch": "Search purchase orders", "orderPages": "Purchase order pages", "firstPage": "First page", "previousPage": "Previous page", "nextPage": "Next page", "lastPage": "Last page",
     "categories": { "rawMaterials": "Raw Materials", "auxiliaryMaterials": "Auxiliary Materials", "consumables": "Consumables", "packagingMaterials": "Packaging Materials" }
   },

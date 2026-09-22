@@ -504,9 +504,6 @@ def list_purchase_order_documents(
         )
     ).all()
 
-    if not documents:
-        raise ValueError("purchase order documents not loaded")
-
     results = []
     for document in documents:
         items = session.exec(

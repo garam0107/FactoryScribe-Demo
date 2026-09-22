@@ -39,7 +39,7 @@
     "noCategoryData": "표시할 {{category}} 데이터가 없습니다.", "quantityWithUnit": "{{count}} 개", "additionalNeeded": "추가 필요",
     "loadingForecast": "예상 소모도 데이터를 불러오는 중입니다.", "noPriceData": "표시할 가격 데이터가 없습니다.",
     "purchaseOrdersLoadError": "발주서 데이터를 불러오지 못했습니다.", "loadingPurchaseOrders": "발주서 데이터를 불러오는 중입니다.",
-    "noMonthlyPurchaseOrders": "표시할 이번 달 발주 데이터가 없습니다.", "orderSearch": "발주 검색", "orderPages": "발주 페이지",
+    "noMonthlyPurchaseOrders": "조회된 결과가 없습니다.", "orderSearch": "발주 검색", "orderPages": "발주 페이지",
     "firstPage": "첫 페이지", "previousPage": "이전 페이지", "nextPage": "다음 페이지", "lastPage": "마지막 페이지",
     "categories": { "rawMaterials": "원자재", "auxiliaryMaterials": "부자재", "consumables": "소모품", "packagingMaterials": "포장재" }
   },

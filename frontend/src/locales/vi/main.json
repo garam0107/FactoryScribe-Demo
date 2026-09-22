@@ -37,7 +37,7 @@
     "tabsLabel": "Các tab bảng điều khiển", "loadingInventory": "Đang tải dữ liệu tồn kho.", "noInventoryData": "Không có dữ liệu tồn kho để hiển thị.",
     "supplierUnspecified": "Chưa chỉ định nhà cung cấp", "noCategoryData": "Không có dữ liệu {{category}} để hiển thị.", "quantityWithUnit": "{{count}} cái", "additionalNeeded": "Cần bổ sung",
     "loadingForecast": "Đang tải dữ liệu mức tiêu hao dự kiến.", "noPriceData": "Không có dữ liệu giá để hiển thị.",
-    "purchaseOrdersLoadError": "Không thể tải dữ liệu đơn đặt hàng.", "loadingPurchaseOrders": "Đang tải dữ liệu đơn đặt hàng.", "noMonthlyPurchaseOrders": "Không có đơn đặt hàng nào trong tháng này để hiển thị.",
+    "purchaseOrdersLoadError": "Không thể tải dữ liệu đơn đặt hàng.", "loadingPurchaseOrders": "Đang tải dữ liệu đơn đặt hàng.", "noMonthlyPurchaseOrders": "Không có kết quả nào.",
     "orderSearch": "Tìm kiếm đơn đặt hàng", "orderPages": "Các trang đơn đặt hàng", "firstPage": "Trang đầu", "previousPage": "Trang trước", "nextPage": "Trang tiếp", "lastPage": "Trang cuối",
     "categories": { "rawMaterials": "Nguyên vật liệu", "auxiliaryMaterials": "Vật liệu phụ", "consumables": "Vật tư tiêu hao", "packagingMaterials": "Vật liệu đóng gói" }
   },
