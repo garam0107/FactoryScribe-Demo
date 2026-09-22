@@ -1,4 +1,5 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron");
+const fs = require("fs/promises");
 const path = require("path");
 
 const isDev = !app.isPackaged;
@@ -23,6 +24,28 @@ ipcMain.handle("directory:select", async (event) => {
     name: path.basename(directoryPath),
     path: directoryPath,
   };
+});
+
+ipcMain.handle("file:save", async (event, { defaultFileName, bytes }) => {
+  const parentWindow = BrowserWindow.fromWebContents(event.sender);
+  const result = parentWindow
+    ? await dialog.showSaveDialog(parentWindow, {
+        title: "BOM 파일 저장",
+        defaultPath: defaultFileName,
+        filters: [{ name: "Excel Workbook", extensions: ["xlsx"] }],
+      })
+    : await dialog.showSaveDialog({
+        title: "BOM 파일 저장",
+        defaultPath: defaultFileName,
+        filters: [{ name: "Excel Workbook", extensions: ["xlsx"] }],
+      });
+
+  if (result.canceled || !result.filePath) {
+    return { saved: false };
+  }
+
+  await fs.writeFile(result.filePath, Buffer.from(bytes));
+  return { saved: true, filePath: result.filePath };
 });
 
 function createWindow() {

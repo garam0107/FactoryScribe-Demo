@@ -447,7 +447,26 @@ export function QuotationDrawingPage({
 
     input.value = ''
   }
-  const handleDownloadBomXlsx = () => {
+  const handleDownloadBomXlsx = async () => {
+    setIsBomMenuOpen(false)
+
+    if (window.electronAPI) {
+      try {
+        const response = await fetch(bomXlsxFileUrl)
+        if (!response.ok) {
+          throw new Error('Unable to load BOM XLSX')
+        }
+
+        await window.electronAPI.saveFile({
+          defaultFileName: 'PLH2-420-EM134-11001_0-BOM.xlsx',
+          bytes: new Uint8Array(await response.arrayBuffer()),
+        })
+      } catch {
+        window.alert(t('quotation.downloadFailed'))
+      }
+      return
+    }
+
     const link = document.createElement('a')
 
     link.href = bomXlsxFileUrl
@@ -457,7 +476,6 @@ export function QuotationDrawingPage({
     link.click()
     document.body.removeChild(link)
 
-    setIsBomMenuOpen(false)
   }
 
   return (

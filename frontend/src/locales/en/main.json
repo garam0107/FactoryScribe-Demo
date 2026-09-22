@@ -53,7 +53,7 @@
     "pdfPreviewUnavailable": "The PDF preview cannot be displayed.", "previewUnsupported": "Preview is not supported for this file.", "attachQuotationHere": "Attach quotation here",
     "viewToggle": "Switch between 2D and 3D views", "switchTo3D": "Switch to 3D view", "openAnotherFile": "Open Another File", "expectedBom": "Estimated BOM", "quotationName": "Quotation Name", "openBomMenu": "Open BOM menu",
     "shortageCount": "{{count}} short", "stockCount": "Stock {{count}}", "estimateConditions": "Quotation Conditions", "estimatedPrice": "Estimated Quotation Price", "exportPdf": "Export PDF",
-    "supportedFilesOnly": "Only part2/PLH2/CF3RA010-S2-21 PDF or C1/C3/C5 PNG files are supported.", "modelLoadError": "Unable to load the 3D model.", "modelViewerLabel": "{{modelName}} 3D viewer"
+    "supportedFilesOnly": "Only part2/PLH2/CF3RA010-S2-21 PDF or C1/C3/C5 PNG files are supported.", "modelLoadError": "Unable to load the 3D model.", "modelViewerLabel": "{{modelName}} 3D viewer", "downloadFailed": "Unable to save the BOM XLSX file."
   },
   "chat": {
     "greeting": "Hello, 김OO님. ",
