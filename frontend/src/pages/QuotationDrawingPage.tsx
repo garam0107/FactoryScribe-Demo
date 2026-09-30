@@ -41,6 +41,7 @@ type ImageView = {
 const INITIAL_IMAGE_VIEW: ImageView = { scale: 1, x: 0, y: 0 }
 const MIN_IMAGE_SCALE = 1
 const MAX_IMAGE_SCALE = 4
+const GENERATION_DELAY_MS = 5000
 
 type BomRow = {
   mark: string
@@ -259,9 +260,11 @@ export function QuotationDrawingPage({
     useState<ThreeDModelSelection | null>(null)
   const [threeDFileError, setThreeDFileError] = useState<string | null>(null)
   const [isThreeDLoading, setIsThreeDLoading] = useState(false)
+  const [isQuotationLoading, setIsQuotationLoading] = useState(false)
   const [isBomMenuOpen, setIsBomMenuOpen] = useState(false)
   const bomMenuRef = useRef<HTMLDivElement | null>(null)
   const threeDLoadingTimerRef = useRef<number | null>(null)
+  const quotationLoadingTimerRef = useRef<number | null>(null)
 
   const hasPreviewFile = previewFile !== null
   const selectedThreeDModel = previewFile
@@ -288,6 +291,9 @@ export function QuotationDrawingPage({
     return () => {
       if (threeDLoadingTimerRef.current !== null) {
         window.clearTimeout(threeDLoadingTimerRef.current)
+      }
+      if (quotationLoadingTimerRef.current !== null) {
+        window.clearTimeout(quotationLoadingTimerRef.current)
       }
     }
   }, [])
@@ -324,6 +330,17 @@ export function QuotationDrawingPage({
     setImageView(INITIAL_IMAGE_VIEW)
     setIsImageDragging(false)
     setIsThreeDView(false)
+    setIsBomMenuOpen(false)
+    setIsQuotationLoading(true)
+
+    if (quotationLoadingTimerRef.current !== null) {
+      window.clearTimeout(quotationLoadingTimerRef.current)
+    }
+    quotationLoadingTimerRef.current = window.setTimeout(() => {
+      setIsQuotationLoading(false)
+      setIsThreeDView(isDefaultThreeDView)
+      quotationLoadingTimerRef.current = null
+    }, GENERATION_DELAY_MS)
 
     setPreviewFile({
       name: file.name,
@@ -434,7 +451,7 @@ export function QuotationDrawingPage({
     threeDLoadingTimerRef.current = window.setTimeout(() => {
       setIsThreeDLoading(false)
       threeDLoadingTimerRef.current = null
-    }, 6000)
+    }, GENERATION_DELAY_MS)
 
     const modelBlob =
       model.format === 'obj'
@@ -611,6 +628,12 @@ export function QuotationDrawingPage({
             )}
           </div>
         ) : (
+          isQuotationLoading ? (
+            <div className="quotation-generation-loading quotation-three-d-loading" role="status">
+              <LoaderCircle aria-hidden="true" />
+              <strong>{t('quotation.generating3DModel')}</strong>
+            </div>
+          ) : (
           <div className="quotation-drawing-content">
           <div className="quotation-source-panel">
           <label
@@ -840,6 +863,7 @@ export function QuotationDrawingPage({
             </div>
           </aside>
           </div>
+          )
         )}
       </div>
     </section>

@@ -717,6 +717,11 @@
   box-sizing: border-box;
 }
 
+.quotation-generation-loading {
+  width: 100%;
+  height: 100%;
+}
+
 .quotation-estimate-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
