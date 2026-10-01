@@ -260,11 +260,14 @@ export function QuotationDrawingPage({
     useState<ThreeDModelSelection | null>(null)
   const [threeDFileError, setThreeDFileError] = useState<string | null>(null)
   const [isThreeDLoading, setIsThreeDLoading] = useState(false)
-  const [isQuotationLoading, setIsQuotationLoading] = useState(false)
+  const [isInlineThreeDLoading, setIsInlineThreeDLoading] = useState(false)
+  const [hasInlineThreeDLoaded, setHasInlineThreeDLoaded] = useState(false)
+  const [isBoqLoading, setIsBoqLoading] = useState(false)
   const [isBomMenuOpen, setIsBomMenuOpen] = useState(false)
   const bomMenuRef = useRef<HTMLDivElement | null>(null)
   const threeDLoadingTimerRef = useRef<number | null>(null)
-  const quotationLoadingTimerRef = useRef<number | null>(null)
+  const inlineThreeDLoadingTimerRef = useRef<number | null>(null)
+  const boqLoadingTimerRef = useRef<number | null>(null)
 
   const hasPreviewFile = previewFile !== null
   const selectedThreeDModel = previewFile
@@ -292,8 +295,11 @@ export function QuotationDrawingPage({
       if (threeDLoadingTimerRef.current !== null) {
         window.clearTimeout(threeDLoadingTimerRef.current)
       }
-      if (quotationLoadingTimerRef.current !== null) {
-        window.clearTimeout(quotationLoadingTimerRef.current)
+      if (inlineThreeDLoadingTimerRef.current !== null) {
+        window.clearTimeout(inlineThreeDLoadingTimerRef.current)
+      }
+      if (boqLoadingTimerRef.current !== null) {
+        window.clearTimeout(boqLoadingTimerRef.current)
       }
     }
   }, [])
@@ -330,16 +336,21 @@ export function QuotationDrawingPage({
     setImageView(INITIAL_IMAGE_VIEW)
     setIsImageDragging(false)
     setIsThreeDView(false)
+    setIsInlineThreeDLoading(false)
+    setHasInlineThreeDLoaded(false)
     setIsBomMenuOpen(false)
-    setIsQuotationLoading(true)
+    setIsBoqLoading(true)
 
-    if (quotationLoadingTimerRef.current !== null) {
-      window.clearTimeout(quotationLoadingTimerRef.current)
+    if (inlineThreeDLoadingTimerRef.current !== null) {
+      window.clearTimeout(inlineThreeDLoadingTimerRef.current)
+      inlineThreeDLoadingTimerRef.current = null
     }
-    quotationLoadingTimerRef.current = window.setTimeout(() => {
-      setIsQuotationLoading(false)
-      setIsThreeDView(isDefaultThreeDView)
-      quotationLoadingTimerRef.current = null
+    if (boqLoadingTimerRef.current !== null) {
+      window.clearTimeout(boqLoadingTimerRef.current)
+    }
+    boqLoadingTimerRef.current = window.setTimeout(() => {
+      setIsBoqLoading(false)
+      boqLoadingTimerRef.current = null
     }, GENERATION_DELAY_MS)
 
     setPreviewFile({
@@ -349,6 +360,25 @@ export function QuotationDrawingPage({
     })
 
     event.target.value = ''
+  }
+
+  const handleViewToggle = () => {
+    if (isThreeDView) {
+      setIsThreeDView(false)
+      return
+    }
+
+    setIsThreeDView(true)
+    if (hasInlineThreeDLoaded || inlineThreeDLoadingTimerRef.current !== null) {
+      return
+    }
+
+    setIsInlineThreeDLoading(true)
+    inlineThreeDLoadingTimerRef.current = window.setTimeout(() => {
+      setIsInlineThreeDLoading(false)
+      setHasInlineThreeDLoaded(true)
+      inlineThreeDLoadingTimerRef.current = null
+    }, GENERATION_DELAY_MS)
   }
 
   const handleImageWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
@@ -628,12 +658,6 @@ export function QuotationDrawingPage({
             )}
           </div>
         ) : (
-          isQuotationLoading ? (
-            <div className="quotation-generation-loading quotation-three-d-loading" role="status">
-              <LoaderCircle aria-hidden="true" />
-              <strong>{t('quotation.generating3DModel')}</strong>
-            </div>
-          ) : (
           <div className="quotation-drawing-content">
           <div className="quotation-source-panel">
           <label
@@ -659,7 +683,12 @@ export function QuotationDrawingPage({
 
             {previewFile ? (
               <div className="quotation-file-preview">
-                {isThreeDView && selectedThreeDModel ? (
+                {isThreeDView && isInlineThreeDLoading ? (
+                  <div className="quotation-three-d-loading" role="status">
+                    <LoaderCircle aria-hidden="true" />
+                    <strong>{t('quotation.generating3DModel')}</strong>
+                  </div>
+                ) : isThreeDView && selectedThreeDModel ? (
                   <div className="quotation-inline-three-d-viewer">
                     <ThreeDModelViewer
                       modelContent={selectedThreeDModel.content}
@@ -732,7 +761,7 @@ export function QuotationDrawingPage({
                 aria-checked={isThreeDView}
                 aria-label={t('quotation.switchTo3D')}
                 disabled={!hasPreviewFile}
-                onClick={() => setIsThreeDView((current) => !current)}
+                onClick={handleViewToggle}
               >
                 <span />
               </button>
@@ -770,6 +799,7 @@ export function QuotationDrawingPage({
                   aria-label={t('quotation.openBomMenu')}
                   aria-haspopup="menu"
                   aria-expanded={isBomMenuOpen}
+                  disabled={!hasPreviewFile || isBoqLoading}
                   onClick={() => setIsBomMenuOpen((prev) => !prev)}
                 >
                   <span>...</span>
@@ -785,6 +815,13 @@ export function QuotationDrawingPage({
               </div>
             </div>
 
+            {isBoqLoading ? (
+              <div className="quotation-boq-loading quotation-three-d-loading" role="status">
+                <LoaderCircle aria-hidden="true" />
+                <strong>{t('quotation.generatingBoq')}</strong>
+              </div>
+            ) : (
+            <>
             <div
               className={`quotation-bom-lines${
                 hasPreviewFile ? ' has-data' : ' is-empty'
@@ -861,9 +898,10 @@ export function QuotationDrawingPage({
                 {t('quotation.exportPdf')}
               </button>
             </div>
+            </>
+            )}
           </aside>
           </div>
-          )
         )}
       </div>
     </section>

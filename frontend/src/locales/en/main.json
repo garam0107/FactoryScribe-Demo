@@ -48,7 +48,7 @@
     "generateBom": "Generate BOM", "detailedSettings": "Detailed Settings", "pageLabel": "Quotation Calculation Drawing", "tabsLabel": "Quotation calculation drawing tabs",
     "basicSettings": "Basic Quotation Settings", "automaticDecision": "Automatic Decision", "marginRate": "Margin Rate", "laborCost": "Labor Cost", "requiredPersonnel": "Required Personnel", "personnel": "Personnel",
     "peopleCount": "{{count}} people", "manufacturingLeadTime": "Manufacturing Lead Time", "dayCount": "{{count}} days", "defaultViewOnCompletion": "Default View on Completion",
-    "selectAnother2DDrawing": "Select another 2D drawing", "selectAnotherDrawing": "Select Another Drawing", "download": "Download", "generating3DModel": "Generating the 3D model.", "pleaseWait": "Please wait.",
+    "selectAnother2DDrawing": "Select another 2D drawing", "selectAnotherDrawing": "Select Another Drawing", "download": "Download", "generating3DModel": "Generating the 3D model.", "generatingBoq": "Generating the BOQ.", "pleaseWait": "Please wait.",
     "attach2DDrawingFor3D": "Attach a 2D drawing for 3D generation", "upload2DDrawing": "Upload 2D Drawing", "attachQuotation": "Attach quotation", "modelNotFound": "No 3D model was found for this file.",
     "pdfPreviewUnavailable": "The PDF preview cannot be displayed.", "previewUnsupported": "Preview is not supported for this file.", "attachQuotationHere": "Attach quotation here",
     "viewToggle": "Switch between 2D and 3D views", "switchTo3D": "Switch to 3D view", "openAnotherFile": "Open Another File", "expectedBom": "Estimated BOM", "quotationName": "Quotation Name", "openBomMenu": "Open BOM menu",

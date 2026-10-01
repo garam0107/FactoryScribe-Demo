@@ -48,7 +48,7 @@
     "generateBom": "Tạo BOM", "detailedSettings": "Cài đặt chi tiết", "pageLabel": "Bản vẽ tính báo giá", "tabsLabel": "Các tab bản vẽ tính báo giá",
     "basicSettings": "Cài đặt báo giá cơ bản", "automaticDecision": "Tự động đánh giá", "marginRate": "Tỷ suất lợi nhuận", "laborCost": "Chi phí nhân công", "requiredPersonnel": "Nhân sự cần thiết", "personnel": "Nhân sự",
     "peopleCount": "{{count}} người", "manufacturingLeadTime": "Thời gian sản xuất", "dayCount": "{{count}} ngày", "defaultViewOnCompletion": "Chế độ xem mặc định khi hoàn tất",
-    "selectAnother2DDrawing": "Chọn bản vẽ 2D khác", "selectAnotherDrawing": "Chọn bản vẽ khác", "download": "Tải xuống", "generating3DModel": "Đang tạo mô hình 3D.", "pleaseWait": "Vui lòng chờ.",
+    "selectAnother2DDrawing": "Chọn bản vẽ 2D khác", "selectAnotherDrawing": "Chọn bản vẽ khác", "download": "Tải xuống", "generating3DModel": "Đang tạo mô hình 3D.", "generatingBoq": "Đang tạo bảng khối lượng BOQ.", "pleaseWait": "Vui lòng chờ.",
     "attach2DDrawingFor3D": "Đính kèm bản vẽ 2D để tạo 3D", "upload2DDrawing": "Tải bản vẽ 2D lên", "attachQuotation": "Đính kèm báo giá", "modelNotFound": "Không tìm thấy mô hình 3D cho tệp này.",
     "pdfPreviewUnavailable": "Không thể hiển thị bản xem trước PDF.", "previewUnsupported": "Tệp này không hỗ trợ xem trước.", "attachQuotationHere": "Đính kèm báo giá tại đây",
     "viewToggle": "Chuyển đổi chế độ xem 2D/3D", "switchTo3D": "Chuyển sang chế độ xem 3D", "openAnotherFile": "Mở tệp khác", "expectedBom": "BOM dự kiến", "quotationName": "Tên báo giá", "openBomMenu": "Mở menu BOM",

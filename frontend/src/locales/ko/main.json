@@ -50,7 +50,7 @@
     "generateBom": "BOQ 생성", "detailedSettings": "세부 설정", "pageLabel": "견적 계산 도면", "tabsLabel": "견적 계산 도면 탭",
     "basicSettings": "기본 견적 설정", "automaticDecision": "자동 판단", "marginRate": "마진율", "laborCost": "인건비", "requiredPersonnel": "필요 인원", "personnel": "인원",
     "peopleCount": "{{count}}명", "manufacturingLeadTime": "제조 소요 기간", "dayCount": "{{count}}일", "defaultViewOnCompletion": "작업 완료 시 기본 뷰",
-    "selectAnother2DDrawing": "다른 2D 도면 선택", "selectAnotherDrawing": "다른 도면 선택", "download": "다운로드", "generating3DModel": "3D 모델을 생성중입니다", "pleaseWait": "잠시만 기다려주세요.",
+    "selectAnother2DDrawing": "다른 2D 도면 선택", "selectAnotherDrawing": "다른 도면 선택", "download": "다운로드", "generating3DModel": "3D 모델을 생성중입니다", "generatingBoq": "BOQ를 생성중입니다", "pleaseWait": "잠시만 기다려주세요.",
     "attach2DDrawingFor3D": "3D 도면 생성용 2D 도면 첨부", "upload2DDrawing": "2D 도면 업로드", "attachQuotation": "견적서 첨부", "modelNotFound": "이 파일의 3D 모델을 찾을 수 없습니다.",
     "pdfPreviewUnavailable": "PDF 미리보기를 표시할 수 없습니다.", "previewUnsupported": "미리보기를 지원하지 않는 파일입니다.", "attachQuotationHere": "파일을 첨부해주세요.",
     "viewToggle": "2D 3D 보기 전환", "switchTo3D": "3D 보기로 전환", "openAnotherFile": "다른 파일 열기", "expectedBom": "예상 BOQ", "quotationName": "견적서명", "openBomMenu": "BOQ 메뉴 열기",
