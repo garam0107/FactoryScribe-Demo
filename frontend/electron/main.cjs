@@ -30,12 +30,12 @@ ipcMain.handle("file:save", async (event, { defaultFileName, bytes }) => {
   const parentWindow = BrowserWindow.fromWebContents(event.sender);
   const result = parentWindow
     ? await dialog.showSaveDialog(parentWindow, {
-        title: "BOM 파일 저장",
+        title: "BOQ 파일 저장",
         defaultPath: defaultFileName,
         filters: [{ name: "Excel Workbook", extensions: ["xlsx"] }],
       })
     : await dialog.showSaveDialog({
-        title: "BOM 파일 저장",
+        title: "BOQ 파일 저장",
         defaultPath: defaultFileName,
         filters: [{ name: "Excel Workbook", extensions: ["xlsx"] }],
       });
